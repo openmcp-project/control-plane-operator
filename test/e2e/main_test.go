@@ -31,7 +31,7 @@ import (
 )
 
 var (
-	UutControllerKey = "cloud-orchestration/control-plane-operator"
+	UutControllerKey = "openmcp-project/control-plane-operator"
 
 	testEnv env.Environment
 )

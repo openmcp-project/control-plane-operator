@@ -8,7 +8,7 @@ IMG ?= $(IMG_BASE):$(IMG_VERSION)
 # Pick from https://storage.googleapis.com/kubebuilder-tools
 ENVTEST_K8S_VERSION = 1.30.0
 
-export UUT_IMAGES = {"cloud-orchestration/control-plane-operator":"$(IMG)"}
+export UUT_IMAGES = {"openmcp-project/control-plane-operator":"$(IMG)"}
 SET_BASE_DIR := $(eval BASE_DIR=$(shell git rev-parse --show-toplevel))
 GENERATED_DIR := ${BASE_DIR}/hack/.generated
 
@@ -86,16 +86,16 @@ golangci-lint: localbin ## Download golangci-lint locally if necessary. If wrong
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(LOCALBIN) $(LINTER_VERSION) )
 
 
-.PHONY: lint 
+.PHONY: lint
 lint:golangci-lint  ## Run golangci-lint to lint code
 	$(LOCALBIN)/golangci-lint run ./... --timeout=15m
 
 .PHONY: tidy
-tidy: 
+tidy:
 	go mod tidy -e
 
 .PHONY: verify
-verify: lint goimports vet 
+verify: lint goimports vet
 
 .PHONY: localbin
 localbin:

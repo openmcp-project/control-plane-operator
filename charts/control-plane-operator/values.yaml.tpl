@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: deploy-releases-hyperspace-docker.common.repositories.cloud.sap/cloud-orchestration/control-plane-operator
+  repository: ghcr.io/openmcp-project/github.com/openmcp-project/control-plane-operator/images/control-plane-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: $OPERATOR_VERSION
