@@ -1,0 +1,13 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: ControlPlane
+metadata:
+  name: cp-minimal-e2e
+  namespace: default
+spec:
+  target:
+    serviceAccount: {}
+    fluxServiceAccount:
+      name: flux-deployer
+      namespace: default
+      overrides:
+        host: https://kubernetes.default.svc

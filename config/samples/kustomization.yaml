@@ -1,0 +1,6 @@
+## Append samples of your project ##
+resources:
+#- controlplane_local.yaml
+#- _v1beta1_releasechannel.yaml
+- v1beta1_crossplanepackagerestriction.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

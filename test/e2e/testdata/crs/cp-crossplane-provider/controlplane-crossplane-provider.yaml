@@ -1,0 +1,33 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: ControlPlane
+metadata:
+  name: cp-e2e-crossplane-provider
+spec:
+  target:
+    serviceAccount: {}
+    fluxServiceAccount:
+      name: flux-deployer
+      namespace: default
+      overrides:
+        host: https://kubernetes.default.svc
+  crossplane:
+    version: 1.17.1
+    providers:
+      - name: kubernetes
+        version: 0.14.1
+---
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: CrossplanePackageRestriction
+metadata:
+  name: default
+spec:
+  providers:
+    registries:
+      - xpkg.upbound.io
+    packages: []
+  configurations:
+    registries: []
+    packages: []
+  functions:
+    registries: []
+    packages: []

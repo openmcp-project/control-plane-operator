@@ -1,0 +1,38 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: ControlPlane
+metadata:
+  name: controlplane-sample
+spec:
+  target:
+    # use local cluster
+    serviceAccount: {}
+    fluxServiceAccount:
+      name: flux-deployer
+      namespace: default
+      overrides:
+        host: https://kubernetes.default.svc
+    # optional impersonation
+    # serviceAccount:
+    #   name: serviceaccount-to-impersonate
+    #   namespace: namespace-of-that-serviceaccount
+  crossplane:
+    version: 1.17.0
+    providers:
+      - name: kubernetes
+        version: 0.14.0
+---
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: CrossplanePackageRestriction
+metadata:
+  name: default
+spec:
+  providers:
+    registries:
+      - xpkg.upbound.io
+    packages: []
+  configurations:
+    registries: []
+    packages: []
+  functions:
+    registries: []
+    packages: []

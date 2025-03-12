@@ -1,0 +1,9 @@
+# Adds namespace to all resources.
+namespace: "{{ .Release.Namespace }}"
+
+# Labels to add to all resources and selectors.
+commonLabels:
+  app.kubernetes.io/managed-by: helm
+
+bases:
+  - ../default

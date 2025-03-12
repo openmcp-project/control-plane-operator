@@ -1,0 +1,15 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: ControlPlane
+metadata:
+  name: cp-e2e-kyverno
+  namespace: default
+spec:
+  target:
+    serviceAccount: {}
+    fluxServiceAccount:
+      name: flux-deployer
+      namespace: default
+      overrides:
+        host: https://kubernetes.default.svc
+  kyverno:
+    version: 3.2.7

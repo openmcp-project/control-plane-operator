@@ -1,0 +1,33 @@
+name: ci
+on:
+  push:
+    tags:
+      - v*
+    branches:
+      - master
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: make tidy
+        run: |
+          make tidy
+          git diff --exit-code
+          
+      - name: make verify
+        run: make verify
+
+      - name: make test
+        run: make test

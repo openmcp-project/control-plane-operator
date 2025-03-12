@@ -1,0 +1,16 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: ControlPlane
+metadata:
+  name: cp-e2e-btpso
+spec:
+  target:
+    serviceAccount: {}
+    fluxServiceAccount:
+      name: flux-deployer
+      namespace: default
+      overrides:
+        host: https://kubernetes.default.svc
+  btpServiceOperator:
+    version: 0.6.0
+  certManager:
+    version: 1.16.1
