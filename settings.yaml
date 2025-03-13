@@ -1,0 +1,4 @@
+COMPONENT_NAME: control-plane-operator
+COMPONENT_NAME_PREFIX: github.com/openmcp-project
+PROVIDER: openmcp-project
+COMPONENT_REPO_PREFIX: ghcr.io/openmcp-project/control-plane-operator
