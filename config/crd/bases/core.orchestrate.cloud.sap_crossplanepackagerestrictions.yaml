@@ -1,0 +1,108 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.16.4
+  name: crossplanepackagerestrictions.core.orchestrate.cloud.sap
+spec:
+  group: core.orchestrate.cloud.sap
+  names:
+    kind: CrossplanePackageRestriction
+    listKind: CrossplanePackageRestrictionList
+    plural: crossplanepackagerestrictions
+    singular: crossplanepackagerestriction
+  scope: Cluster
+  versions:
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: CrossplanePackageRestriction is the Schema for the crossplanepackagerestrictions
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CrossplanePackageRestrictionSpec defines the desired state
+              of CrossplanePackageRestriction
+            properties:
+              configurations:
+                description: |-
+                  PackageRestriction restricts a package type (e.g. providers) to certain registries or literal packages.
+                  If both Registries and Packages are empty, no packages of this type will be allowed.
+                properties:
+                  packages:
+                    items:
+                      type: string
+                    type: array
+                  registries:
+                    items:
+                      type: string
+                    type: array
+                required:
+                - packages
+                - registries
+                type: object
+              functions:
+                description: |-
+                  PackageRestriction restricts a package type (e.g. providers) to certain registries or literal packages.
+                  If both Registries and Packages are empty, no packages of this type will be allowed.
+                properties:
+                  packages:
+                    items:
+                      type: string
+                    type: array
+                  registries:
+                    items:
+                      type: string
+                    type: array
+                required:
+                - packages
+                - registries
+                type: object
+              providers:
+                description: |-
+                  PackageRestriction restricts a package type (e.g. providers) to certain registries or literal packages.
+                  If both Registries and Packages are empty, no packages of this type will be allowed.
+                properties:
+                  packages:
+                    items:
+                      type: string
+                    type: array
+                  registries:
+                    items:
+                      type: string
+                    type: array
+                required:
+                - packages
+                - registries
+                type: object
+            required:
+            - configurations
+            - functions
+            - providers
+            type: object
+          status:
+            description: CrossplanePackageRestrictionStatus defines the observed state
+              of CrossplanePackageRestriction
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

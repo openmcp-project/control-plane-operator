@@ -1,0 +1,6 @@
+rbac:
+  clusterRole:
+    rules:
+      - apiGroups: ["*"]
+        resources: ["*"]
+        verbs: ["*"]

@@ -1,0 +1,20 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: CrossplanePackageRestriction
+metadata:
+  name: default
+spec:
+  providers:
+    registries:
+      - xpkg.upbound.io                           # any provider from this registry can be pulled
+      - registry.example.com                      # same here
+    packages:
+      - ghcr.io/some-owner/some-provider:v0.14.0  # allows only specific version
+      - ghcr.io/some-owner/some-other-provider    # allows any version
+  configurations:
+    registries:
+      - "*"                                       # allows any registry
+    packages: []
+  functions:
+    registries: []
+    packages:
+      - "*"                                       # allows any package

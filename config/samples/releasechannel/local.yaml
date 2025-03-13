@@ -1,0 +1,11 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: ReleaseChannel
+metadata:
+  name: cloudorchestration-local
+spec:
+  ocmRegistrySecretRef:
+    name: ocm-registry
+    namespace: co-system
+  ocmRegistrySecretKey: ocm_registry.tgz
+  prefixFilter: "core.orchestrate.cloud.sap"
+

@@ -1,0 +1,23 @@
+# permissions for end users to view crossplanepackagerestrictions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: control-plane-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: crossplanepackagerestriction-viewer-role
+rules:
+- apiGroups:
+  - core.orchestrate.cloud.sap
+  resources:
+  - crossplanepackagerestrictions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - core.orchestrate.cloud.sap
+  resources:
+  - crossplanepackagerestrictions/status
+  verbs:
+  - get

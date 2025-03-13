@@ -1,0 +1,45 @@
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: ControlPlane
+metadata:
+  name: controlplane-sample
+spec:
+  target:
+    # use projected service account token
+    serviceAccount:
+      tokenFile: /service-account/token
+      host: https://some.other.cluster.example.com
+      caData: LS0tLS1CRUdJTiBDRVJUSUZJQ0FUR...
+      # optional
+      # name: remote-serviceaccount-to-impersonate
+      # namespace: namespace-of-that-serviceaccount
+      # caFile: /etc/certs/some.other.cluster.crt
+    fluxServiceAccount:
+      name: flux-deployer
+      namespace: default
+  crossplane:
+    version: 1.17.0
+    providers:
+      - name: kubernetes
+        version: 0.14.1
+  btpServiceOperator:
+    version: 0.6.0
+  certManager:
+    version: 1.16.1
+  externalSecretsOperator:
+    version: 0.10.0
+---
+apiVersion: core.orchestrate.cloud.sap/v1beta1
+kind: CrossplanePackageRestriction
+metadata:
+  name: default
+spec:
+  providers:
+    registries:
+      - xpkg.upbound.io
+    packages: []
+  configurations:
+    registries: []
+    packages: []
+  functions:
+    registries: []
+    packages: []
