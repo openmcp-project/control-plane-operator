@@ -92,10 +92,6 @@ func TestMain(m *testing.M) {
 			if err != nil {
 				return ctx, err
 			}
-			err = exec.Command("kubectl", "annotate", "secret", "artifactory-readonly-basic", "core.orchestrate.cloud.sap/credentials-for-url=https://common.repositories.cloud.sap/artifactory/api/helm/deploy-releases-hyperspace-helm").Run() //nolint:lll
-			if err != nil {
-				return ctx, err
-			}
 
 			return ctx, nil
 		},
