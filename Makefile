@@ -79,15 +79,17 @@ test: manifests generate fmt vet envtest ## Run tests.
 	go tool cover --html=cover.out -o cover.html
 	go tool cover -func cover.out | tail -n 1
 
+LINTER ?= $(LOCALBIN)/golangci-lint
+LINTER_VERSION ?= v1.64.7
 .PHONY: golangci-lint
 golangci-lint: localbin ## Download golangci-lint locally if necessary. If wrong version is installed, it will be overwritten.
-	@test -s $(LINTER) && $(LINTER) --version | grep -q $(subst v,,$(LINTER_VERSION)) || \
+	test -s $(LINTER) && $(LINTER) --version | grep -q $(subst v,,$(LINTER_VERSION)) || \
 	( echo "Installing golangci-lint $(LINTER_VERSION) ..."; \
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(LOCALBIN) $(LINTER_VERSION) )
 
 
 .PHONY: lint
-lint:golangci-lint  ## Run golangci-lint to lint code
+lint: golangci-lint  ## Run golangci-lint to lint code
 	$(LOCALBIN)/golangci-lint run ./... --timeout=15m
 
 .PHONY: tidy
@@ -96,6 +98,10 @@ tidy:
 
 .PHONY: verify
 verify: lint goimports vet
+
+
+.PHONY: prepare-release
+prepare-release: lint goimports vet
 
 .PHONY: localbin
 localbin:
