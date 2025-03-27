@@ -251,7 +251,7 @@ flux-install:
 ### ------------------------------------ HELM ------------------------------------ ###
 
 .PHONY: helm-chart
-helm-chart: helm-templates
+helm-chart:
 	OPERATOR_VERSION=$(shell cat VERSION) envsubst < charts/$(PROJECT_FULL_NAME)/Chart.yaml.tpl > charts/$(PROJECT_FULL_NAME)/Chart.yaml
 	OPERATOR_VERSION=$(shell cat VERSION) envsubst < charts/$(PROJECT_FULL_NAME)/values.yaml.tpl > charts/$(PROJECT_FULL_NAME)/values.yaml
 
