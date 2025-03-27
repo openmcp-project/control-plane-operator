@@ -39,3 +39,11 @@ The following rule governs code contributions:
 * We use GitHub issues to track bugs and enhancement requests.
 
 * Please provide as much context as possible when you open an issue. The information you provide must be comprehensive enough to reproduce that issue for the assignee.
+
+## Creating a new release
+
+Create a new PR with the following changes:
+
+1. Modify the `VERSION` file
+2. Run `make helm-chart`
+3. After your PR is approved and merged, a new version of the image and helm chart will automatically be build and published
