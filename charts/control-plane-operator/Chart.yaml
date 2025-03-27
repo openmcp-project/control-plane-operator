@@ -2,8 +2,8 @@ apiVersion: v2
 name: co-control-plane-operator
 description: A Helm chart for the Cloud Orchestration Control Plane Operator
 type: application
-version: 0.1.3
-appVersion: 0.1.3
+version: v0.1.5
+appVersion: v0.1.5
 home: https://github.com/openmcp-project/control-plane-operator
 sources:
   - https://github.com/openmcp-project/control-plane-operator
