@@ -22,7 +22,7 @@ require (
 	k8s.io/client-go v0.32.2
 	k8s.io/klog/v2 v2.130.1
 	ocm.software/ocm v0.17.0
-	sigs.k8s.io/controller-runtime v0.20.2
+	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/e2e-framework v0.5.0
 )
 
