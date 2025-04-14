@@ -80,6 +80,8 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             {{- end }}
+            - name: GODEBUG
+              value: "fips140={{ .Values.fips.mode }}"
           {{- with .Values.init.env }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -177,6 +179,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.serviceAccountName
+            - name: GODEBUG
+              value: "fips140={{ .Values.fips.mode }}"
           {{- with .Values.manager.env }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

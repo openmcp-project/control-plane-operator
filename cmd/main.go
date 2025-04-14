@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"crypto/fips140"
 	"embed"
 	"flag"
 	"os"
@@ -128,6 +129,13 @@ func main() {
 	}
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	// needs to be run after ctrl.SetLogger has been called, so we can log
+	if fips140.Enabled() {
+		setupLog.Info("Running in FIPS 140-3 compliant mode")
+	} else {
+		setupLog.Info("Running in non-FIPS-compliant mode")
+	}
 
 	setupContext := context.Background()
 
