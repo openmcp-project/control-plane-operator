@@ -9,7 +9,6 @@ import (
 	helmv2 "github.com/fluxcd/helm-controller/api/v2"
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/cmd/options"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler/fluxcd"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler/hooks"
@@ -82,15 +81,13 @@ func (c *Crossplane) GetPolicyRules() PolicyRules {
 		},
 	}
 
-	if options.IsDeploymentRuntimeConfigProtectionEnabled() {
-		rules.Admin = append(rules.Admin, rbacv1.PolicyRule{
-			APIGroups: []string{"pkg.crossplane.io"},
-			Resources: []string{
-				"deploymentruntimeconfigs",
-			},
-			Verbs: VerbsModify,
-		})
-	}
+	rules.Admin = append(rules.Admin, rbacv1.PolicyRule{
+		APIGroups: []string{"pkg.crossplane.io"},
+		Resources: []string{
+			"deploymentruntimeconfigs",
+		},
+		Verbs: VerbsModify,
+	})
 
 	return rules
 }
