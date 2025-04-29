@@ -148,6 +148,9 @@ rbac:
   role:
     rules: []
 
+fips:
+  mode: "off" # controls GODEBUG=fips140 setting. Set to either off, on, or only (refer to https://go.dev/doc/security/fips140#fips-140-3-mode)
+
 nodeSelector: {}
 
 tolerations: []
