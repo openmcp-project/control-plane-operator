@@ -74,6 +74,8 @@ tasks:
     - '[ "{{.ENVTEST_REQUIRED | default "false"}}" != "true" ]'
     cmds:
     - task: tools:envtest
+    vars:
+      ENVTEST_REQUIRED: "true"
     internal: true
 
   build-raw:
