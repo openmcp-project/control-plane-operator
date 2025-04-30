@@ -7,7 +7,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	"ocm.software/ocm/api/ocm"
 	"ocm.software/ocm/api/ocm/extensions/accessmethods/helm"
@@ -18,6 +17,8 @@ import (
 	"ocm.software/ocm/api/tech/oci/identity"
 	"ocm.software/ocm/api/utils/accessobj"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 // Create an ocm.Repository entity out of an url specified in the ocmRegistry parameter.
