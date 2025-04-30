@@ -22,6 +22,8 @@ var (
 	errK8sVersionNotFound      = errors.New("value of ENVTEST_K8S_VERSION not found")
 
 	k8sVersionRegexp = regexp.MustCompile(`ENVTEST_K8S_VERSION\s*=\s*(.+)\n`)
+
+	k8sVersionEnvName = "ENVTEST_K8S_VERSION"
 )
 
 // Install uses make to install the envtest dependencies and sets the
@@ -109,6 +111,12 @@ func findMakefile(root string) (string, error) {
 }
 
 func readK8sVersion(makefilePath string) (string, error) {
+	// try to read environment variables first.
+	version := os.Getenv("ENVTEST_K8S_VERSION")
+	if len(version) != 0 {
+		return version, nil
+	}
+	// fall back to reading the makefile!
 	bytes, err := os.ReadFile(makefilePath)
 	if err != nil {
 		return "", errors.Join(errFailedToReadMakefile, err)
