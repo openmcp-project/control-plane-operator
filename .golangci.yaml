@@ -1,0 +1,8 @@
+run:
+  concurrency: 4
+  timeout: 10m
+
+issues:
+  exclude-files:
+  - "zz_generated.*\\.go$"
+  - "tmp/.*"
