@@ -1,0 +1,155 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.3
+  name: releasechannels.core.orchestrate.cloud.sap
+spec:
+  group: core.orchestrate.cloud.sap
+  names:
+    kind: ReleaseChannel
+    listKind: ReleaseChannelList
+    plural: releasechannels
+    shortNames:
+    - rc
+    singular: releasechannel
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: ReleaseChannel is the Schema for the ReleaseChannel API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ReleaseChannelSpec defines the desired state of ReleaseChannel
+            properties:
+              interval:
+                default: 15m
+                description: Interval specifies the timespan when the registry is
+                  checked again
+                type: string
+              ocmRegistrySecretKey:
+                description: |-
+                  Here you must specify the key which contains the tar based ocm registry in the referenced secret.
+                  Required, if ocmRegistrySecretRef is specified.
+                type: string
+              ocmRegistrySecretRef:
+                description: |-
+                  This parameter can be used for a tar based ocm registry in a secret.
+                  The secret referenced here must contain a key where a tar based ocm registry is stored in.
+                properties:
+                  name:
+                    description: name is unique within a namespace to reference a
+                      secret resource.
+                    type: string
+                  namespace:
+                    description: namespace defines the space within which the secret
+                      name must be unique.
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+              ocmRegistryUrl:
+                description: Specify a ocm registry url where the releasechannel components
+                  are uploaded
+                minLength: 1
+                type: string
+              prefixFilter:
+                description: |-
+                  When specified only components starting with this prefix will be fetched.
+                  Also this prefix will be cut from the componentNames in the status field.
+                type: string
+              pullSecretRef:
+                description: |-
+                  This should be a reference to a secret, which has the `username` and `password` keys.
+                  If specified, will be used when accessing the ocmRegistry specified in ocmRegistryUrl.
+                properties:
+                  name:
+                    description: name is unique within a namespace to reference a
+                      secret resource.
+                    type: string
+                  namespace:
+                    description: namespace defines the space within which the secret
+                      name must be unique.
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+            required:
+            - interval
+            type: object
+          status:
+            description: ReleaseChannelStatus defines the observed state of ReleaseChannel
+            properties:
+              components:
+                description: The components which are inside the ocm registry
+                items:
+                  properties:
+                    name:
+                      description: Name of the component which can be used to install
+                        it via the controlplane CR.
+                      type: string
+                    versions:
+                      description: All available versions for that component.
+                      items:
+                        properties:
+                          dockerRef:
+                            description: if it's a Docker Image, this specifies the
+                              Docker reference for pulling the image
+                            type: string
+                          helmChart:
+                            description: if it's a helm chart, this specifies the
+                              chart name
+                            type: string
+                          helmRepo:
+                            description: if it's a helm chart, this specifies the
+                              helm repo
+                            type: string
+                          version:
+                            description: The version number for that ComponentVersion
+                            type: string
+                        required:
+                        - version
+                        type: object
+                      type: array
+                  required:
+                  - name
+                  - versions
+                  type: object
+                type: array
+            type: object
+        type: object
+        x-kubernetes-validations:
+        - message: You can't specify 'ocmRegistryUrl' and 'ocmRegistrySecretRef' at
+            the same time, either use a remote ocm registry or a secret
+          rule: (!(has(self.spec.ocmRegistryUrl) && has(self.spec.ocmRegistrySecretRef)))
+        - message: You need to specify an 'ocmRegistrySecretKey' if you want to use
+            the 'ocmRegistrySecretRef'.
+          rule: (!(has(self.spec.ocmRegistrySecretRef) && !has(self.spec.ocmRegistrySecretKey)))
+        - message: If you specify a 'pullSecretRef' you must specify an 'ocmRegistryUrl'
+            otherwise the 'pullSecretRef' will not be used.
+          rule: (!(has(self.spec.pullSecretRef) && !has(self.spec.ocmRegistryUrl)))
+    served: true
+    storage: true
+    subresources:
+      status: {}
