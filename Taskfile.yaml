@@ -45,22 +45,6 @@ includes:
       GENERATE_DOCS_INDEX: "true"
       ENVTEST_REQUIRED: "true"
       ENVTEST_K8S_VERSION: "1.30.0"
-      
-
-# tasks:
-#   build:bin:val:test:
-#     desc: "  Run all tests."
-#     env:
-#       ENVTEST_K8S_VERSION: "1.30.0"
-        
-#     run: once
-#     # requires:
-#     #   vars:
-#     #     - CODE_DIRS
-#     deps:
-#     - test-envtest-dep
-#     cmds:
-#     - 'PROJECT_ROOT="{{.ROOT_DIR2}}" NESTED_MODULES="{{.NESTED_MODULES}}" {{.TASKFILE_DIR2}}/run-tests.sh {{.CODE_DIRS}}'
 
 tasks:
   test:
