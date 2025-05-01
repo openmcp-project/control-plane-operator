@@ -27,7 +27,6 @@ includes:
       CODE_DIRS: '{{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
       COMPONENTS: 'control-plane-operator'
       REPO_URL: 'https://github.com/openmcp-project/control-plane-operator'
-      GENERATE_DOCS_INDEX: "true"
       ENVTEST_REQUIRED: "true"
       ENVTEST_K8S_VERSION: "1.30.0"
   common: # imported a second time so that overwriting task definitions can call the overwritten task with a 'c:' prefix
