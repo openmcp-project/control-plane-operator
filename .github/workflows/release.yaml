@@ -104,22 +104,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Create Git tag for api submodule
-        if: ${{ env.SKIP != 'true' }}
-        run: |
-          AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
-          AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
-          echo "Tagging as $AUTHOR_NAME <$AUTHOR_EMAIL>"
- 
-          echo "AUTHOR_NAME=$AUTHOR_NAME" >> $GITHUB_ENV
-          echo "AUTHOR_EMAIL=$AUTHOR_EMAIL" >> $GITHUB_ENV
- 
-          git config user.name "$AUTHOR_NAME"
-          git config user.email "$AUTHOR_EMAIL"
- 
-          git tag -a "api/${{ env.version }}" -m "Release ${{ env.version }}"
-          git push origin "api/${{ env.version }}"
-
       - name: Create GitHub release
         if: ${{ env.SKIP != 'true' }}
         uses: softprops/action-gh-release@v2
