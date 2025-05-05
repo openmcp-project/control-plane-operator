@@ -40,16 +40,18 @@ tasks:
       NESTED_MODULES: api
       API_DIRS: '{{.ROOT_DIR}}/api/v1beta1/...'
       MANIFEST_OUT: '{{.ROOT_DIR}}/api/crds/manifests'
-      CODE_DIRS: '{{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
+      CODE_DIRS: '{{.ROOT_DIR}}/... {{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
       COMPONENTS: 'control-plane-operator'
       REPO_URL: 'https://github.com/openmcp-project/control-plane-operator'
       GENERATE_DOCS_INDEX: "true"
       ENVTEST_REQUIRED: "true"
       ENVTEST_K8S_VERSION: "1.30.0"
+      KUBEBUILDER_ASSETS:
+        sh:  "{{.ROOT_DIR}}/bin/setup-envtest use {{.ENVTEST_K8S_VERSION}} -p path"
     deps:
     - test-envtest-dep
     cmds:
-    - 'PROJECT_ROOT="{{.ROOT_DIR2}}" NESTED_MODULES="{{.NESTED_MODULES}}" ENVTEST_K8S_VERSION="{{.ENVTEST_K8S_VERSION}}" {{.TASKFILE_DIR2}}/run-tests.sh {{.CODE_DIRS}}'
+    - 'PROJECT_ROOT="{{.ROOT_DIR}}" NESTED_MODULES="{{.NESTED_MODULES}}" ENVTEST_K8S_VERSION="{{.ENVTEST_K8S_VERSION}}" KUBEBUILDER_ASSETS="{{.KUBEBUILDER_ASSETS}}" {{.TASKFILE_DIR2}}/run-tests.sh {{.CODE_DIRS}}'
 
   test-envtest-dep:
     desc: "  Install the envtest dependency, if marked as required."
