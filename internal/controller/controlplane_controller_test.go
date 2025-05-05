@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"errors"
-	"log"
 	"os"
 	"testing"
 	"time"
@@ -33,13 +32,9 @@ import (
 	"github.com/openmcp-project/control-plane-operator/internal/schemes"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/kubeconfiggen"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
-	envtestutil "github.com/openmcp-project/control-plane-operator/pkg/utils/envtest"
 )
 
 func TestMain(m *testing.M) {
-	if err := envtestutil.Install(); err != nil {
-		log.Fatalln(err)
-	}
 	os.Exit(m.Run())
 }
 
