@@ -46,12 +46,13 @@ tasks:
       GENERATE_DOCS_INDEX: "true"
       ENVTEST_REQUIRED: "true"
       ENVTEST_K8S_VERSION: "1.30.0"
-      KUBEBUILDER_ASSETS:
-        sh:  "{{.ROOT_DIR}}/bin/setup-envtest use {{.ENVTEST_K8S_VERSION}} -p path"
     deps:
     - test-envtest-dep
+    # Very hacky way to run the test. We need to have KUBEBUILDER_ASSETS set. If we configure this as a dynamic task variable,
+    # it fails if the setup-envtest binary is not installed. Unfortunately setting test-envtest-dep as a dependency here doesn't
+    # work because variables are evaluated before dependencies.
     cmds:
-    - 'PROJECT_ROOT="{{.ROOT_DIR}}" NESTED_MODULES="{{.NESTED_MODULES}}" ENVTEST_K8S_VERSION="{{.ENVTEST_K8S_VERSION}}" KUBEBUILDER_ASSETS="{{.KUBEBUILDER_ASSETS}}" {{.TASKFILE_DIR2}}/run-tests.sh {{.CODE_DIRS}}'
+    - export KUBEBUILDER_ASSETS=$({{.ROOT_DIR}}/bin/setup-envtest use {{.ENVTEST_K8S_VERSION}} -p path); sh -c 'PROJECT_ROOT="{{.ROOT_DIR}}" NESTED_MODULES="{{.NESTED_MODULES}}" ENVTEST_K8S_VERSION="{{.ENVTEST_K8S_VERSION}}" {{.TASKFILE_DIR2}}/run-tests.sh {{.CODE_DIRS}}'
 
   test-envtest-dep:
     desc: "  Install the envtest dependency, if marked as required."
