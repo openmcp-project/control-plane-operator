@@ -1,8 +1,24 @@
+version: "2"
 run:
   concurrency: 4
-  timeout: 10m
-
-issues:
-  exclude-files:
-  - "zz_generated.*\\.go$"
-  - "tmp/.*"
+linters:
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - zz_generated.*\.go$
+      - tmp/.*
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
