@@ -207,5 +207,5 @@ func GetOCMComponent(
 		}
 	}
 
-	return v1beta1.ComponentVersion{}, fmt.Errorf("Component %s with version %s not found.", componentName, version)
+	return v1beta1.ComponentVersion{}, fmt.Errorf("component %s with version %s not found", componentName, version)
 }

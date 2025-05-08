@@ -211,7 +211,7 @@ func ReconcileDeploymentConfigRuntimeProtectionPolicy(avp *arv1.ValidatingAdmiss
 func ReconcileDeploymentConfigRuntimeProtectionPolicyBinding(policyName string,
 	avpd *arv1.ValidatingAdmissionPolicyBinding) {
 
-	avpd.ObjectMeta.Name = policyName
+	avpd.Name = policyName
 
 	avpd.Spec = arv1.ValidatingAdmissionPolicyBindingSpec{
 		ValidationActions: []arv1.ValidationAction{arv1.Deny},
