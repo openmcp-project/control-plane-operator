@@ -13,29 +13,7 @@ includes:
   shared:
     taskfile: hack/common/Taskfile_controller.yaml
     flatten: true
-    excludes:
-    - test
-    - test-envtest-dep
-    - build:bin:val:test
-    - build-raw
-    - build:bin:build-raw
-     # put task names in here which are overwritten in this file
-    vars:
-      NESTED_MODULES: api
-      API_DIRS: '{{.ROOT_DIR}}/api/v1beta1/...'
-      MANIFEST_OUT: '{{.ROOT_DIR}}/api/crds/manifests'
-      CODE_DIRS: '{{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
-      COMPONENTS: 'control-plane-operator'
-      REPO_URL: 'https://github.com/openmcp-project/control-plane-operator'
-      ENVTEST_REQUIRED: "true"
-      ENVTEST_K8S_VERSION: "1.30.0"
-
-tasks:
-  test:
-    desc: "  Run all tests."
-    run: once
-    aliases:
-      - build:bin:val:test
+    excludes: []
     vars:
       NESTED_MODULES: api
       API_DIRS: '{{.ROOT_DIR}}/api/v1beta1/...'
@@ -43,38 +21,5 @@ tasks:
       CODE_DIRS: '{{.ROOT_DIR}}/... {{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
       COMPONENTS: 'control-plane-operator'
       REPO_URL: 'https://github.com/openmcp-project/control-plane-operator'
-      GENERATE_DOCS_INDEX: "true"
       ENVTEST_REQUIRED: "true"
       ENVTEST_K8S_VERSION: "1.30.0"
-    deps:
-    - test-envtest-dep
-    # Very hacky way to run the test. We need to have KUBEBUILDER_ASSETS set. If we configure this as a dynamic task variable,
-    # it fails if the setup-envtest binary is not installed. Unfortunately setting test-envtest-dep as a dependency here doesn't
-    # work because variables are evaluated before dependencies.
-    cmds:
-    - export KUBEBUILDER_ASSETS=$({{.ROOT_DIR}}/bin/setup-envtest use {{.ENVTEST_K8S_VERSION}} -p path); sh -c 'PROJECT_ROOT="{{.ROOT_DIR}}" NESTED_MODULES="{{.NESTED_MODULES}}" ENVTEST_K8S_VERSION="{{.ENVTEST_K8S_VERSION}}" {{.TASKFILE_DIR2}}/run-tests.sh {{.CODE_DIRS}}'
-
-  test-envtest-dep:
-    desc: "  Install the envtest dependency, if marked as required."
-    run: once
-    status:
-    - '[ "{{.ENVTEST_REQUIRED | default "false"}}" != "true" ]'
-    cmds:
-    - task: tools:envtest
-    vars:
-      ENVTEST_REQUIRED: "true"
-    internal: true
-
-  build-raw:
-    desc: "  Build the binary. Opposed to the regular build, this one just builds and skips code generation/validation tasks."
-    summary: |
-      This task builds the binary for the current operating system and architecture.
-      To overwrite this, set the 'OS' and 'ARCH' environment variables.
-      The binary is saved in the 'bin' folder, as $COMPONENT.$OS-$ARCH.
-    aliases:
-      - build:bin:build-raw
-    cmds:
-    - for:
-        var: COMPONENTS
-        as: COMPONENT
-      cmd: 'CGO_ENABLED=0 GOOS={{.OS}} GOARCH={{.ARCH}} go build -a -o {{.ROOT_DIR2}}/bin/{{.COMPONENT}}.{{.OS}}-{{.ARCH}} {{.ROOT_DIR2}}/cmd/main.go'
