@@ -3,11 +3,12 @@ package controller
 import (
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/controller-utils/pkg/api"
 	"github.com/openmcp-project/controller-utils/pkg/clientconfig"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/client-go/rest"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 func TestNewRemoteConfigBuilder(t *testing.T) {

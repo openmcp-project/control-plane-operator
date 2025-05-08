@@ -8,14 +8,15 @@ import (
 
 	commonv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 var (

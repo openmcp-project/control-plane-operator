@@ -3,10 +3,11 @@ package secrets
 import (
 	"context"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 )
 
 // AvailablePullSecrets returns a list of secrets that are labeled with `constants.LabelCopyToCP`

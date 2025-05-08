@@ -6,8 +6,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"k8s.io/client-go/tools/record"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"

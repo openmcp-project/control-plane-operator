@@ -5,9 +5,10 @@ import (
 	"strings"
 
 	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
+	"k8s.io/apimachinery/pkg/types"
+
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
-	"k8s.io/apimachinery/pkg/types"
 )
 
 const (

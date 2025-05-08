@@ -3,9 +3,10 @@ package object
 import (
 	"context"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 // ObjectComponent is an interface for manageable components, specifically for plain client.Objects.

@@ -226,11 +226,11 @@ func (am *Juggler) reconcileComponent(ctx context.Context, component Component) 
 	}
 
 	// Resource is not healthy
-	if !observation.ResourceHealthiness.Healthy {
+	if !observation.Healthy {
 		return ComponentResult{
 			Component: component,
 			Result:    StatusUnhealthy,
-			Message:   observation.ResourceHealthiness.Message,
+			Message:   observation.Message,
 		}
 	}
 

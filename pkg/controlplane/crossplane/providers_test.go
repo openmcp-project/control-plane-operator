@@ -4,11 +4,12 @@ import (
 	"testing"
 
 	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 func TestReconcileProvider(t *testing.T) {

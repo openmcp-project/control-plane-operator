@@ -4,13 +4,14 @@ import (
 	"context"
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 	"github.com/stretchr/testify/assert"
 	assert2 "gotest.tools/v3/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 )
 
 var (

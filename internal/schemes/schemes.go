@@ -1,10 +1,11 @@
 package schemes
 
 import (
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 
 	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
 	crossplanev1beta1 "github.com/crossplane/crossplane/apis/pkg/v1beta1"

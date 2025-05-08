@@ -5,8 +5,9 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 var (

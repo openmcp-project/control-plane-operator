@@ -1,0 +1,25 @@
+version: 3
+
+# vars: # cannot be specified here due to https://github.com/go-task/task/issues/2108
+#   NESTED_MODULES: api
+#   API_DIRS: '{{.ROOT_DIR}}/api/v1beta1/...'
+#   MANIFEST_OUT: '{{.ROOT_DIR}}/api/crds/manifests'
+#   CODE_DIRS: '{{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
+#   COMPONENTS: 'control-plane-operator'
+#   REPO_URL: 'https://github.com/openmcp-project/control-plane-operator'
+#   GENERATE_DOCS_INDEX: "true"
+
+includes:
+  shared:
+    taskfile: hack/common/Taskfile_controller.yaml
+    flatten: true
+    excludes: []
+    vars:
+      NESTED_MODULES: api
+      API_DIRS: '{{.ROOT_DIR}}/api/v1beta1/...'
+      MANIFEST_OUT: '{{.ROOT_DIR}}/api/crds/manifests'
+      CODE_DIRS: '{{.ROOT_DIR}}/... {{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
+      COMPONENTS: 'control-plane-operator'
+      REPO_URL: 'https://github.com/openmcp-project/control-plane-operator'
+      ENVTEST_REQUIRED: "true"
+      ENVTEST_K8S_VERSION: "1.30.0"

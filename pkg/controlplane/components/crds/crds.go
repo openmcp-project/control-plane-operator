@@ -6,12 +6,13 @@ import (
 	"embed"
 	"path"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/components"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	apiextv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/components"
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 func RegisterAsComponents(jug *juggler.Juggler, crdFiles embed.FS, enabled bool, names ...string) error {

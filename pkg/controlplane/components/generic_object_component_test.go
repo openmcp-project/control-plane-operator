@@ -4,10 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 func genComponent(enabled, healthy bool, reconcileErr error) *GenericObjectComponent {

@@ -42,3 +42,6 @@ secret.env
 
 test/e2e/testdata/serect.yaml
 integration-tests.xml
+
+cover.root.html
+api/cover.root.html
