@@ -4,9 +4,10 @@ import (
 	"context"
 	"strings"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 )
 
 type ResolveFunc func(urlType UrlSecretType) (*corev1.LocalObjectReference, error)

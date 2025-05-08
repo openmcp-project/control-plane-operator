@@ -7,6 +7,10 @@ import (
 	"testing"
 
 	"github.com/fluxcd/pkg/apis/meta"
+	"github.com/stretchr/testify/assert"
+	corev1 "k8s.io/api/core/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
@@ -14,9 +18,6 @@ import (
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler/object"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
-	"github.com/stretchr/testify/assert"
-	corev1 "k8s.io/api/core/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 var (

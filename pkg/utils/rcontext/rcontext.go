@@ -4,9 +4,10 @@ import (
 	"context"
 
 	"github.com/fluxcd/pkg/apis/meta"
+	corev1 "k8s.io/api/core/v1"
+
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
-	corev1 "k8s.io/api/core/v1"
 )
 
 type tenantNamespaceKey struct{}

@@ -4,10 +4,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/tools/record"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 func TestObjectEventRecorder_Event(t *testing.T) {

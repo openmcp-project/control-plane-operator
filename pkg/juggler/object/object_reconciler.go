@@ -6,12 +6,13 @@ import (
 	"reflect"
 
 	"github.com/go-logr/logr"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
-	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 const (

@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 // checkForResources checks if there are any resources of the given GroupVersionKind remaining in the cluster
