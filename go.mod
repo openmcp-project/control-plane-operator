@@ -3,7 +3,7 @@ module github.com/openmcp-project/control-plane-operator
 go 1.24.2
 
 require (
-	github.com/crossplane-contrib/xp-testing v1.3.4
+	github.com/crossplane-contrib/xp-testing v1.5.0
 	github.com/crossplane/crossplane v1.17.2
 	github.com/fluxcd/helm-controller/api v1.1.0
 	github.com/fluxcd/kustomize-controller/api v1.4.0
@@ -21,7 +21,7 @@ require (
 	k8s.io/klog/v2 v2.130.1
 	ocm.software/ocm v0.17.0
 	sigs.k8s.io/controller-runtime v0.20.2
-	sigs.k8s.io/e2e-framework v0.5.0
+	sigs.k8s.io/e2e-framework v0.6.0
 )
 
 require (
@@ -320,11 +320,11 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.62.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
-	github.com/samber/lo v1.39.0 // indirect
+	github.com/samber/lo v1.47.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/vbatts/tar-split v0.11.6 // indirect
-	github.com/vladimirvivien/gexe v0.3.0 // indirect
+	github.com/vladimirvivien/gexe v0.4.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c // indirect
