@@ -4,11 +4,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
 )
 
 func TestTenantNamespace(t *testing.T) {

@@ -3,13 +3,14 @@ package policies
 import (
 	"context"
 
+	arv1 "k8s.io/api/admissionregistration/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/components"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
-	arv1 "k8s.io/api/admissionregistration/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (

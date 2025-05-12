@@ -3,8 +3,9 @@ package fluxcd
 import (
 	"context"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 type FluxComponent interface {

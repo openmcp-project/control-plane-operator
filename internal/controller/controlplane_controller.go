@@ -23,8 +23,9 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/openmcp-project/control-plane-operator/internal/ocm"
 	"k8s.io/apimachinery/pkg/types"
+
+	"github.com/openmcp-project/control-plane-operator/internal/ocm"
 
 	"github.com/openmcp-project/control-plane-operator/cmd/options"
 	"github.com/openmcp-project/control-plane-operator/internal/schemes"
@@ -39,11 +40,6 @@ import (
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler/object"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
 
-	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/components"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/kubeconfiggen"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/targetrbac"
-	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	condApi "k8s.io/apimachinery/pkg/api/meta"
@@ -54,6 +50,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+
+	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/components"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/kubeconfiggen"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/targetrbac"
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 const (

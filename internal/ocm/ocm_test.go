@@ -5,16 +5,18 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/internal/schemes"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
+	"github.com/openmcp-project/control-plane-operator/internal/schemes"
+
 	testutils "github.com/openmcp-project/control-plane-operator/test/utils"
 
-	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/stretchr/testify/assert"
+
+	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 func TestGetOCMComponent(t *testing.T) {

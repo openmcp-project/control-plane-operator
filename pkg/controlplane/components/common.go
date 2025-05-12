@@ -1,8 +1,9 @@
 package components
 
 import (
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	rbacv1 "k8s.io/api/rbac/v1"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 // TargetComponent is a component that should be installed on the Target (remote/workload) cluster.

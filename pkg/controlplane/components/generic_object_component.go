@@ -5,12 +5,13 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler/object"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler/object"
 )
 
 var _ object.ObjectComponent = &GenericObjectComponent{}

@@ -6,9 +6,10 @@ import (
 
 	helmv2 "github.com/fluxcd/helm-controller/api/v2"
 	fluxmeta "github.com/fluxcd/pkg/apis/meta"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 func TestHelmReleaseManifesto_GetHealthiness(t *testing.T) {

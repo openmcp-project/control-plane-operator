@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"errors"
-	"log"
 	"os"
 	"testing"
 	"time"
@@ -12,12 +11,6 @@ import (
 
 	"github.com/openmcp-project/controller-utils/pkg/clientconfig"
 
-	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/cmd/options"
-	"github.com/openmcp-project/control-plane-operator/internal/schemes"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/kubeconfiggen"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
-	envtestutil "github.com/openmcp-project/control-plane-operator/pkg/utils/envtest"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -33,12 +26,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
+
+	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/cmd/options"
+	"github.com/openmcp-project/control-plane-operator/internal/schemes"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/kubeconfiggen"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/secretresolver"
 )
 
 func TestMain(m *testing.M) {
-	if err := envtestutil.Install(); err != nil {
-		log.Fatalln(err)
-	}
 	os.Exit(m.Run())
 }
 

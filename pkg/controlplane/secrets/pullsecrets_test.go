@@ -5,7 +5,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -13,6 +12,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 )
 
 var (

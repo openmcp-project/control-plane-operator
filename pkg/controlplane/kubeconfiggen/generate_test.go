@@ -4,13 +4,10 @@ import (
 	"bytes"
 	"context"
 	"io"
-	"log"
 	"os"
 	"testing"
 	"time"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	envtestutil "github.com/openmcp-project/control-plane-operator/pkg/utils/envtest"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -20,6 +17,8 @@ import (
 	"k8s.io/utils/ptr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 var (
@@ -32,9 +31,6 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	if err := envtestutil.Install(); err != nil {
-		log.Fatalln(err)
-	}
 	os.Exit(m.Run())
 }
 
