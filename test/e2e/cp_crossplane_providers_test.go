@@ -9,8 +9,6 @@ import (
 	xpres "github.com/crossplane-contrib/xp-testing/pkg/resources"
 	xcommonv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/e2e-framework/klient/k8s"
@@ -19,6 +17,9 @@ import (
 	"sigs.k8s.io/e2e-framework/klient/wait/conditions"
 	"sigs.k8s.io/e2e-framework/pkg/envconf"
 	"sigs.k8s.io/e2e-framework/pkg/features"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
 )
 
 const (

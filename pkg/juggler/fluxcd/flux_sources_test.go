@@ -6,9 +6,10 @@ import (
 
 	fluxmeta "github.com/fluxcd/pkg/apis/meta"
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 func TestHelmRepositoryAdapter_GetHealthiness(t *testing.T) {

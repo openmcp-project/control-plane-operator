@@ -3,10 +3,11 @@ package utils
 import (
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"gotest.tools/v3/assert"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 func TestSetLabel(t *testing.T) {

@@ -6,16 +6,17 @@ import (
 	"strings"
 
 	crossplanev1beta1 "github.com/crossplane/crossplane/apis/pkg/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler/object"
-	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler/object"
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 var _ object.ObjectComponent = &CrossplaneDeploymentRuntimeConfig{}

@@ -6,10 +6,11 @@ import (
 
 	helmv2 "github.com/fluxcd/helm-controller/api/v2"
 	fluxmeta "github.com/fluxcd/pkg/apis/meta"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	apimeta "k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 var (

@@ -7,11 +7,12 @@ import (
 
 	crossplanev1beta1 "github.com/crossplane/crossplane/apis/pkg/v1beta1"
 	"github.com/google/go-cmp/cmp"
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 func TestCrossplaneDeploymentRuntimConfig(t *testing.T) {

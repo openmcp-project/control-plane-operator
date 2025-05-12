@@ -6,17 +6,18 @@ import (
 	"strings"
 
 	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/crossplane"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler/object"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 var _ object.ObjectComponent = &CrossplaneProvider{}

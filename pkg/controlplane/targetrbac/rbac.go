@@ -5,14 +5,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 var (

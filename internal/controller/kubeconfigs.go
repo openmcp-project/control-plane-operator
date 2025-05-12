@@ -5,14 +5,15 @@ import (
 	"errors"
 	"time"
 
-	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
-	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+
+	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 const (

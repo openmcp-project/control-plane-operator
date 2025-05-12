@@ -7,8 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"k8s.io/apimachinery/pkg/api/meta"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 
 	xpres "github.com/crossplane-contrib/xp-testing/pkg/resources"
 	"sigs.k8s.io/e2e-framework/pkg/envconf"

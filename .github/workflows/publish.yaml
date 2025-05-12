@@ -3,8 +3,7 @@ on:
   push:
     tags:
       - v*
-  workflow_dispatch:
-    
+  workflow_dispatch:    
 
 permissions: 
   packages: write
@@ -23,11 +22,17 @@ jobs:
           ssh-key: ${{ secrets.PUSH_KEY }}
           fetch-tags: true
           fetch-depth: 0
+          submodules: recursive
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
 
       - name: Read and validate VERSION
         id: version
         run: |
-          VERSION=$(cat VERSION)
+          VERSION=$(task version)
           if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-dev)?$ ]]; then
             echo "Invalid version format in VERSION file: $VERSION"
             exit 1
@@ -43,7 +48,7 @@ jobs:
           exit 0
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Context for Buildx
         id: buildx-context
@@ -59,7 +64,7 @@ jobs:
 
       - name: Set up Docker Buildx
         timeout-minutes: 5
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           version: latest
 
@@ -68,24 +73,14 @@ jobs:
         with:
           go-version-file: go.mod
       
-      - name: Build the ${{ github.repository }}
+      - name: Build and Push Images
         run: |
-          make prepare-release 
-          make build
+          task build:img:all
 
-      - name: Build Images
+      - name: Package and Push Helm Charts
         run: |
-          IMAGE_REGISTRY=ghcr.io/openmcp-project make image-build
+          task build:helm:all
 
-      - name: setup OCM
-        uses: open-component-model/ocm-setup-action@main
-
-      - name: Create OCM CTF
+      - name: Build and Push OCM Component
         run: |
-          ocm add componentversions --create \
-          --file ctf component-constructor.yaml \
-          --settings settings.yaml  -- VERSION=${{ env.version }}
-
-      - name: Push CTF
-        run: |
-          ocm transfer ctf --overwrite ./ctf ${{ env.OCI_URL }} 
+          task build:ocm:all

@@ -4,11 +4,12 @@ package components
 import (
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
 var (

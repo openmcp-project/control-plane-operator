@@ -4,8 +4,9 @@ package components
 import (
 	"testing"
 
-	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+
+	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 func Test_BTPServiceOperator(t *testing.T) {
