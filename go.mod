@@ -21,7 +21,7 @@ require (
 	k8s.io/klog/v2 v2.130.1
 	ocm.software/ocm v0.24.0
 	sigs.k8s.io/controller-runtime v0.20.4
-	sigs.k8s.io/e2e-framework v0.5.0
+	sigs.k8s.io/e2e-framework v0.6.0
 )
 
 require (
@@ -345,7 +345,7 @@ require (
 	github.com/spf13/afero v1.12.0 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/vbatts/tar-split v0.12.1 // indirect
-	github.com/vladimirvivien/gexe v0.3.0 // indirect
+	github.com/vladimirvivien/gexe v0.4.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6 // indirect
