@@ -10,5 +10,24 @@
   ],
   "postUpdateOptions": [
     "gomodTidy"
-  ]
+  ],
+  "packageRules": [
+    {
+      "description": "Combine crossplane updates in a single PR",
+      "matchDatasources": [
+        "go"
+      ],
+      "matchPackageNames": [
+        "github.com/crossplane/crossplane{/,}**"
+      ]
+    },
+    {
+      "description": "Combine fluxcd updates in a single PR",
+      "matchDatasources": [
+        "go"
+      ],
+      "matchPackageNames": [
+        "github.com/fluxcd{/,}**"
+      ]
+    }
 }
