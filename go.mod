@@ -7,8 +7,8 @@ require (
 	github.com/crossplane/crossplane v1.17.2
 	github.com/fluxcd/helm-controller/api v1.1.0
 	github.com/fluxcd/kustomize-controller/api v1.4.0
-	github.com/fluxcd/pkg/apis/meta v1.6.1
-	github.com/fluxcd/source-controller/api v1.4.1
+	github.com/fluxcd/pkg/apis/meta v1.10.0
+	github.com/fluxcd/source-controller/api v1.5.0
 	github.com/go-logr/logr v1.4.2
 	github.com/openmcp-project/controller-utils v0.7.0
 	github.com/pkg/errors v0.9.1
@@ -313,7 +313,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.11 // indirect
-	github.com/fluxcd/pkg/apis/acl v0.3.0 // indirect
+	github.com/fluxcd/pkg/apis/acl v0.6.0 // indirect
 	github.com/fluxcd/pkg/apis/kustomize v1.6.1 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-logr/zapr v1.3.0 // indirect
