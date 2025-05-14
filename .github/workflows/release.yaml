@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ssh-key: ${{ secrets.PUSH_KEY }}
           fetch-tags: true
@@ -72,7 +72,7 @@ jobs:
   
       - name: Build Changelog
         id: github_release
-        uses: mikepenz/release-changelog-builder-action@v5
+        uses: mikepenz/release-changelog-builder-action@e92187bd633e680ebfdd15961a7c30b2d097e7ad # v5
         with:
           mode: "PR"
           configurationJson: |
@@ -106,7 +106,7 @@ jobs:
       
       - name: Create GitHub release
         if: ${{ env.SKIP != 'true' }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2
         with:
           tag_name: ${{ env.version }}
           name: Release ${{ env.version }}
