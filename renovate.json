@@ -18,16 +18,20 @@
         "go"
       ],
       "matchPackageNames": [
-        "github.com/crossplane/crossplane{/,}**"
-      ]
+        "^github\\.com/crossplane"
+      ],
+      "groupName": "crossplane dependencies",
+      "groupSlug": "crossplane-dependencies"
+
     },
     {
       "description": "Combine fluxcd updates in a single PR",
       "matchDatasources": [
         "go"
       ],
-      "matchPackageNames": [
-        "github.com/fluxcd{/,}**"
-      ]
+      "matchPackagePatterns": ["^github\\.com/fluxcd"],
+      "groupName": "fluxcd dependencies",
+      "groupSlug": "fluxcd-dependencies"
     }
+  ]
 }
