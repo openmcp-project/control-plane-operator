@@ -22,16 +22,17 @@
       ],
       "groupName": "crossplane dependencies",
       "groupSlug": "crossplane-dependencies"
-
     },
     {
       "description": "Combine fluxcd updates in a single PR",
       "matchDatasources": [
         "go"
       ],
-      "matchPackagePatterns": ["^github\\.com/fluxcd"],
       "groupName": "fluxcd dependencies",
-      "groupSlug": "fluxcd-dependencies"
+      "groupSlug": "fluxcd-dependencies",
+      "matchPackageNames": [
+        "/^github\\.com/fluxcd/"
+      ]
     }
   ]
 }
