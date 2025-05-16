@@ -287,8 +287,8 @@ github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSV
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
 github.com/creack/pty v1.1.19 h1:tUN6H7LWqNx4hQVxomd0CVsDwaDr9gaRQaI4GpSmrsA=
 github.com/creack/pty v1.1.19/go.mod h1:MOBLtS5ELjhRRrroQr9kyvTxUAFNvYEK993ew/Vr4O4=
-github.com/crossplane-contrib/xp-testing v1.3.4 h1:3v2jaLWmiN+yfUfwCP92uJTogS9sLt0E8Rc/qZYXgwI=
-github.com/crossplane-contrib/xp-testing v1.3.4/go.mod h1:L5/0u+QObxlQO7xm69FsWoOEJ/lpfV8B/TTtAIvy0+M=
+github.com/crossplane-contrib/xp-testing v1.5.0 h1:mz0va06BNSdcGojDFN9ArXMzebVpk4Qhtzk/zUhSuX0=
+github.com/crossplane-contrib/xp-testing v1.5.0/go.mod h1:8ky1wgWGT38IOLJXi6Gj7KyLu3RL+vBSsYLv2e5ux10=
 github.com/crossplane/crossplane v1.17.2 h1:iJyqNCI0ub5W+L/2eUvWnKXHBHhqmRynVDhFuvZanvw=
 github.com/crossplane/crossplane v1.17.2/go.mod h1:KAoOkSa6i9EW+Q9yseuf6GLKSko2HWztkNrFTMeh1bc=
 github.com/crossplane/crossplane-runtime v1.17.0 h1:y+GvxPT1M9s8BKt2AeZJdd2d6pg2xZeCO6LiR+VxEF8=
@@ -835,8 +835,8 @@ github.com/ryanuber/go-glob v1.0.0 h1:iQh3xXAumdQ+4Ufa5b25cRpC5TYKlno6hsv6Cb3pkB
 github.com/ryanuber/go-glob v1.0.0/go.mod h1:807d1WSdnB0XRJzKNil9Om6lcp/3a0v4qIHxIXzX/Yc=
 github.com/sagikazarmark/locafero v0.7.0 h1:5MqpDsTGNDhY8sGp0Aowyf0qKsPrhewaLSsFaodPcyo=
 github.com/sagikazarmark/locafero v0.7.0/go.mod h1:2za3Cg5rMaTMoG/2Ulr9AwtFaIppKXTRYnozin4aB5k=
-github.com/samber/lo v1.39.0 h1:4gTz1wUhNYLhFSKl6O+8peW0v2F4BCY034GRpU9WnuA=
-github.com/samber/lo v1.39.0/go.mod h1:+m/ZKRl6ClXCE2Lgf3MsQlWfh4bn1bz6CXEOxnEXnEA=
+github.com/samber/lo v1.47.0 h1:z7RynLwP5nbyRscyvcD043DWYoOcYRv3mV8lBeqOCLc=
+github.com/samber/lo v1.47.0/go.mod h1:RmDH9Ct32Qy3gduHQuKJ3gW1fMHAnE/fAzQuf6He5cU=
 github.com/sassoftware/relic v7.2.1+incompatible h1:Pwyh1F3I0r4clFJXkSI8bOyJINGqpgjJU3DYAZeI05A=
 github.com/sassoftware/relic v7.2.1+incompatible/go.mod h1:CWfAxv73/iLZ17rbyhIEq3K9hs5w6FpNMdUT//qR+zk=
 github.com/sassoftware/relic/v7 v7.6.2 h1:rS44Lbv9G9eXsukknS4mSjIAuuX+lMq/FnStgmZlUv4=
