@@ -131,7 +131,7 @@ func (cp ControlPlane) WasDeleted() bool {
 	return !cp.DeletionTimestamp.IsZero()
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // ControlPlaneList contains a list of ControlPlane
 type ControlPlaneList struct {

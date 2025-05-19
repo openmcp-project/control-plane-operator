@@ -46,7 +46,7 @@ import (
 	"github.com/openmcp-project/control-plane-operator/internal/controller"
 	"github.com/openmcp-project/control-plane-operator/internal/schemes"
 	"github.com/openmcp-project/control-plane-operator/pkg/controlplane/kubeconfiggen"
-	//+kubebuilder:scaffold:imports
+	// +kubebuilder:scaffold:imports
 )
 
 var (
@@ -202,7 +202,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Secret")
 		os.Exit(1)
 	}
-	//+kubebuilder:scaffold:builder
+	// +kubebuilder:scaffold:builder
 
 	if err = (&controller.ReleaseChannelReconciler{
 		Client: mgr.GetClient(),

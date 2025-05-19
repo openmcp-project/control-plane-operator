@@ -15,7 +15,7 @@ type CrossplaneConfig struct {
 	Chart *ChartSpec `json:"chart,omitempty"`
 
 	// Optional additional values that should be passed to the Crossplane Helm chart.
-	//+kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:pruning:PreserveUnknownFields
 	Values *apiextensionsv1.JSON `json:"values,omitempty"`
 
 	// List of Crossplane providers to be installed.
