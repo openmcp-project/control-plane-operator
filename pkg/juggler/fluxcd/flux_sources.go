@@ -22,7 +22,7 @@ const (
 	msgReadyNotPresent = "Unable to check healthiness. Ready condition is not present."
 )
 
-/// use strategy for  with adapter pattern
+// use strategy for  with adapter pattern
 // adapter for third party types to conform to a common interface
 // use strategy for the reconcilers on how each can be reconciled e.g. for the applyResources method in flux-reconciler
 
