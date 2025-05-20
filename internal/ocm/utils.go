@@ -17,7 +17,7 @@ type CatalogResponse struct {
 	Repositories []string `json:"repositories"`
 }
 
-/**
+/*
  * @Description: GetRepositoriesInOCIRegistry returns the repositories in the OCI registry
  * @param ociRegistry string - the OCI registry URL without paths
  * @param creds RegistryCredentials - the credentials to access the OCI registry
