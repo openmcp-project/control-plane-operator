@@ -33,7 +33,7 @@ jobs:
         id: version
         run: |
           VERSION=$(task version)
-          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-dev)?$ ]]; then
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-dev(-[0-9a-f]*)?)?$ ]]; then
             echo "Invalid version format in VERSION file: $VERSION"
             exit 1
           fi
