@@ -1,5 +1,5 @@
 apiVersion: v2
-name: co-control-plane-operator
+name: control-plane-operator
 description: A Helm chart for the Cloud Orchestration Control Plane Operator
 type: application
 version: $OPERATOR_VERSION
