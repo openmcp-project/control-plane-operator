@@ -770,8 +770,8 @@ github.com/opencontainers/image-spec v1.1.1 h1:y0fUlFfIZhPF1W537XOLg0/fcx6zcHCJw
 github.com/opencontainers/image-spec v1.1.1/go.mod h1:qpqAh3Dmcf36wStyyWU+kCeDgrGnAve2nCC8+7h8Q0M=
 github.com/opencontainers/runtime-spec v1.2.1 h1:S4k4ryNgEpxW1dzyqffOmhI1BHYcjzU8lpJfSlR0xww=
 github.com/opencontainers/runtime-spec v1.2.1/go.mod h1:jwyrGlmzljRJv/Fgzds9SsS/C5hL+LL3ko9hs6T5lQ0=
-github.com/openmcp-project/controller-utils v0.7.0 h1:o8Ot4r1rUxwkBWVmTAhMqCNcjQCY08iFYFuvAVRMDuo=
-github.com/openmcp-project/controller-utils v0.7.0/go.mod h1:/PeEIAdVHe9W1u0Nw8PlrKr5Gp3Wqwhnr2uo/Q7BtEI=
+github.com/openmcp-project/controller-utils v0.9.0 h1:S9g23FFbUBfHOkRTvpjT826hcbX5SXd/gZ9VT83V7Lg=
+github.com/openmcp-project/controller-utils v0.9.0/go.mod h1:j0FuxU5JhlDq+XkWNhDUY+k8AuqFINqXWjX7dlpQlNU=
 github.com/opentracing/opentracing-go v1.2.0 h1:uEJPy/1a5RIPAJ0Ov+OIO8OxWu77jEv+1B0VhjKrZUs=
 github.com/opentracing/opentracing-go v1.2.0/go.mod h1:GxEUsuufX4nBwe+T+Wl9TAgYrxe9dPLANfrWvHYVTgc=
 github.com/pborman/uuid v1.2.1 h1:+ZZIw58t/ozdjRaXh/3awHfmWRbzYxJoAdNJxe/3pvw=
