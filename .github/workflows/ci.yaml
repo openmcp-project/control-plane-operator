@@ -1,4 +1,5 @@
-name: ci
+name: CI
+
 on:
   push:
     tags:
@@ -8,34 +9,10 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  build:
-    runs-on: ubuntu-24.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          submodules: recursive
-
-
-      - name: Set up Go
-        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5
-        with:
-          go-version-file: go.mod
-
-      - name: Install Task
-        uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-
-      - name: make generate
-        run: |
-          task generate
-          git diff --exit-code
-
-      - name: task validate
-        run: task validate
-
-      - name: task test
-        run: task test
+  build_validate_test:
+    uses: openmcp-project/build/.github/workflows/ci.lib.yaml@main
+    secrets: inherit
