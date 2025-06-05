@@ -5,10 +5,10 @@ go 1.24.2
 require (
 	github.com/crossplane-contrib/xp-testing v1.5.0
 	github.com/crossplane/crossplane v1.20.0
-	github.com/fluxcd/helm-controller/api v1.1.0
-	github.com/fluxcd/kustomize-controller/api v1.4.0
-	github.com/fluxcd/pkg/apis/meta v1.6.1
-	github.com/fluxcd/source-controller/api v1.4.1
+	github.com/fluxcd/helm-controller/api v1.3.0
+	github.com/fluxcd/kustomize-controller/api v1.6.0
+	github.com/fluxcd/pkg/apis/meta v1.12.0
+	github.com/fluxcd/source-controller/api v1.6.0
 	github.com/go-logr/logr v1.4.2
 	github.com/openmcp-project/controller-utils v0.9.0
 	github.com/pkg/errors v0.9.1
@@ -20,7 +20,7 @@ require (
 	k8s.io/client-go v0.33.1
 	k8s.io/klog/v2 v2.130.1
 	ocm.software/ocm v0.24.0
-	sigs.k8s.io/controller-runtime v0.20.4
+	sigs.k8s.io/controller-runtime v0.21.0
 	sigs.k8s.io/e2e-framework v0.6.0
 )
 
@@ -129,7 +129,7 @@ require (
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fvbommel/sortorder v1.1.0 // indirect
-	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
+	github.com/fxamacker/cbor/v2 v2.8.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-chi/chi v4.1.2+incompatible // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
@@ -314,8 +314,8 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.11 // indirect
-	github.com/fluxcd/pkg/apis/acl v0.3.0 // indirect
-	github.com/fluxcd/pkg/apis/kustomize v1.6.1 // indirect
+	github.com/fluxcd/pkg/apis/acl v0.7.0 // indirect
+	github.com/fluxcd/pkg/apis/kustomize v1.10.0 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-logr/zapr v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
