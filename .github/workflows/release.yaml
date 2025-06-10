@@ -1,11 +1,15 @@
-name: REUSE Compliance Check
+name: Versioned Release
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 permissions:
-  contents: read
+  contents: write # we need this to be able to push tags
+  pull-requests: read
 
 jobs:
-  run_reuse:
-    uses: openmcp-project/build/.github/workflows/reuse.lib.yaml@main
+  release_tag:
+    uses: openmcp-project/build/.github/workflows/release.lib.yaml@main
     secrets: inherit
