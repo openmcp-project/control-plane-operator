@@ -9,7 +9,7 @@ require (
 	github.com/fluxcd/kustomize-controller/api v1.6.0
 	github.com/fluxcd/pkg/apis/meta v1.12.0
 	github.com/fluxcd/source-controller/api v1.6.0
-	github.com/go-logr/logr v1.4.2
+	github.com/go-logr/logr v1.4.3
 	github.com/openmcp-project/controller-utils v0.9.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.10.0
