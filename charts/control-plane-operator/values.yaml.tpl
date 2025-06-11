@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/openmcp-project/github.com/openmcp-project/control-plane-operator/images/control-plane-operator
+  repository: ghcr.io/openmcp-project/images/control-plane-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: $OPERATOR_VERSION
