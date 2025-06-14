@@ -7,7 +7,7 @@ require (
 	github.com/crossplane/crossplane v1.20.0
 	github.com/fluxcd/helm-controller/api v1.3.0
 	github.com/fluxcd/kustomize-controller/api v1.6.0
-	github.com/fluxcd/pkg/apis/meta v1.12.0
+	github.com/fluxcd/pkg/apis/meta v1.13.0
 	github.com/fluxcd/source-controller/api v1.6.0
 	github.com/go-logr/logr v1.4.3
 	github.com/openmcp-project/controller-utils v0.10.0
