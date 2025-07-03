@@ -16,6 +16,18 @@
   ],
   "packageRules": [
     {
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepNames": [
+        "go"
+      ],
+      "matchDepTypes": [
+        "golang"
+      ],
+      "rangeStrategy": "bump"
+    },
+    {
       "description": "Combine crossplane updates in a single PR",
       "matchDatasources": [
         "go"
