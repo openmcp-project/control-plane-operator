@@ -93,7 +93,7 @@ func (r *ReleaseChannelReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		}, fmt.Errorf("either 'OcmRegistryUrl' or 'OcmRegistrySecretRef & OcmRegistrySecretKey' must be set")
 	}
 
-	components, err := ocm.GetOCMComponentsWithVersions(repo, componentNames, releasechannel.Spec.PrefixFilter)
+	components, err := ocm.GetOCMComponentsWithVersions(ctx, repo, componentNames, releasechannel.Spec.PrefixFilter)
 	if err != nil {
 		log.Error(err, "unable to get components from OCM")
 		return ctrl.Result{

@@ -17,6 +17,7 @@ import (
 	"ocm.software/ocm/api/tech/oci/identity"
 	"ocm.software/ocm/api/utils/accessobj"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
@@ -119,7 +120,9 @@ func GetOCMLocalRepo(ocmRegistry []byte, prefixFilter string) (ocm.Repository, [
 //
 // The prefixFilter must be specified as it will be cut off every componentName in the end
 // so the resulting Component names are without it.
-func GetOCMComponentsWithVersions(repo ocm.Repository, components []string, prefixFilter string) ([]v1beta1.Component, error) {
+func GetOCMComponentsWithVersions(ctx context.Context, repo ocm.Repository, components []string, prefixFilter string) ([]v1beta1.Component, error) {
+	log := log.FromContext(ctx)
+
 	octx := ocm.DefaultContext()
 
 	var componentList = make([]v1beta1.Component, 0, len(components))
@@ -134,13 +137,28 @@ func GetOCMComponentsWithVersions(repo ocm.Repository, components []string, pref
 			Versions: make([]v1beta1.ComponentVersion, 0),
 		}
 
+	outer:
 		for _, version := range versions {
 			cva, err := component.LookupVersion(version)
 			if err != nil {
 				return nil, err
 			}
 
+			if len(cva.GetDescriptor().Labels) > 0 {
+				for _, label := range cva.GetDescriptor().Labels {
+					valStr := strings.Trim(string(label.Value), "\"")
+					if (label.Name == "openmcp.cloud/ignore") && valStr == "true" {
+						continue outer
+					}
+				}
+			}
+
 			resources := cva.GetResources()
+			if len(resources) == 0 {
+				log.Info("Skipping component version %s of %s: no resources found\n", version, componentName)
+				continue // We skip releasechannel component versions which dont have any resources
+			}
+
 			access, err := resources[0].Access()
 			if err != nil {
 				return nil, err
