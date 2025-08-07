@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 
+	"log"
+
 	corev1 "k8s.io/api/core/v1"
 	"ocm.software/ocm/api/ocm"
 	"ocm.software/ocm/api/ocm/extensions/accessmethods/helm"
@@ -134,13 +136,28 @@ func GetOCMComponentsWithVersions(repo ocm.Repository, components []string, pref
 			Versions: make([]v1beta1.ComponentVersion, 0),
 		}
 
+	outer:
 		for _, version := range versions {
 			cva, err := component.LookupVersion(version)
 			if err != nil {
 				return nil, err
 			}
 
+			if len(cva.GetDescriptor().Labels) > 0 {
+				for _, label := range cva.GetDescriptor().Labels {
+					valStr := strings.Trim(string(label.Value), "\"")
+					if (label.Name == "openmcp.cloud/ignore") && valStr == "true" {
+						continue outer
+					}
+				}
+			}
+
 			resources := cva.GetResources()
+			if len(resources) == 0 {
+				log.Printf("Error: component version %s of %s does not have any resources\n", version, componentName)
+				continue // We skip releasechannel component versions which dont have any resources
+			}
+
 			access, err := resources[0].Access()
 			if err != nil {
 				return nil, err
