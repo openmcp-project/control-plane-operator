@@ -7,8 +7,6 @@ import (
 	"os"
 	"strings"
 
-	"log"
-
 	corev1 "k8s.io/api/core/v1"
 	"ocm.software/ocm/api/ocm"
 	"ocm.software/ocm/api/ocm/extensions/accessmethods/helm"
@@ -19,6 +17,7 @@ import (
 	"ocm.software/ocm/api/tech/oci/identity"
 	"ocm.software/ocm/api/utils/accessobj"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
@@ -121,7 +120,9 @@ func GetOCMLocalRepo(ocmRegistry []byte, prefixFilter string) (ocm.Repository, [
 //
 // The prefixFilter must be specified as it will be cut off every componentName in the end
 // so the resulting Component names are without it.
-func GetOCMComponentsWithVersions(repo ocm.Repository, components []string, prefixFilter string) ([]v1beta1.Component, error) {
+func GetOCMComponentsWithVersions(ctx context.Context, repo ocm.Repository, components []string, prefixFilter string) ([]v1beta1.Component, error) {
+	log := log.FromContext(ctx)
+
 	octx := ocm.DefaultContext()
 
 	var componentList = make([]v1beta1.Component, 0, len(components))
@@ -154,7 +155,7 @@ func GetOCMComponentsWithVersions(repo ocm.Repository, components []string, pref
 
 			resources := cva.GetResources()
 			if len(resources) == 0 {
-				log.Printf("Skipping component version %s of %s: no resources found\n", version, componentName)
+				log.Info("Skipping component version %s of %s: no resources found\n", version, componentName)
 				continue // We skip releasechannel component versions which dont have any resources
 			}
 
