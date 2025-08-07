@@ -63,8 +63,7 @@ extraVolumes: []
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext:
-  {}
+podSecurityContext: {}
   # fsGroup: 2000
 
 securityContext:
@@ -75,8 +74,7 @@ securityContext:
   # readOnlyRootFilesystem: true
   # runAsUser: 1000
 
-resources:
-  {}
+resources: {}
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
