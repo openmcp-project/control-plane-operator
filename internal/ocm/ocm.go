@@ -154,7 +154,7 @@ func GetOCMComponentsWithVersions(repo ocm.Repository, components []string, pref
 
 			resources := cva.GetResources()
 			if len(resources) == 0 {
-				log.Printf("Error: component version %s of %s does not have any resources\n", version, componentName)
+				log.Printf("Skipping component version %s of %s: no resources found\n", version, componentName)
 				continue // We skip releasechannel component versions which dont have any resources
 			}
 
