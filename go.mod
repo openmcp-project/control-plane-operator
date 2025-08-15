@@ -6,8 +6,8 @@ require (
 	github.com/crossplane-contrib/xp-testing v1.5.0
 	github.com/crossplane/crossplane v1.20.0
 	github.com/fluxcd/helm-controller/api v1.3.0
-	github.com/fluxcd/kustomize-controller/api v1.6.0
-	github.com/fluxcd/pkg/apis/meta v1.13.0
+	github.com/fluxcd/kustomize-controller/api v1.6.1
+	github.com/fluxcd/pkg/apis/meta v1.18.0
 	github.com/fluxcd/source-controller/api v1.6.2
 	github.com/go-logr/logr v1.4.3
 	github.com/openmcp-project/controller-utils v0.11.0
@@ -352,10 +352,10 @@ require (
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
 	golang.org/x/net v0.41.0
 	golang.org/x/oauth2 v0.30.0 // indirect
-	golang.org/x/sync v0.15.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
-	golang.org/x/text v0.26.0
+	golang.org/x/text v0.27.0
 	golang.org/x/time v0.11.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
