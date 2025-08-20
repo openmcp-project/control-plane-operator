@@ -15,7 +15,6 @@ includes:
     flatten: true
     excludes: []
     vars:
-      NESTED_MODULES: api
       API_DIRS: '{{.ROOT_DIR}}/api/v1beta1/...'
       MANIFEST_OUT: '{{.ROOT_DIR}}/api/crds/manifests'
       CODE_DIRS: '{{.ROOT_DIR}}/... {{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
