@@ -335,7 +335,7 @@ func (r *ControlPlaneReconciler) newJuggler(ctx context.Context, cp *corev1beta1
 }
 
 func (r *ControlPlaneReconciler) registerReconcilers(juggler *juggler.Juggler, logger logr.Logger, remoteClient client.Client) {
-	fr := fluxcd.NewFluxReconciler(logger, r.Client, remoteClient)
+	fr := fluxcd.NewFluxReconciler(logger, r.Client, remoteClient, utils.LabelComponentName)
 	fr.RegisterType(
 		&components.BTPServiceOperator{},
 		&components.CertManager{},
@@ -346,7 +346,7 @@ func (r *ControlPlaneReconciler) registerReconcilers(juggler *juggler.Juggler, l
 	)
 	juggler.RegisterReconciler(fr)
 
-	or := object.NewReconciler(logger, remoteClient)
+	or := object.NewReconciler(logger, remoteClient, utils.LabelComponentName)
 	or.RegisterType(
 		&components.ClusterRole{},
 		&components.CrossplaneProvider{},

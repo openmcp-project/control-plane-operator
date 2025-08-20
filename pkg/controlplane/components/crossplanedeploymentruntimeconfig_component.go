@@ -104,7 +104,7 @@ func (c *CrossplaneDeploymentRuntimeConfig) OrphanDetectorContext() object.Detec
 		ListType: &crossplanev1beta1.DeploymentRuntimeConfigList{},
 		FilterCriteria: object.FilterCriteria{
 			utils.IsManaged(),
-			object.HasComponentLabel(),
+			utils.HasComponentLabel(),
 		},
 		ConvertFunc: func(list client.ObjectList) []juggler.Component {
 			cdrcs := []juggler.Component{}

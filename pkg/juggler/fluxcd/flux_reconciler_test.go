@@ -21,6 +21,8 @@ import (
 
 var errBoom = errors.New("boom")
 
+const testLabelComponentName = "flux.juggler.test.io/component"
+
 func TestNewFluxReconciler(t *testing.T) {
 	tests := []struct {
 		name         string
@@ -56,7 +58,7 @@ func TestNewFluxReconciler(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			actual := NewFluxReconciler(tt.logger, tt.localClient, tt.remoteClient)
+			actual := NewFluxReconciler(tt.logger, tt.localClient, tt.remoteClient, "")
 			if !assert.Equal(t, actual, tt.expected) {
 				t.Errorf("NewReconciler() = %v, want %v", actual, tt.expected)
 			}
@@ -361,7 +363,7 @@ func TestFluxReconciler_Observe(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil)
+			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentName)
 			actualObservation, actualError := r.Observe(context.TODO(), tt.obj)
 			if !assert.Equal(t, tt.expectedObservation, actualObservation) {
 				t.Errorf("ObjectReconciler.Observe() = %v, want %v", actualObservation, tt.expectedObservation)
@@ -613,7 +615,7 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil)
+			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentName)
 			actual := r.Uninstall(context.TODO(), tt.obj)
 			if !errors.Is(actual, tt.expected) {
 				t.Errorf("ObjectReconciler.Uninstall() = %v, want %v", actual, tt.expected)
@@ -672,7 +674,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, helmRepo.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					labelComponentName:             component.GetName(),
+					testLabelComponentName:         component.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -717,7 +719,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, helmRelease.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					labelComponentName:             component.GetName(),
+					testLabelComponentName:         component.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -729,7 +731,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeLocalClient := fake.NewClientBuilder().WithScheme(scheme).Build()
-			r := NewFluxReconciler(logr.Logger{}, fakeLocalClient, nil)
+			r := NewFluxReconciler(logr.Logger{}, fakeLocalClient, nil, testLabelComponentName)
 			ctx := context.TODO()
 			actual := r.Install(ctx, tt.obj)
 
@@ -747,7 +749,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 }
 
 func Test_FluxReconciler_Types(t *testing.T) {
-	r := NewFluxReconciler(logr.Logger{}, nil, nil)
+	r := NewFluxReconciler(logr.Logger{}, nil, nil, "")
 	r.RegisterType(FakeFluxComponent{}, FakeFluxComponent{})
 	assert.Len(t, r.KnownTypes(), 1)
 	assert.Equal(t, r.KnownTypes()[0], reflect.TypeOf(FakeFluxComponent{}))

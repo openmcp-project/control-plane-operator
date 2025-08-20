@@ -26,6 +26,8 @@ import (
 
 var errBoom = errors.New("boom")
 
+const testLabelComponentName = "object.juggler.test.io/component"
+
 func TestObjectReconciler_Install(t *testing.T) {
 	tests := []struct {
 		name          string
@@ -77,7 +79,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					labelComponentName:             comp.GetName(),
+					testLabelComponentName:         comp.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -117,7 +119,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					labelComponentName:             comp.GetName(),
+					testLabelComponentName:         comp.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -131,7 +133,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeRemoteClient := fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build()
-			r := NewReconciler(logr.Logger{}, fakeRemoteClient)
+			r := NewReconciler(logr.Logger{}, fakeRemoteClient, testLabelComponentName)
 			ctx := context.TODO()
 			actual := r.Install(ctx, tt.obj)
 			if !errors.Is(actual, tt.error) {
@@ -368,7 +370,7 @@ func TestObjectReconciler_Uninstall(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeClient := fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build()
-			r := NewReconciler(logr.Logger{}, fakeClient)
+			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentName)
 			ctx := context.TODO()
 			actual := r.Uninstall(ctx, tt.obj)
 			if !errors.Is(actual, tt.expected) {
@@ -413,7 +415,7 @@ func TestNewReconciler(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			actual := NewReconciler(tt.logger, tt.remoteClient)
+			actual := NewReconciler(tt.logger, tt.remoteClient, "")
 			if !assert.Equal(t, tt.expected, actual) {
 				t.Errorf("NewReconciler() = %v, want %v", actual, tt.expected)
 			}
@@ -528,7 +530,7 @@ func TestObjectReconciler_Observe(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := NewReconciler(logr.Logger{}, fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build())
+			r := NewReconciler(logr.Logger{}, fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build(), testLabelComponentName)
 			ctx := context.TODO()
 			actualObservation, actualError := r.Observe(ctx, tt.obj)
 			if !assert.Equal(t, tt.expectedObservation, actualObservation) {
@@ -542,7 +544,7 @@ func TestObjectReconciler_Observe(t *testing.T) {
 }
 
 func Test_ObjectReconciler_Types(t *testing.T) {
-	r := NewReconciler(logr.Logger{}, nil)
+	r := NewReconciler(logr.Logger{}, nil, "")
 	r.RegisterType(FakeObjectComponent{}, FakeObjectComponent{})
 	assert.Len(t, r.KnownTypes(), 1)
 	assert.Equal(t, r.KnownTypes()[0], reflect.TypeOf(FakeObjectComponent{}))
@@ -622,7 +624,7 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			fakeClient := fake.NewClientBuilder().WithObjects(tC.initObjs...).WithInterceptorFuncs(tC.interceptorFuncs).Build()
-			r := NewReconciler(logr.Logger{}, fakeClient)
+			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentName)
 			for _, cc := range tC.configuredComponents {
 				r.RegisterType(cc.(ObjectComponent))
 			}

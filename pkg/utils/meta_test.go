@@ -86,3 +86,8 @@ func TestIsManaged(t *testing.T) {
 	got := IsManaged()
 	assert.DeepEqual(t, got, client.MatchingLabels{labelManagedBy: labelManagedByValue})
 }
+
+func TestHasComponentLabel(t *testing.T) {
+	got := HasComponentLabel()
+	assert.DeepEqual(t, got, client.HasLabels{LabelComponentName})
+}
