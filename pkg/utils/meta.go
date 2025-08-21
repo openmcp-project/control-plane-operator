@@ -8,6 +8,7 @@ import (
 const (
 	labelManagedBy      = "app.kubernetes.io/managed-by"
 	labelManagedByValue = "control-plane-operator"
+	LabelComponentName  = "controlplane.core.orchestrate.cloud.sap/component"
 )
 
 func SetLabel(obj v1.Object, label string, value string) {
@@ -25,4 +26,8 @@ func SetManagedBy(obj v1.Object) {
 
 func IsManaged() client.MatchingLabels {
 	return client.MatchingLabels{labelManagedBy: labelManagedByValue}
+}
+
+func HasComponentLabel() client.ListOption {
+	return client.HasLabels{LabelComponentName}
 }

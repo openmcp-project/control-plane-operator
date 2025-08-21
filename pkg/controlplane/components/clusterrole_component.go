@@ -60,7 +60,7 @@ func (*ClusterRole) OrphanDetectorContext() object.DetectorContext {
 		ListType: &rbacv1.ClusterRoleList{},
 		FilterCriteria: object.FilterCriteria{
 			utils.IsManaged(),
-			object.HasComponentLabel(),
+			utils.HasComponentLabel(),
 		},
 		ConvertFunc: func(list client.ObjectList) []juggler.Component {
 			clusterRoles := []juggler.Component{}

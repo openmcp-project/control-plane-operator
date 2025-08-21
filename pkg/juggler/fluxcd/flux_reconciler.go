@@ -17,30 +17,28 @@ import (
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
-const (
-	labelComponentName = "controlplane.core.orchestrate.cloud.sap/component"
-)
-
 var (
 	errNotFluxComponent = errors.New("not a flux component")
 )
 
 var _ juggler.ComponentReconciler = &FluxReconciler{}
 
-func NewFluxReconciler(logger logr.Logger, localClient client.Client, remoteClient client.Client) *FluxReconciler {
+func NewFluxReconciler(logger logr.Logger, localClient client.Client, remoteClient client.Client, labelComponentName string) *FluxReconciler {
 	return &FluxReconciler{
-		logger:       logger,
-		localClient:  localClient,
-		remoteClient: remoteClient,
-		knownTypes:   sets.Set[reflect.Type]{},
+		logger:             logger,
+		localClient:        localClient,
+		remoteClient:       remoteClient,
+		knownTypes:         sets.Set[reflect.Type]{},
+		labelComponentName: labelComponentName,
 	}
 }
 
 type FluxReconciler struct {
-	localClient  client.Client
-	remoteClient client.Client
-	logger       logr.Logger
-	knownTypes   sets.Set[reflect.Type]
+	localClient        client.Client
+	remoteClient       client.Client
+	logger             logr.Logger
+	knownTypes         sets.Set[reflect.Type]
+	labelComponentName string
 }
 
 // KnownTypes implements juggler.ComponentReconciler.
@@ -218,7 +216,7 @@ func (r *FluxReconciler) installOrUpdateManifesto(ctx context.Context, fluxCompo
 		}
 
 		utils.SetManagedBy(obj)
-		utils.SetLabel(obj, labelComponentName, fluxComponent.GetName())
+		utils.SetLabel(obj, r.labelComponentName, fluxComponent.GetName())
 		return nil
 	})
 
@@ -245,7 +243,7 @@ func (r *FluxReconciler) installOrUpdateSource(ctx context.Context, fluxComponen
 		}
 
 		utils.SetManagedBy(obj)
-		utils.SetLabel(obj, labelComponentName, fluxComponent.GetName())
+		utils.SetLabel(obj, r.labelComponentName, fluxComponent.GetName())
 		return nil
 	})
 

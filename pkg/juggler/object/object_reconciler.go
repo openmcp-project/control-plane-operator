@@ -15,10 +15,6 @@ import (
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
-const (
-	labelComponentName = "controlplane.core.orchestrate.cloud.sap/component"
-)
-
 var (
 	errNotObjectComponent = errors.New("not an object component")
 )
@@ -26,18 +22,20 @@ var (
 var _ juggler.ComponentReconciler = &ObjectReconciler{}
 var _ juggler.OrphanedComponentsDetector = &ObjectReconciler{}
 
-func NewReconciler(logger logr.Logger, remoteClient client.Client) *ObjectReconciler {
+func NewReconciler(logger logr.Logger, remoteClient client.Client, labelComponentName string) *ObjectReconciler {
 	return &ObjectReconciler{
-		logger:       logger,
-		remoteClient: remoteClient,
-		knownTypes:   sets.Set[reflect.Type]{},
+		logger:             logger,
+		remoteClient:       remoteClient,
+		knownTypes:         sets.Set[reflect.Type]{},
+		labelComponentName: labelComponentName,
 	}
 }
 
 type ObjectReconciler struct {
-	logger       logr.Logger
-	remoteClient client.Client
-	knownTypes   sets.Set[reflect.Type]
+	logger             logr.Logger
+	remoteClient       client.Client
+	knownTypes         sets.Set[reflect.Type]
+	labelComponentName string
 }
 
 // DetectOrphanedComponents implements juggler.OrphanedComponentsDetector.
@@ -200,7 +198,7 @@ func (r *ObjectReconciler) applyObject(ctx context.Context, component juggler.Co
 
 	_, err = controllerutil.CreateOrUpdate(ctx, r.remoteClient, obj, func() error {
 		utils.SetManagedBy(obj)
-		utils.SetLabel(obj, labelComponentName, component.GetName())
+		utils.SetLabel(obj, r.labelComponentName, component.GetName())
 		return objectComponent.ReconcileObject(ctx, obj)
 	})
 	return err

@@ -71,7 +71,7 @@ func (*Secret) OrphanDetectorContext() object.DetectorContext {
 		ListType: &corev1.SecretList{},
 		FilterCriteria: object.FilterCriteria{
 			utils.IsManaged(),
-			object.HasComponentLabel(),
+			utils.HasComponentLabel(),
 		},
 		ConvertFunc: func(list client.ObjectList) []juggler.Component {
 			secrets := []juggler.Component{}

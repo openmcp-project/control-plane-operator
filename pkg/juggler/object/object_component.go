@@ -51,7 +51,3 @@ type DetectorContext struct {
 type OrphanedObjectsDetector interface {
 	OrphanDetectorContext() DetectorContext
 }
-
-func HasComponentLabel() client.ListOption {
-	return client.HasLabels{labelComponentName}
-}
