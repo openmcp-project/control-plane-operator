@@ -26,6 +26,11 @@ func TestIsCRDNotFound(t *testing.T) {
 			want: true,
 		},
 		{
+			name: "no resource match error",
+			err:  &meta.NoResourceMatchError{},
+			want: true,
+		},
+		{
 			name: "resource discovery failed error",
 			err:  &apiutil.ErrResourceDiscoveryFailed{},
 			want: true,
