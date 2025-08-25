@@ -15,6 +15,11 @@ func IsCRDNotFound(err error) bool {
 		return true
 	}
 
+	// check if err tree contains a "NoResourceMatchError" error.
+	if errors.Is(err, &meta.NoResourceMatchError{}) {
+		return true
+	}
+
 	// check if err tree contains a "ErrResourceDiscoveryFailed" error.
 	var rdfErr *apiutil.ErrResourceDiscoveryFailed
 	if !errors.As(err, &rdfErr) {
