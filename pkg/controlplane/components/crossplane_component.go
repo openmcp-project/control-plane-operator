@@ -54,6 +54,7 @@ func (c *Crossplane) GetPolicyRules() PolicyRules {
 					"compositeresourcedefinitions",
 					"compositions",
 					"environmentconfigs",
+					"usages",
 				},
 				Verbs: VerbsAdmin,
 			},
