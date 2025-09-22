@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 
@@ -33,7 +34,8 @@ var (
 // SecretReconciler reconciles a Secret object
 type SecretReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme          *runtime.Scheme
+	ReconcilePeriod time.Duration
 }
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
@@ -136,7 +138,7 @@ func (r *SecretReconciler) handleSync(ctx context.Context, secret *corev1.Secret
 		}
 	}
 
-	return ctrl.Result{RequeueAfter: requeueAfter}, nil
+	return ctrl.Result{RequeueAfter: r.ReconcilePeriod}, nil
 }
 
 func (r *SecretReconciler) shouldReconcile(o client.Object) bool {

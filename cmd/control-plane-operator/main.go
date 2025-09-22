@@ -109,6 +109,8 @@ func main() {
 
 	var syncPeriod string
 	flag.StringVar(&syncPeriod, "sync-period", "1m", "The period at which the controller will sync the resources.")
+	var fluxTokenLifetimeStr string
+	flag.StringVar(&fluxTokenLifetimeStr, "flux-token-lifetime", "1h", "The desired lifetime of the flux service account token used to access the MCP.")
 
 	// component flags
 	var webhookMiddlewareName string
@@ -178,11 +180,18 @@ func main() {
 	}
 	setupLog.Info("sync period set to", "syncPeriod", reconcilePeriod)
 
+	fluxTokenLifetime, errFluxTokenLifetime := time.ParseDuration(fluxTokenLifetimeStr)
+	if errFluxTokenLifetime != nil {
+		fluxTokenLifetime = 1 * time.Hour
+	}
+	setupLog.Info("flux token lifetime set to", "fluxTokenLifetime", fluxTokenLifetime)
+
 	if err = (&controller.ControlPlaneReconciler{
 		Client:             mgr.GetClient(),
 		Scheme:             mgr.GetScheme(),
 		Kubeconfiggen:      &kubeconfiggen.Default{},
 		FluxSecretResolver: fluxSecretResolver,
+		FluxTokenLifetime:  fluxTokenLifetime,
 		WebhookMiddleware: types.NamespacedName{
 			Namespace: webhookMiddlewareNamespace,
 			Name:      webhookMiddlewareName,
@@ -196,8 +205,9 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&controller.SecretReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		ReconcilePeriod: reconcilePeriod,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Secret")
 		os.Exit(1)

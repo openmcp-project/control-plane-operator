@@ -19,9 +19,6 @@ import (
 const (
 	keyKubeconfig = "kubeconfig"
 	keyExpiration = "expiresAt"
-
-	kubeconfigExpiration = 10 * time.Minute
-	kubeconfigBuffer     = 3 * requeueAfter
 )
 
 var (
@@ -29,10 +26,6 @@ var (
 )
 
 func (r *ControlPlaneReconciler) ensureKubeconfig(ctx context.Context, remoteCfg *rest.Config, namespace string, secretName string, svcaccountRef corev1beta1.ServiceAccountReference) (*corev1.SecretReference, error) {
-	if kubeconfigBuffer >= kubeconfigExpiration {
-		return nil, errInvalidExpirationOrBuffer
-	}
-
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      secretName,
@@ -53,13 +46,14 @@ func (r *ControlPlaneReconciler) ensureKubeconfig(ctx context.Context, remoteCfg
 			return nil, err
 		}
 
-		if time.Now().Before(expiration.Add(-kubeconfigBuffer)) {
+		// check if token would expire before next planned reconciliation
+		if time.Now().Before(expiration.Add(-r.ReconcilePeriod)) {
 			// kubeconfig is still valid
 			return &corev1.SecretReference{Name: secret.Name, Namespace: secret.Namespace}, nil
 		}
 	}
 
-	kubeconfig, expiration, err := r.Kubeconfiggen.ForServiceAccount(ctx, remoteCfg, svcaccountRef, kubeconfigExpiration)
+	kubeconfig, expiration, err := r.Kubeconfiggen.ForServiceAccount(ctx, remoteCfg, svcaccountRef, r.FluxTokenLifetime)
 	if err != nil {
 		return nil, err
 	}
