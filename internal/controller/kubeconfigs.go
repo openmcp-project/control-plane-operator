@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -19,10 +18,6 @@ import (
 const (
 	keyKubeconfig = "kubeconfig"
 	keyExpiration = "expiresAt"
-)
-
-var (
-	errInvalidExpirationOrBuffer = errors.New("desired expiration and buffer are incompatible. make sure that desired expiration is greater than the buffer")
 )
 
 func (r *ControlPlaneReconciler) ensureKubeconfig(ctx context.Context, remoteCfg *rest.Config, namespace string, secretName string, svcaccountRef corev1beta1.ServiceAccountReference) (*corev1.SecretReference, error) {
