@@ -288,7 +288,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 				assert.Equal(t, "Uninstalled", cond.Reason)
 				return nil
 			},
-			expectedResult: ctrl.Result{RequeueAfter: 5 * time.Second},
+			expectedResult: ctrl.Result{RequeueAfter: requeueAfterError},
 			expectedErr:    nil,
 		},
 		{
@@ -352,6 +352,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 				Scheme:             c.Scheme(),
 				Kubeconfiggen:      &kubeconfiggen.Default{},
 				FluxSecretResolver: testSecretResolver,
+				FluxTokenLifetime:  1 * time.Hour,
 				WebhookMiddleware:  types.NamespacedName{},
 				ReconcilePeriod:    time.Second * 30,
 				Recorder:           record.NewFakeRecorder(100),
