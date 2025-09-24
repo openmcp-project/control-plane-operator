@@ -8,7 +8,7 @@ image:
   repository: ghcr.io/openmcp-project/images/control-plane-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: v0.1.15
+  tag: v0.1.15@sha256:aa48f3b4118613414641b703d2241ec93c331bc0a37577e9c9a95152a61e18b2
 
 imagePullSecrets: []
 nameOverride: ""
