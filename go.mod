@@ -4,7 +4,7 @@ go 1.24.5
 
 require (
 	github.com/crossplane-contrib/xp-testing v1.5.0
-	github.com/crossplane/crossplane v1.20.0
+	github.com/crossplane/crossplane v1.20.1
 	github.com/fluxcd/helm-controller/api v1.3.0
 	github.com/fluxcd/kustomize-controller/api v1.6.0
 	github.com/fluxcd/pkg/apis/meta v1.13.0
