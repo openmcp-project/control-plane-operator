@@ -14,6 +14,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 syncPeriod: 1m
+fluxTokenLifetime: 1h
 
 serviceAccount:
   # Specifies whether a service account should be created

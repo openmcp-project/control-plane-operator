@@ -59,8 +59,7 @@ import (
 )
 
 const (
-	requeueAfter      = 1 * time.Minute
-	requeueAfterError = 5 * time.Second
+	requeueAfterError = 10 * time.Second
 
 	cpNamespacePrefix = "cp-"
 	cpNamespaceMaxLen = 63
@@ -92,6 +91,7 @@ type ControlPlaneReconciler struct {
 	FluxSecretResolver  secretresolver.SecretResolver
 	WebhookMiddleware   types.NamespacedName
 	ReconcilePeriod     time.Duration
+	FluxTokenLifetime   time.Duration
 	RemoteConfigBuilder RemoteConfigBuilder
 	EmbeddedCRDs        embed.FS
 }

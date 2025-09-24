@@ -8,12 +8,13 @@ image:
   repository: ghcr.io/openmcp-project/images/control-plane-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: v0.1.14
+  tag: v0.1.15
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 syncPeriod: 1m
+fluxTokenLifetime: 1h
 
 serviceAccount:
   # Specifies whether a service account should be created

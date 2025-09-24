@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
@@ -152,7 +153,7 @@ func Test_SecretReconciler_Reconcile(t *testing.T) {
 				return nil
 			},
 			expectedResult: ctrl.Result{
-				RequeueAfter: requeueAfter,
+				RequeueAfter: time.Minute,
 			},
 		},
 		{
@@ -212,8 +213,9 @@ func Test_SecretReconciler_Reconcile(t *testing.T) {
 			req := newRequest(tC.initObjs[0])
 
 			sr := &SecretReconciler{
-				Client: c,
-				Scheme: c.Scheme(),
+				Client:          c,
+				Scheme:          c.Scheme(),
+				ReconcilePeriod: time.Minute,
 			}
 			result, err := sr.Reconcile(ctx, req)
 
