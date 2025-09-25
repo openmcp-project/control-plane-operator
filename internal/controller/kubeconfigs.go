@@ -41,8 +41,13 @@ func (r *ControlPlaneReconciler) ensureKubeconfig(ctx context.Context, remoteCfg
 			return nil, err
 		}
 
+		remainingLifetime := time.Until(expiration)
+
 		// check if token would expire before next planned reconciliation
-		if time.Now().Before(expiration.Add(-r.ReconcilePeriod)) {
+		// or less than a third of the desired lifetime is left
+		expired := remainingLifetime < r.ReconcilePeriod || remainingLifetime < r.FluxTokenLifetime/3
+
+		if !expired {
 			// kubeconfig is still valid
 			return &corev1.SecretReference{Name: secret.Name, Namespace: secret.Namespace}, nil
 		}
