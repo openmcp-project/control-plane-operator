@@ -163,3 +163,75 @@ func (g *GitRepositoryAdapter) ApplyDefaults() {
 
 	g.Source.Spec.Interval = metav1.Duration{Duration: 1 * time.Hour}
 }
+
+//
+// -----------------------------------
+//
+
+var _ SourceAdapter = &OCIRepositoryAdapter{}
+
+// OCIRepositoryAdapter implements SourceAdapter
+type OCIRepositoryAdapter struct {
+	Source *sourcev1.OCIRepository
+}
+
+// ApplyDefaults implements SourceAdapter.
+func (o *OCIRepositoryAdapter) ApplyDefaults() {
+	// This usually does nothing but we can keep it here in case Flux resources will have
+	// a defaulting func in the future.
+	scheme.Default(o.Source)
+
+	o.Source.Spec.Interval = metav1.Duration{Duration: 1 * time.Hour}
+}
+
+// Empty implements SourceAdapter.
+func (o *OCIRepositoryAdapter) Empty() SourceAdapter {
+	return &OCIRepositoryAdapter{&sourcev1.OCIRepository{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      o.Source.Name,
+			Namespace: o.Source.Namespace,
+		},
+	}}
+}
+
+// GetHealthiness implements SourceAdapter.
+func (o *OCIRepositoryAdapter) GetHealthiness() juggler.ResourceHealthiness {
+	cond := apimeta.FindStatusCondition(o.Source.Status.Conditions, fluxmeta.ReadyCondition)
+	if cond == nil {
+		return juggler.ResourceHealthiness{
+			Healthy: false,
+			Message: msgReadyNotPresent,
+		}
+	}
+	return juggler.ResourceHealthiness{
+		Healthy: cond.Status == metav1.ConditionTrue,
+		Message: cond.Message,
+	}
+}
+
+// GetObject implements SourceAdapter.
+func (o *OCIRepositoryAdapter) GetObject() client.Object {
+	return o.Source
+}
+
+// GetObjectKey implements SourceAdapter.
+func (o *OCIRepositoryAdapter) GetObjectKey() client.ObjectKey {
+	return client.ObjectKey{
+		Namespace: o.Source.Namespace,
+		Name:      o.Source.Name,
+	}
+}
+
+// Reconcile implements SourceAdapter.
+func (o *OCIRepositoryAdapter) Reconcile(desired FluxResource) error {
+	desiredAdapter, ok := desired.(*OCIRepositoryAdapter)
+	if !ok {
+		return errNotAGitRepositoryAdapter
+	}
+
+	preserved := o.Source.Spec.DeepCopy()
+	o.Source.Spec = desiredAdapter.Source.Spec
+	// Give suspension precedence
+	o.Source.Spec.Suspend = preserved.Suspend
+	return nil
+}
