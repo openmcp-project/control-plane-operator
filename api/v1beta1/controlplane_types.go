@@ -89,6 +89,9 @@ type ChartSpec struct {
 	// Repository is the URL to a Helm repository
 	Repository string `json:"repository,omitempty"`
 
+	// URL is the URL to an OCI registry where the Helm chart is stored.
+	URL string `json:"url,omitempty"`
+
 	// Name of the Helm chart
 	Name string `json:"name,omitempty"`
 

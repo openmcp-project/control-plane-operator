@@ -125,6 +125,10 @@ spec:
                             description: if it's a helm chart, this specifies the
                               helm repo
                             type: string
+                          ociUrl:
+                            description: if the Helm chart is stored in an OCI registry,
+                              this specifies the OCI URL
+                            type: string
                           version:
                             description: The version number for that ComponentVersion
                             type: string

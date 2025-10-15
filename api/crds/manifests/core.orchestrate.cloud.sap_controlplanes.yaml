@@ -68,6 +68,10 @@ spec:
                       repository:
                         description: Repository is the URL to a Helm repository
                         type: string
+                      url:
+                        description: URL is the URL to an OCI registry where the Helm
+                          chart is stored.
+                        type: string
                       version:
                         description: Version of the Helm chart, latest version if
                           not set
@@ -96,6 +100,10 @@ spec:
                         type: string
                       repository:
                         description: Repository is the URL to a Helm repository
+                        type: string
+                      url:
+                        description: URL is the URL to an OCI registry where the Helm
+                          chart is stored.
                         type: string
                       version:
                         description: Version of the Helm chart, latest version if
@@ -140,6 +148,10 @@ spec:
                         type: string
                       repository:
                         description: Repository is the URL to a Helm repository
+                        type: string
+                      url:
+                        description: URL is the URL to an OCI registry where the Helm
+                          chart is stored.
                         type: string
                       version:
                         description: Version of the Helm chart, latest version if
@@ -259,6 +271,10 @@ spec:
                       repository:
                         description: Repository is the URL to a Helm repository
                         type: string
+                      url:
+                        description: URL is the URL to an OCI registry where the Helm
+                          chart is stored.
+                        type: string
                       version:
                         description: Version of the Helm chart, latest version if
                           not set
@@ -288,6 +304,10 @@ spec:
                       repository:
                         description: Repository is the URL to a Helm repository
                         type: string
+                      url:
+                        description: URL is the URL to an OCI registry where the Helm
+                          chart is stored.
+                        type: string
                       version:
                         description: Version of the Helm chart, latest version if
                           not set
@@ -316,6 +336,10 @@ spec:
                         type: string
                       repository:
                         description: Repository is the URL to a Helm repository
+                        type: string
+                      url:
+                        description: URL is the URL to an OCI registry where the Helm
+                          chart is stored.
                         type: string
                       version:
                         description: Version of the Helm chart, latest version if

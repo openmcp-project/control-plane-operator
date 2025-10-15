@@ -71,6 +71,8 @@ type ComponentVersion struct {
 	HelmRepo string `json:"helmRepo,omitempty"`
 	// if it's a helm chart, this specifies the chart name
 	HelmChart string `json:"helmChart,omitempty"`
+	// if the Helm chart is stored in an OCI registry, this specifies the OCI URL
+	OCIURL string `json:"ociUrl,omitempty"`
 }
 
 // ReleaseChannel is the Schema for the ReleaseChannel API
