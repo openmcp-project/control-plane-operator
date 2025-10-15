@@ -193,3 +193,94 @@ func TestGitRepositoryAdapter_GetHealthiness(t *testing.T) {
 		})
 	}
 }
+
+func TestOCIRepositoryAdapter_GetHealthiness(t *testing.T) {
+	tests := []struct {
+		name     string
+		adapter  OCIRepositoryAdapter
+		expected juggler.ResourceHealthiness
+	}{
+		{
+			name: "OCIRepositoryAdapter - Status Condition nil - Ready condition not present",
+			adapter: OCIRepositoryAdapter{
+				Source: &sourcev1.OCIRepository{
+					Status: sourcev1.OCIRepositoryStatus{
+						Conditions: nil,
+					},
+				},
+			},
+			expected: juggler.ResourceHealthiness{
+				Healthy: false,
+				Message: msgReadyNotPresent,
+			},
+		},
+		{
+			name: "OCIRepositoryAdapter - Status Condition Ready not found",
+			adapter: OCIRepositoryAdapter{
+				Source: &sourcev1.OCIRepository{
+					Status: sourcev1.OCIRepositoryStatus{
+						Conditions: []metav1.Condition{
+							{
+								Type:    "NotReady", // can not be found
+								Status:  metav1.ConditionTrue,
+								Message: "The release is ready",
+							},
+						},
+					},
+				},
+			},
+			expected: juggler.ResourceHealthiness{
+				Healthy: false,
+				Message: msgReadyNotPresent,
+			},
+		},
+		{
+			name: "OCIRepositoryAdapter - Status Condition Ready = True",
+			adapter: OCIRepositoryAdapter{
+				Source: &sourcev1.OCIRepository{
+					Status: sourcev1.OCIRepositoryStatus{
+						Conditions: []metav1.Condition{
+							{
+								Type:    fluxmeta.ReadyCondition,
+								Status:  metav1.ConditionTrue,
+								Message: "The release is ready",
+							},
+						},
+					},
+				},
+			},
+			expected: juggler.ResourceHealthiness{
+				Healthy: true,
+				Message: "The release is ready",
+			},
+		},
+		{
+			name: "OCIRepositoryAdapter - Status Condition Ready = False",
+			adapter: OCIRepositoryAdapter{
+				Source: &sourcev1.OCIRepository{
+					Status: sourcev1.OCIRepositoryStatus{
+						Conditions: []metav1.Condition{
+							{
+								Type:    fluxmeta.ReadyCondition,
+								Status:  metav1.ConditionFalse,
+								Message: "The release is not ready",
+							},
+						},
+					},
+				},
+			},
+			expected: juggler.ResourceHealthiness{
+				Healthy: false,
+				Message: "The release is not ready",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := tt.adapter.GetHealthiness()
+			if !assert.Equal(t, tt.expected, actual) {
+				t.Errorf("OCIRepositoryAdapter.GetHealthiness() = %v, want %v", actual, tt.expected)
+			}
+		})
+	}
+}
