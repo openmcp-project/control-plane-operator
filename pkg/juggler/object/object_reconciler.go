@@ -24,18 +24,25 @@ var _ juggler.OrphanedComponentsDetector = &ObjectReconciler{}
 
 func NewReconciler(logger logr.Logger, remoteClient client.Client, labelComponentName string) *ObjectReconciler {
 	return &ObjectReconciler{
-		logger:             logger,
-		remoteClient:       remoteClient,
-		knownTypes:         sets.Set[reflect.Type]{},
-		labelComponentName: labelComponentName,
+		logger:       logger,
+		remoteClient: remoteClient,
+		knownTypes:   sets.Set[reflect.Type]{},
+		labelFunc:    juggler.DefaultLabelFunc(labelComponentName),
 	}
 }
 
+func (r *ObjectReconciler) WithLabelFunc(fn juggler.LabelFunc) *ObjectReconciler {
+	if fn != nil {
+		r.labelFunc = fn
+	}
+	return r
+}
+
 type ObjectReconciler struct {
-	logger             logr.Logger
-	remoteClient       client.Client
-	knownTypes         sets.Set[reflect.Type]
-	labelComponentName string
+	logger       logr.Logger
+	remoteClient client.Client
+	knownTypes   sets.Set[reflect.Type]
+	labelFunc    juggler.LabelFunc
 }
 
 // DetectOrphanedComponents implements juggler.OrphanedComponentsDetector.
@@ -197,8 +204,7 @@ func (r *ObjectReconciler) applyObject(ctx context.Context, component juggler.Co
 	obj.SetNamespace(key.Namespace)
 
 	_, err = controllerutil.CreateOrUpdate(ctx, r.remoteClient, obj, func() error {
-		utils.SetManagedBy(obj)
-		utils.SetLabel(obj, r.labelComponentName, component.GetName())
+		utils.SetLabels(obj, r.labelFunc(component))
 		return objectComponent.ReconcileObject(ctx, obj)
 	})
 	return err

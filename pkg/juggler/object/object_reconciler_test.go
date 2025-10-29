@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
+	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -33,6 +34,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 		name          string
 		obj           juggler.Component
 		remoteObjects []client.Object
+		labelFunc     juggler.LabelFunc
 		error         error
 		validateFunc  func(ctx context.Context, c client.Client, comp juggler.Component) error
 	}{
@@ -129,11 +131,48 @@ func TestObjectReconciler_Install(t *testing.T) {
 				return nil
 			},
 		},
+		{
+			name: "ObjectReconciler with custom label func - creation successful",
+			obj: FakeObjectComponent{
+				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
+					return &corev1.Secret{}, types.NamespacedName{
+						Name:      "test",
+						Namespace: "default",
+					}, nil
+				},
+				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
+					return nil
+				},
+				name: "FakeObjectComponent",
+			},
+			labelFunc: func(juggler.Component) map[string]string {
+				return map[string]string{
+					testLabelComponentName:         "custom-name",
+					"app.kubernetes.io/managed-by": "managed-by-value",
+					"custom-label":                 "custom-value",
+				}
+			},
+			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
+				secret := &corev1.Secret{}
+				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret); err != nil {
+					return err
+				}
+				if !assert.Equal(t, secret.GetLabels(), map[string]string{
+					testLabelComponentName:         "custom-name",
+					"app.kubernetes.io/managed-by": "managed-by-value",
+					"custom-label":                 "custom-value",
+				}) {
+					return errors.New("labels not equal")
+				}
+				return nil
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeRemoteClient := fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build()
-			r := NewReconciler(logr.Logger{}, fakeRemoteClient, testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fakeRemoteClient, testLabelComponentName).
+				WithLabelFunc(tt.labelFunc)
 			ctx := context.TODO()
 			actual := r.Install(ctx, tt.obj)
 			if !errors.Is(actual, tt.error) {
@@ -417,7 +456,12 @@ func TestNewReconciler(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			actual := NewReconciler(tt.logger, tt.remoteClient, "")
-			if !assert.Equal(t, tt.expected, actual) {
+			diff := cmp.Diff(actual, tt.expected, cmp.Comparer(func(a, b ObjectReconciler) bool {
+				return actual.remoteClient == tt.remoteClient &&
+					actual.logger == tt.logger &&
+					actual.knownTypes.Equal(tt.expected.knownTypes)
+			}))
+			if !assert.Empty(t, diff) {
 				t.Errorf("NewReconciler() = %v, want %v", actual, tt.expected)
 			}
 		})

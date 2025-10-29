@@ -31,3 +31,9 @@ func IsManaged() client.MatchingLabels {
 func HasComponentLabel() client.ListOption {
 	return client.HasLabels{LabelComponentName}
 }
+
+func SetLabels(obj v1.Object, labels map[string]string) {
+	for k, v := range labels {
+		SetLabel(obj, k, v)
+	}
+}
