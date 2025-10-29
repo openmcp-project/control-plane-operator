@@ -23,7 +23,7 @@ import (
 var (
 	tenantNamespace = "tenant-namespace"
 	fluxSecretRef   = &meta.KubeConfigReference{
-		SecretRef: meta.SecretKeyReference{
+		SecretRef: &meta.SecretKeyReference{
 			Name: "some-secret",
 			Key:  "kubeconfig",
 		},
