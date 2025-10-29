@@ -24,6 +24,7 @@ var errBoom = errors.New("boom")
 const testLabelComponentName = "flux.juggler.test.io/component"
 
 func TestNewFluxReconciler(t *testing.T) {
+	fakeClient := fake.NewFakeClient()
 	tests := []struct {
 		name         string
 		logger       logr.Logger
@@ -45,13 +46,13 @@ func TestNewFluxReconciler(t *testing.T) {
 		},
 		{
 			name:         "New FluxReconciler with localClient and remoteClient",
-			localClient:  fake.NewFakeClient(),
-			remoteClient: fake.NewFakeClient(),
+			localClient:  fakeClient,
+			remoteClient: fakeClient,
 			logger:       logr.Logger{},
 			expected: &FluxReconciler{
 				logger:       logr.Logger{},
-				localClient:  fake.NewFakeClient(),
-				remoteClient: fake.NewFakeClient(),
+				localClient:  fakeClient,
+				remoteClient: fakeClient,
 				knownTypes:   sets.Set[reflect.Type]{},
 			},
 		},

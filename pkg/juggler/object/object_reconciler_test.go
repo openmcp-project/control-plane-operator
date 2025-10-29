@@ -386,6 +386,7 @@ func TestObjectReconciler_Uninstall(t *testing.T) {
 }
 
 func TestNewReconciler(t *testing.T) {
+	fakeClient := fake.NewFakeClient()
 	tests := []struct {
 		name         string
 		logger       logr.Logger
@@ -405,9 +406,9 @@ func TestNewReconciler(t *testing.T) {
 		{
 			name:         "New ObjectReconciler with remoteClient",
 			logger:       logr.Logger{},
-			remoteClient: fake.NewFakeClient(),
+			remoteClient: fakeClient,
 			expected: &ObjectReconciler{
-				remoteClient: fake.NewFakeClient(),
+				remoteClient: fakeClient,
 				logger:       logr.Logger{},
 				knownTypes:   sets.Set[reflect.Type]{},
 			},
