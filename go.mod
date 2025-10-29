@@ -1,14 +1,14 @@
 module github.com/openmcp-project/control-plane-operator
 
-go 1.24.5
+go 1.25.0
 
 require (
 	github.com/crossplane-contrib/xp-testing v1.5.0
 	github.com/crossplane/crossplane v1.20.1
-	github.com/fluxcd/helm-controller/api v1.3.0
-	github.com/fluxcd/kustomize-controller/api v1.6.0
-	github.com/fluxcd/pkg/apis/meta v1.13.0
-	github.com/fluxcd/source-controller/api v1.6.2
+	github.com/fluxcd/helm-controller/api v1.4.3
+	github.com/fluxcd/kustomize-controller/api v1.7.2
+	github.com/fluxcd/pkg/apis/meta v1.22.0
+	github.com/fluxcd/source-controller/api v1.7.3
 	github.com/go-logr/logr v1.4.3
 	github.com/openmcp-project/controller-utils v0.11.0
 	github.com/pkg/errors v0.9.1
@@ -20,7 +20,7 @@ require (
 	k8s.io/client-go v0.34.1
 	k8s.io/klog/v2 v2.130.1
 	ocm.software/ocm v0.28.0
-	sigs.k8s.io/controller-runtime v0.21.0
+	sigs.k8s.io/controller-runtime v0.22.2
 	sigs.k8s.io/e2e-framework v0.6.0
 )
 
@@ -307,9 +307,9 @@ require (
 	go.opentelemetry.io/proto/otlp v1.7.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.42.0 // indirect
-	golang.org/x/mod v0.27.0 // indirect
-	golang.org/x/tools v0.36.0 // indirect
+	golang.org/x/crypto v0.43.0 // indirect
+	golang.org/x/mod v0.28.0 // indirect
+	golang.org/x/tools v0.37.0 // indirect
 	golang.org/x/tools/go/packages/packagestest v0.1.1-deprecated // indirect
 	google.golang.org/api v0.241.0 // indirect
 	google.golang.org/genproto v0.0.0-20250505200425-f936aa4a68b2 // indirect
@@ -342,8 +342,8 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.12.2 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.11 // indirect
-	github.com/fluxcd/pkg/apis/acl v0.7.0 // indirect
-	github.com/fluxcd/pkg/apis/kustomize v1.10.0 // indirect
+	github.com/fluxcd/pkg/apis/acl v0.9.0 // indirect
+	github.com/fluxcd/pkg/apis/kustomize v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-logr/zapr v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.1 // indirect
@@ -378,12 +378,12 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
-	golang.org/x/net v0.44.0
+	golang.org/x/net v0.46.0
 	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
-	golang.org/x/sys v0.36.0 // indirect
-	golang.org/x/term v0.35.0 // indirect
-	golang.org/x/text v0.29.0
+	golang.org/x/sys v0.37.0 // indirect
+	golang.org/x/term v0.36.0 // indirect
+	golang.org/x/text v0.30.0
 	golang.org/x/time v0.12.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
@@ -392,6 +392,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250710124328-f3f2b991d03b // indirect
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4
-	sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8 // indirect
+	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
