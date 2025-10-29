@@ -28,7 +28,7 @@ type fluxKubeconfigKey struct{}
 
 func WithFluxKubeconfigRef(ctx context.Context, ref *corev1.SecretReference) context.Context {
 	return context.WithValue(ctx, fluxKubeconfigKey{}, &meta.KubeConfigReference{
-		SecretRef: meta.SecretKeyReference{
+		SecretRef: &meta.SecretKeyReference{
 			Name: ref.Name,
 			Key:  "kubeconfig",
 		},
