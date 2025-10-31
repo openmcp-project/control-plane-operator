@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
+	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -26,13 +27,18 @@ import (
 
 var errBoom = errors.New("boom")
 
-const testLabelComponentName = "object.juggler.test.io/component"
+const (
+	testLabelComponentKey   = "object.juggler.test.io/component"
+	testLabelManagedByKey   = "object.juggler.test.io/managedBy"
+	testLabelManagedByValue = "object.juggler.test.io/control-plane-operator"
+)
 
 func TestObjectReconciler_Install(t *testing.T) {
 	tests := []struct {
 		name          string
 		obj           juggler.Component
 		remoteObjects []client.Object
+		labelFunc     juggler.LabelFunc
 		error         error
 		validateFunc  func(ctx context.Context, c client.Client, comp juggler.Component) error
 	}{
@@ -79,7 +85,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         comp.GetName(),
+					testLabelComponentKey:          comp.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -119,7 +125,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         comp.GetName(),
+					testLabelComponentKey:          comp.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -129,11 +135,46 @@ func TestObjectReconciler_Install(t *testing.T) {
 				return nil
 			},
 		},
+		{
+			name: "ObjectReconciler with custom label func - creation successful",
+			obj: FakeObjectComponent{
+				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
+					return &corev1.Secret{}, types.NamespacedName{
+						Name:      "test",
+						Namespace: "default",
+					}, nil
+				},
+				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
+					return nil
+				},
+				name: "FakeObjectComponent",
+			},
+			labelFunc: func(comp juggler.Component) map[string]string {
+				return map[string]string{
+					testLabelComponentKey: comp.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
+				}
+			},
+			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
+				secret := &corev1.Secret{}
+				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret); err != nil {
+					return err
+				}
+				if !assert.Equal(t, secret.GetLabels(), map[string]string{
+					testLabelComponentKey: comp.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
+				}) {
+					return errors.New("labels not equal")
+				}
+				return nil
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeRemoteClient := fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build()
-			r := NewReconciler(logr.Logger{}, fakeRemoteClient, testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fakeRemoteClient, testLabelComponentKey).
+				WithLabelFunc(tt.labelFunc)
 			ctx := context.TODO()
 			actual := r.Install(ctx, tt.obj)
 			if !errors.Is(actual, tt.error) {
@@ -370,7 +411,7 @@ func TestObjectReconciler_Uninstall(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeClient := fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build()
-			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentKey)
 			ctx := context.TODO()
 			actual := r.Uninstall(ctx, tt.obj)
 			if !errors.Is(actual, tt.expected) {
@@ -417,7 +458,12 @@ func TestNewReconciler(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			actual := NewReconciler(tt.logger, tt.remoteClient, "")
-			if !assert.Equal(t, tt.expected, actual) {
+			diff := cmp.Diff(actual, tt.expected, cmp.Comparer(func(a, b ObjectReconciler) bool {
+				return actual.remoteClient == tt.remoteClient &&
+					actual.logger == tt.logger &&
+					actual.knownTypes.Equal(tt.expected.knownTypes)
+			}))
+			if !assert.Empty(t, diff) {
 				t.Errorf("NewReconciler() = %v, want %v", actual, tt.expected)
 			}
 		})
@@ -531,7 +577,7 @@ func TestObjectReconciler_Observe(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := NewReconciler(logr.Logger{}, fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build(), testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build(), testLabelComponentKey)
 			ctx := context.TODO()
 			actualObservation, actualError := r.Observe(ctx, tt.obj)
 			if !assert.Equal(t, tt.expectedObservation, actualObservation) {
@@ -625,7 +671,7 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			fakeClient := fake.NewClientBuilder().WithObjects(tC.initObjs...).WithInterceptorFuncs(tC.interceptorFuncs).Build()
-			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentKey)
 			for _, cc := range tC.configuredComponents {
 				r.RegisterType(cc.(ObjectComponent))
 			}

@@ -25,20 +25,27 @@ var _ juggler.ComponentReconciler = &FluxReconciler{}
 
 func NewFluxReconciler(logger logr.Logger, localClient client.Client, remoteClient client.Client, labelComponentName string) *FluxReconciler {
 	return &FluxReconciler{
-		logger:             logger,
-		localClient:        localClient,
-		remoteClient:       remoteClient,
-		knownTypes:         sets.Set[reflect.Type]{},
-		labelComponentName: labelComponentName,
+		logger:       logger,
+		localClient:  localClient,
+		remoteClient: remoteClient,
+		knownTypes:   sets.Set[reflect.Type]{},
+		labelFunc:    juggler.DefaultLabelFunc(labelComponentName),
 	}
 }
 
+func (r *FluxReconciler) WithLabelFunc(fn juggler.LabelFunc) *FluxReconciler {
+	if fn != nil {
+		r.labelFunc = fn
+	}
+	return r
+}
+
 type FluxReconciler struct {
-	localClient        client.Client
-	remoteClient       client.Client
-	logger             logr.Logger
-	knownTypes         sets.Set[reflect.Type]
-	labelComponentName string
+	localClient  client.Client
+	remoteClient client.Client
+	logger       logr.Logger
+	knownTypes   sets.Set[reflect.Type]
+	labelFunc    juggler.LabelFunc
 }
 
 // KnownTypes implements juggler.ComponentReconciler.
@@ -214,9 +221,7 @@ func (r *FluxReconciler) installOrUpdateManifesto(ctx context.Context, fluxCompo
 		if err := actual.Reconcile(desired); err != nil {
 			return err
 		}
-
-		utils.SetManagedBy(obj)
-		utils.SetLabel(obj, r.labelComponentName, fluxComponent.GetName())
+		utils.SetLabels(obj, r.labelFunc(fluxComponent))
 		return nil
 	})
 
@@ -241,9 +246,7 @@ func (r *FluxReconciler) installOrUpdateSource(ctx context.Context, fluxComponen
 		if err := actual.Reconcile(desired); err != nil {
 			return err
 		}
-
-		utils.SetManagedBy(obj)
-		utils.SetLabel(obj, r.labelComponentName, fluxComponent.GetName())
+		utils.SetLabels(obj, r.labelFunc(fluxComponent))
 		return nil
 	})
 
