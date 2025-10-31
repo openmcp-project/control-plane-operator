@@ -22,7 +22,11 @@ import (
 
 var errBoom = errors.New("boom")
 
-const testLabelComponentName = "flux.juggler.test.io/component"
+const (
+	testLabelComponentKey   = "flux.juggler.test.io/component"
+	testLabelManagedByKey   = "flux.juggler.test.io/managedBy"
+	testLabelManagedByValue = "flux.juggler.test.io/control-plane-operator"
+)
 
 func TestNewFluxReconciler(t *testing.T) {
 	fakeClient := fake.NewFakeClient()
@@ -371,7 +375,7 @@ func TestFluxReconciler_Observe(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentName)
+			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentKey)
 			actualObservation, actualError := r.Observe(context.TODO(), tt.obj)
 			if !assert.Equal(t, tt.expectedObservation, actualObservation) {
 				t.Errorf("ObjectReconciler.Observe() = %v, want %v", actualObservation, tt.expectedObservation)
@@ -623,7 +627,7 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentName)
+			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentKey)
 			actual := r.Uninstall(context.TODO(), tt.obj)
 			if !errors.Is(actual, tt.expected) {
 				t.Errorf("ObjectReconciler.Uninstall() = %v, want %v", actual, tt.expected)
@@ -683,7 +687,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, helmRepo.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         component.GetName(),
+					testLabelComponentKey:          component.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -728,7 +732,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, helmRelease.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         component.GetName(),
+					testLabelComponentKey:          component.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -738,11 +742,10 @@ func TestFluxReconciler_Install(t *testing.T) {
 		},
 		{
 			name: "FluxReconciler with custom label func - creation successful",
-			labelFunc: func(juggler.Component) map[string]string {
+			labelFunc: func(comp juggler.Component) map[string]string {
 				return map[string]string{
-					testLabelComponentName:         "custom-name",
-					"app.kubernetes.io/managed-by": "service-provider-crossplane",
-					"custom-label":                 "custom-value",
+					testLabelComponentKey: comp.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
 				}
 			},
 			obj: FakeFluxComponent{
@@ -774,9 +777,8 @@ func TestFluxReconciler_Install(t *testing.T) {
 			},
 			validateFunc: func(ctx context.Context, c client.Client, component juggler.Component) error {
 				expectedLabels := map[string]string{
-					"app.kubernetes.io/managed-by": "service-provider-crossplane",
-					testLabelComponentName:         "custom-name",
-					"custom-label":                 "custom-value",
+					testLabelComponentKey: component.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
 				}
 				helmRepository := &sourcev1.HelmRepository{}
 				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, helmRepository); err != nil {
@@ -800,7 +802,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeLocalClient := fake.NewClientBuilder().WithScheme(scheme).Build()
-			r := NewFluxReconciler(logr.Logger{}, fakeLocalClient, nil, testLabelComponentName).
+			r := NewFluxReconciler(logr.Logger{}, fakeLocalClient, nil, testLabelComponentKey).
 				WithLabelFunc(tt.labelFunc)
 			ctx := context.TODO()
 			actual := r.Install(ctx, tt.obj)

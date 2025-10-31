@@ -3,6 +3,8 @@ package juggler
 import (
 	"context"
 	"reflect"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 type ComponentReconciler interface {
@@ -53,8 +55,8 @@ type LabelFunc func(comp Component) map[string]string
 func DefaultLabelFunc(componentLabel string) LabelFunc {
 	return func(comp Component) map[string]string {
 		return map[string]string{
-			"app.kubernetes.io/managed-by": "control-plane-operator",
-			componentLabel:                 comp.GetName(),
+			utils.LabelManagedBy: utils.LabelManagedByValue,
+			componentLabel:       comp.GetName(),
 		}
 	}
 }

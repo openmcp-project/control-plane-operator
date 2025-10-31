@@ -57,7 +57,7 @@ func TestSetManagedBy(t *testing.T) {
 		{
 			name: "set managed by label",
 			obj:  &v1beta1.ControlPlane{},
-			want: map[string]string{labelManagedBy: labelManagedByValue},
+			want: map[string]string{LabelManagedBy: LabelManagedByValue},
 		},
 		{
 			name: "update existing label",
@@ -66,12 +66,12 @@ func TestSetManagedBy(t *testing.T) {
 					Labels: map[string]string{"app.kubernetes.io/managed-by": "foo"},
 				},
 			},
-			want: map[string]string{labelManagedBy: labelManagedByValue},
+			want: map[string]string{LabelManagedBy: LabelManagedByValue},
 		},
 		{
 			name: "add a second label to object",
 			obj:  &v1beta1.ControlPlane{ObjectMeta: v1.ObjectMeta{Labels: map[string]string{"foo": "bar"}}},
-			want: map[string]string{"foo": "bar", labelManagedBy: labelManagedByValue},
+			want: map[string]string{"foo": "bar", LabelManagedBy: LabelManagedByValue},
 		},
 	}
 	for _, tt := range tests {
@@ -84,7 +84,7 @@ func TestSetManagedBy(t *testing.T) {
 
 func TestIsManaged(t *testing.T) {
 	got := IsManaged()
-	assert.DeepEqual(t, got, client.MatchingLabels{labelManagedBy: labelManagedByValue})
+	assert.DeepEqual(t, got, client.MatchingLabels{LabelManagedBy: LabelManagedByValue})
 }
 
 func TestHasComponentLabel(t *testing.T) {

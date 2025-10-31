@@ -27,7 +27,11 @@ import (
 
 var errBoom = errors.New("boom")
 
-const testLabelComponentName = "object.juggler.test.io/component"
+const (
+	testLabelComponentKey   = "object.juggler.test.io/component"
+	testLabelManagedByKey   = "object.juggler.test.io/managedBy"
+	testLabelManagedByValue = "object.juggler.test.io/control-plane-operator"
+)
 
 func TestObjectReconciler_Install(t *testing.T) {
 	tests := []struct {
@@ -81,7 +85,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         comp.GetName(),
+					testLabelComponentKey:          comp.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -121,7 +125,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         comp.GetName(),
+					testLabelComponentKey:          comp.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -145,11 +149,10 @@ func TestObjectReconciler_Install(t *testing.T) {
 				},
 				name: "FakeObjectComponent",
 			},
-			labelFunc: func(juggler.Component) map[string]string {
+			labelFunc: func(comp juggler.Component) map[string]string {
 				return map[string]string{
-					testLabelComponentName:         "custom-name",
-					"app.kubernetes.io/managed-by": "managed-by-value",
-					"custom-label":                 "custom-value",
+					testLabelComponentKey: comp.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
 				}
 			},
 			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
@@ -158,9 +161,8 @@ func TestObjectReconciler_Install(t *testing.T) {
 					return err
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
-					testLabelComponentName:         "custom-name",
-					"app.kubernetes.io/managed-by": "managed-by-value",
-					"custom-label":                 "custom-value",
+					testLabelComponentKey: comp.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -171,7 +173,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeRemoteClient := fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build()
-			r := NewReconciler(logr.Logger{}, fakeRemoteClient, testLabelComponentName).
+			r := NewReconciler(logr.Logger{}, fakeRemoteClient, testLabelComponentKey).
 				WithLabelFunc(tt.labelFunc)
 			ctx := context.TODO()
 			actual := r.Install(ctx, tt.obj)
@@ -409,7 +411,7 @@ func TestObjectReconciler_Uninstall(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeClient := fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build()
-			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentKey)
 			ctx := context.TODO()
 			actual := r.Uninstall(ctx, tt.obj)
 			if !errors.Is(actual, tt.expected) {
@@ -575,7 +577,7 @@ func TestObjectReconciler_Observe(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := NewReconciler(logr.Logger{}, fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build(), testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fake.NewClientBuilder().WithObjects(tt.remoteObjects...).Build(), testLabelComponentKey)
 			ctx := context.TODO()
 			actualObservation, actualError := r.Observe(ctx, tt.obj)
 			if !assert.Equal(t, tt.expectedObservation, actualObservation) {
@@ -669,7 +671,7 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			fakeClient := fake.NewClientBuilder().WithObjects(tC.initObjs...).WithInterceptorFuncs(tC.interceptorFuncs).Build()
-			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentName)
+			r := NewReconciler(logr.Logger{}, fakeClient, testLabelComponentKey)
 			for _, cc := range tC.configuredComponents {
 				r.RegisterType(cc.(ObjectComponent))
 			}
