@@ -3,6 +3,8 @@ package juggler
 import (
 	"context"
 	"reflect"
+
+	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
 type ComponentReconciler interface {
@@ -43,4 +45,18 @@ type OrphanedComponentsDetector interface {
 	// existing and configured components.
 	// Orphaned=Existing\Configured (set difference D=M\N).
 	DetectOrphanedComponents(ctx context.Context, configuredComponents []Component) ([]Component, error)
+}
+
+// LabelFunc defines the Kubernetes object labels to be set during component reconciliation
+type LabelFunc func(comp Component) map[string]string
+
+// DefaultLabelFunc sets the `managedBy` label to `control-plane-operator`
+// and the `componentLabel` label to the name of the component
+func DefaultLabelFunc(componentLabel string) LabelFunc {
+	return func(comp Component) map[string]string {
+		return map[string]string{
+			utils.LabelManagedBy: utils.LabelManagedByValue,
+			componentLabel:       comp.GetName(),
+		}
+	}
 }

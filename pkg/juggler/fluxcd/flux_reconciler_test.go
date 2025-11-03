@@ -10,6 +10,7 @@ import (
 	helmv2 "github.com/fluxcd/helm-controller/api/v2"
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"
 	"github.com/go-logr/logr"
+	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -21,7 +22,11 @@ import (
 
 var errBoom = errors.New("boom")
 
-const testLabelComponentName = "flux.juggler.test.io/component"
+const (
+	testLabelComponentKey   = "flux.juggler.test.io/component"
+	testLabelManagedByKey   = "flux.juggler.test.io/managedBy"
+	testLabelManagedByValue = "flux.juggler.test.io/control-plane-operator"
+)
 
 func TestNewFluxReconciler(t *testing.T) {
 	fakeClient := fake.NewFakeClient()
@@ -60,7 +65,13 @@ func TestNewFluxReconciler(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			actual := NewFluxReconciler(tt.logger, tt.localClient, tt.remoteClient, "")
-			if !assert.Equal(t, actual, tt.expected) {
+			diff := cmp.Diff(actual, tt.expected, cmp.Comparer(func(a, b FluxReconciler) bool {
+				return actual.localClient == tt.localClient &&
+					actual.remoteClient == tt.remoteClient &&
+					actual.logger == tt.logger &&
+					actual.knownTypes.Equal(tt.expected.knownTypes)
+			}))
+			if !assert.Empty(t, diff) {
 				t.Errorf("NewReconciler() = %v, want %v", actual, tt.expected)
 			}
 		})
@@ -364,7 +375,7 @@ func TestFluxReconciler_Observe(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentName)
+			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentKey)
 			actualObservation, actualError := r.Observe(context.TODO(), tt.obj)
 			if !assert.Equal(t, tt.expectedObservation, actualObservation) {
 				t.Errorf("ObjectReconciler.Observe() = %v, want %v", actualObservation, tt.expectedObservation)
@@ -616,7 +627,7 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentName)
+			r := NewFluxReconciler(logr.Logger{}, fake.NewClientBuilder().WithScheme(scheme).WithObjects(tt.localObjects...).Build(), nil, testLabelComponentKey)
 			actual := r.Uninstall(context.TODO(), tt.obj)
 			if !errors.Is(actual, tt.expected) {
 				t.Errorf("ObjectReconciler.Uninstall() = %v, want %v", actual, tt.expected)
@@ -630,6 +641,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 		name         string
 		obj          juggler.Component
 		validateFunc func(ctx context.Context, c client.Client, component juggler.Component) error
+		labelFunc    juggler.LabelFunc
 		expected     error
 	}{
 		{
@@ -675,7 +687,7 @@ func TestFluxReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, helmRepo.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         component.GetName(),
+					testLabelComponentKey:          component.GetName(),
 				}) {
 					return errors.New("labels not equal")
 				}
@@ -720,8 +732,66 @@ func TestFluxReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, helmRelease.GetLabels(), map[string]string{
 					"app.kubernetes.io/managed-by": "control-plane-operator",
-					testLabelComponentName:         component.GetName(),
+					testLabelComponentKey:          component.GetName(),
 				}) {
+					return errors.New("labels not equal")
+				}
+				return nil
+			},
+			expected: nil,
+		},
+		{
+			name: "FluxReconciler with custom label func - creation successful",
+			labelFunc: func(comp juggler.Component) map[string]string {
+				return map[string]string{
+					testLabelComponentKey: comp.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
+				}
+			},
+			obj: FakeFluxComponent{
+				BuildSourceRepositoryFunc: func(ctx context.Context) (SourceAdapter, error) {
+					return &HelmRepositoryAdapter{
+						Source: &sourcev1.HelmRepository{
+							ObjectMeta: metav1.ObjectMeta{
+								Name:      "test",
+								Namespace: "default",
+							},
+							Spec: sourcev1.HelmRepositorySpec{
+								URL: "test-url",
+							},
+						},
+					}, nil
+				},
+				BuildManifestoFunc: func(ctx context.Context) (Manifesto, error) {
+					return &HelmReleaseManifesto{
+						Manifest: &helmv2.HelmRelease{
+							ObjectMeta: metav1.ObjectMeta{
+								Name:      "test",
+								Namespace: "default",
+							},
+							Spec: helmv2.HelmReleaseSpec{ReleaseName: "test-name"},
+						},
+					}, nil
+				},
+				GetNameFunc: "FakeFluxComponent",
+			},
+			validateFunc: func(ctx context.Context, c client.Client, component juggler.Component) error {
+				expectedLabels := map[string]string{
+					testLabelComponentKey: component.GetName(),
+					testLabelManagedByKey: testLabelManagedByValue,
+				}
+				helmRepository := &sourcev1.HelmRepository{}
+				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, helmRepository); err != nil {
+					return err
+				}
+				if !assert.Equal(t, helmRepository.GetLabels(), expectedLabels) {
+					return errors.New("labels not equal")
+				}
+				helmRelease := &helmv2.HelmRelease{}
+				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, helmRelease); err != nil {
+					return err
+				}
+				if !assert.Equal(t, helmRelease.GetLabels(), expectedLabels) {
 					return errors.New("labels not equal")
 				}
 				return nil
@@ -732,7 +802,8 @@ func TestFluxReconciler_Install(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fakeLocalClient := fake.NewClientBuilder().WithScheme(scheme).Build()
-			r := NewFluxReconciler(logr.Logger{}, fakeLocalClient, nil, testLabelComponentName)
+			r := NewFluxReconciler(logr.Logger{}, fakeLocalClient, nil, testLabelComponentKey).
+				WithLabelFunc(tt.labelFunc)
 			ctx := context.TODO()
 			actual := r.Install(ctx, tt.obj)
 
