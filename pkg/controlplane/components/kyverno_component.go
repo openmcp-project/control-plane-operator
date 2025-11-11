@@ -2,25 +2,30 @@ package components
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"os"
 	"strings"
 
 	helmv2 "github.com/fluxcd/helm-controller/api/v2"
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"
-	rbacv1 "k8s.io/api/rbac/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler/fluxcd"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler/hooks"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
+	rbacv1 "k8s.io/api/rbac/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 const (
 	kyvernoRelease       = "kyverno"
 	kyvernoNamespace     = "kyverno-system"
 	ComponentNameKyverno = "Kyverno"
+
+	EnvEnableKyvernoDefaultValues = "ENABLE_KYVERNO_DEFAULT_VALUES"
 )
 
 var _ fluxcd.FluxComponent = &Kyverno{}
@@ -173,6 +178,17 @@ func (k *Kyverno) applyDefaultChartSpec(rfn v1beta1.VersionResolverFn) {
 }
 
 func (k *Kyverno) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, error) {
+	values := k.Config.Values
+
+	// If default values are enabled, use them instead
+	if os.Getenv(EnvEnableKyvernoDefaultValues) == "true" {
+		defaultValues, err := k.getDefaultValues()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get default Kyverno values: %w", err)
+		}
+		values = defaultValues
+	}
+
 	release := &helmv2.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      strings.ToLower(ComponentNameKyverno),
@@ -193,11 +209,55 @@ func (k *Kyverno) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, error) 
 			TargetNamespace:  kyvernoNamespace,
 			StorageNamespace: kyvernoNamespace,
 			KubeConfig:       rcontext.FluxKubeconfigRef(ctx),
-			Values:           k.Config.Values,
+			Values:           values,
 		},
 	}
 
 	adapter := &fluxcd.HelmReleaseManifesto{Manifest: release}
 	adapter.ApplyDefaults()
 	return adapter, nil
+}
+
+func (k *Kyverno) getDefaultValues() (*apiextensionsv1.JSON, error) {
+	defaults := map[string]interface{}{
+		"config": map[string]interface{}{
+			"preserve": false,
+			"resourceFilters": []string{
+				"[*/*,kyverno,*]",
+				"[*/*,istio-system,*]",
+				"[*/*,kyma-system,*]",
+				"[*/*,kube-system,*]",
+				"[*/*,kube-public,*]",
+				"[*/*,neo-core,*]",
+			},
+			"updateRequestThreshold": 5000,
+			"excludeGroups": []string{
+				"system:nodes",
+			},
+			"webhooks": map[string]interface{}{
+				"namespaceSelector": map[string]interface{}{
+					"matchExpressions": []map[string]interface{}{
+						{
+							"key":      "kubernetes.io/metadata.name",
+							"operator": "NotIn",
+							"values": []string{
+								"kube-system",
+								"kyverno",
+								"istio-system",
+								"kube-public",
+								"kyma-system",
+								"neo-core",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	raw, err := json.Marshal(defaults)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal default values: %w", err)
+	}
+	return &apiextensionsv1.JSON{Raw: raw}, nil
 }
