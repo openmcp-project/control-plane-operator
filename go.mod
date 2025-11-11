@@ -4,7 +4,8 @@ go 1.25.3
 
 require (
 	github.com/crossplane-contrib/xp-testing v1.8.0
-	github.com/crossplane/crossplane v1.20.1
+	github.com/crossplane/crossplane v1.20.3
+	github.com/crossplane/crossplane/v2 v2.1.1
 	github.com/fluxcd/helm-controller/api v1.4.3
 	github.com/fluxcd/kustomize-controller/api v1.7.2
 	github.com/fluxcd/pkg/apis/meta v1.22.0
@@ -328,10 +329,12 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	helm.sh/helm/v3 v3.19.0 // indirect
 	k8s.io/cli-runtime v0.34.1 // indirect
+	k8s.io/code-generator v0.34.1 // indirect
 	k8s.io/component-base v0.34.1 // indirect
-	k8s.io/kubectl v0.34.0 // indirect
+	k8s.io/gengo/v2 v2.0.0-20250604051438-85fd79dbfd9f // indirect
+	k8s.io/kubectl v0.34.1 // indirect
 	oras.land/oras-go/v2 v2.6.0 // indirect
-	sigs.k8s.io/controller-tools v0.16.5 // indirect
+	sigs.k8s.io/controller-tools v0.18.0 // indirect
 	sigs.k8s.io/kustomize/api v0.20.1 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.20.1 // indirect
 	sigs.k8s.io/randfill v1.0.0 // indirect
