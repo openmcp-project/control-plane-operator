@@ -12,9 +12,8 @@ import (
 func Test_Kyverno(t *testing.T) {
 	testCases := []struct {
 		desc            string
-		osEnv           string
-		osEnvVal        string
 		config          *v1beta1.KyvernoConfig
+		enableDefaults  bool
 		versionResolver v1beta1.VersionResolverFn
 		validationFuncs []validationFunc
 	}{
@@ -66,9 +65,8 @@ func Test_Kyverno(t *testing.T) {
 			},
 		},
 		{
-			desc:     "should use default values instad of values from config when enabled via env",
-			osEnv:    EnvEnableKyvernoDefaultValues,
-			osEnvVal: "true",
+			desc:           "should use default values instad of values from config when enabled via env",
+			enableDefaults: true,
 			config: &v1beta1.KyvernoConfig{
 				Version: "1.2.3",
 				Values:  &apiextensionsv1.JSON{Raw: []byte(`{"crds":{"install":true}}`)},
@@ -127,8 +125,8 @@ func Test_Kyverno(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			ctx := newContext(nil, tC.versionResolver)
-			if tC.osEnv != "" && tC.osEnvVal != "" {
-				t.Setenv(tC.osEnv, tC.osEnvVal)
+			if tC.enableDefaults {
+				t.Setenv(EnvEnableKyvernoDefaultValues, "true")
 			}
 			c := &Kyverno{Config: tC.config}
 			for _, vfn := range tC.validationFuncs {
