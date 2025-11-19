@@ -5,19 +5,19 @@ go 1.25.3
 require (
 	github.com/crossplane-contrib/xp-testing v1.8.0
 	github.com/crossplane/crossplane v1.20.1
-	github.com/fluxcd/helm-controller/api v1.4.3
-	github.com/fluxcd/kustomize-controller/api v1.7.2
-	github.com/fluxcd/pkg/apis/meta v1.22.0
-	github.com/fluxcd/source-controller/api v1.7.3
+	github.com/fluxcd/helm-controller/api v1.4.4
+	github.com/fluxcd/kustomize-controller/api v1.7.3
+	github.com/fluxcd/pkg/apis/meta v1.23.0
+	github.com/fluxcd/source-controller/api v1.7.4
 	github.com/go-logr/logr v1.4.3
 	github.com/openmcp-project/controller-utils v0.23.3
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.11.1
 	gotest.tools/v3 v3.5.2
-	k8s.io/api v0.34.1
-	k8s.io/apiextensions-apiserver v0.34.1
-	k8s.io/apimachinery v0.34.1
-	k8s.io/client-go v0.34.1
+	k8s.io/api v0.34.2
+	k8s.io/apiextensions-apiserver v0.34.2
+	k8s.io/apimachinery v0.34.2
+	k8s.io/client-go v0.34.2
 	k8s.io/klog/v2 v2.130.1
 	ocm.software/ocm v0.32.0
 	sigs.k8s.io/controller-runtime v0.22.4
@@ -328,7 +328,7 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	helm.sh/helm/v3 v3.19.0 // indirect
 	k8s.io/cli-runtime v0.34.1 // indirect
-	k8s.io/component-base v0.34.1 // indirect
+	k8s.io/component-base v0.34.2 // indirect
 	k8s.io/kubectl v0.34.0 // indirect
 	oras.land/oras-go/v2 v2.6.0 // indirect
 	sigs.k8s.io/controller-tools v0.16.5 // indirect
@@ -349,7 +349,7 @@ require (
 	github.com/emicklei/go-restful/v3 v3.13.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.11 // indirect
 	github.com/fluxcd/pkg/apis/acl v0.9.0 // indirect
-	github.com/fluxcd/pkg/apis/kustomize v1.13.0 // indirect
+	github.com/fluxcd/pkg/apis/kustomize v1.14.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-logr/zapr v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.2 // indirect
