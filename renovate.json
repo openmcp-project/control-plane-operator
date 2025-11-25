@@ -48,6 +48,12 @@
       "matchPackageNames": [
         "/^github\\.com/fluxcd/"
       ]
+    },
+    {
+      "description": "Ignore our own image in chart as it will be updated on release",
+      "matchPackageNames": ["ghcr.io/openmcp-project/images/control-plane-operator"],
+      "matchManagers": ["helm-values"],
+      "enabled": false
     }
   ]
 }

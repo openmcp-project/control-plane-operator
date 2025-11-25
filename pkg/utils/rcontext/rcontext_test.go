@@ -1,11 +1,11 @@
 package rcontext
 
 import (
+	"context"
 	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"

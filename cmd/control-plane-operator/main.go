@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"embed"
 	"flag"
 	"os"
@@ -24,7 +25,6 @@ import (
 
 	"k8s.io/apimachinery/pkg/types"
 
-	"golang.org/x/net/context"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/openmcp-project/control-plane-operator/cmd/options"
