@@ -3,7 +3,7 @@ module github.com/openmcp-project/control-plane-operator
 go 1.25.4
 
 require (
-	github.com/crossplane-contrib/xp-testing v1.8.0
+	github.com/crossplane-contrib/xp-testing v1.9.0
 	github.com/crossplane/crossplane v1.20.3
 	github.com/fluxcd/helm-controller/api v1.4.3
 	github.com/fluxcd/kustomize-controller/api v1.7.2
@@ -363,7 +363,7 @@ require (
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/exp v0.0.0-20251023183803-a4bb9ffd2546 // indirect
-	golang.org/x/mod v0.29.0 // indirect
+	golang.org/x/mod v0.30.0 // indirect
 	golang.org/x/oauth2 v0.32.0 // indirect
 	golang.org/x/sync v0.18.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
