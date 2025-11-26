@@ -6,5 +6,5 @@ SPDX-PackageComment = "The code in this project may include calls to APIs (\"API
 [[annotations]]
 path = "**"
 precedence = "closest"
-SPDX-FileCopyrightText = "2025 SAP SE or an SAP affiliate company and mcp-operator contributors"
+SPDX-FileCopyrightText = "2025 SAP SE or an SAP affiliate company and openmcp-project contributors"
 SPDX-License-Identifier = "Apache-2.0"
