@@ -4,7 +4,8 @@ go 1.25.4
 
 require (
 	github.com/crossplane-contrib/xp-testing v1.8.0
-	github.com/crossplane/crossplane v1.20.3
+	github.com/crossplane/crossplane v1.20.4
+	github.com/crossplane/crossplane/v2 v2.1.3
 	github.com/fluxcd/helm-controller/api v1.4.3
 	github.com/fluxcd/kustomize-controller/api v1.7.2
 	github.com/fluxcd/pkg/apis/meta v1.22.0
@@ -25,7 +26,11 @@ require (
 	sigs.k8s.io/e2e-framework v0.6.0
 )
 
-require golang.org/x/net v0.47.0 // indirect
+require (
+	golang.org/x/net v0.47.0 // indirect
+	k8s.io/code-generator v0.34.2 // indirect
+	k8s.io/gengo/v2 v2.0.0-20250604051438-85fd79dbfd9f // indirect
+)
 
 replace github.com/ThalesIgnite/crypto11 => github.com/ThalesGroup/crypto11 v1.6.0
 
@@ -391,7 +396,7 @@ require (
 	k8s.io/kubectl v0.34.2 // indirect
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4
 	oras.land/oras-go/v2 v2.6.0 // indirect
-	sigs.k8s.io/controller-tools v0.16.5 // indirect
+	sigs.k8s.io/controller-tools v0.18.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/kustomize/api v0.20.1 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.20.1 // indirect
