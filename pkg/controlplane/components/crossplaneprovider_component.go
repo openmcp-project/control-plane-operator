@@ -58,7 +58,7 @@ func (c *CrossplaneProvider) ReconcileObject(ctx context.Context, obj client.Obj
 }
 
 // OrphanDetectorContext implements object.OrphanedObjectsDetector.
-func (*CrossplaneProvider) OrphanDetectorContext() object.DetectorContext {
+func (*CrossplaneProvider) OrphanDetectorContext(_ context.Context) object.DetectorContext {
 	return object.DetectorContext{
 		ListType: &crossplanev1.ProviderList{},
 		FilterCriteria: object.FilterCriteria{

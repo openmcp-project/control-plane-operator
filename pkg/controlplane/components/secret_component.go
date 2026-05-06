@@ -66,7 +66,7 @@ func (s *Secret) ReconcileObject(ctx context.Context, obj client.Object) error {
 }
 
 // OrphanDetectorContext implements object.OrphanedObjectsDetector.
-func (*Secret) OrphanDetectorContext() object.DetectorContext {
+func (*Secret) OrphanDetectorContext(_ context.Context) object.DetectorContext {
 	return object.DetectorContext{
 		ListType: &corev1.SecretList{},
 		FilterCriteria: object.FilterCriteria{

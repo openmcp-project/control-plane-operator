@@ -55,7 +55,7 @@ func (c *ClusterRole) ReconcileObject(ctx context.Context, obj client.Object) er
 }
 
 // OrphanDetectorContext implements object.OrphanedObjectsDetector.
-func (*ClusterRole) OrphanDetectorContext() object.DetectorContext {
+func (*ClusterRole) OrphanDetectorContext(_ context.Context) object.DetectorContext {
 	return object.DetectorContext{
 		ListType: &rbacv1.ClusterRoleList{},
 		FilterCriteria: object.FilterCriteria{
