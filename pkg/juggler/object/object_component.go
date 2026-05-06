@@ -49,5 +49,5 @@ type DetectorContext struct {
 // It should be implemented by MCP components which can leave orphaned resources after
 // said component is being removed from the MCP
 type OrphanedObjectsDetector interface {
-	OrphanDetectorContext() DetectorContext
+	OrphanDetectorContext(_ context.Context) DetectorContext
 }

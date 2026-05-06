@@ -99,7 +99,7 @@ func (c *CrossplaneDeploymentRuntimeConfig) GetNamespace() string {
 }
 
 // OrphanDetectorContext implements object.OrphanedObjectsDetector.
-func (c *CrossplaneDeploymentRuntimeConfig) OrphanDetectorContext() object.DetectorContext {
+func (c *CrossplaneDeploymentRuntimeConfig) OrphanDetectorContext(_ context.Context) object.DetectorContext {
 	return object.DetectorContext{
 		ListType: &crossplanev1beta1.DeploymentRuntimeConfigList{},
 		FilterCriteria: object.FilterCriteria{

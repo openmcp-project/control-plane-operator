@@ -54,7 +54,7 @@ func (r *ObjectReconciler) DetectOrphanedComponents(
 	for _, kt := range r.KnownTypes() {
 		newComp := reflect.New(kt).Elem().Interface()
 		if ood, ok := newComp.(OrphanedObjectsDetector); ok {
-			dc := ood.OrphanDetectorContext()
+			dc := ood.OrphanDetectorContext(ctx)
 			filtered, err := r.filterOrphanedObjects(ctx, configuredComponents, dc)
 			if err != nil {
 				return nil, err

@@ -39,7 +39,7 @@ func (f FakeObjectComponent) ReconcileObject(ctx context.Context, obj client.Obj
 }
 
 // OrphanDetectorContext implements OrphanedObjectsDetector.
-func (f FakeObjectComponent) OrphanDetectorContext() DetectorContext {
+func (f FakeObjectComponent) OrphanDetectorContext(_ context.Context) DetectorContext {
 	return DetectorContext{
 		ListType: &corev1.ConfigMapList{},
 		FilterCriteria: FilterCriteria{
