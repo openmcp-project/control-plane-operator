@@ -22,6 +22,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 
+	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
 
@@ -131,6 +132,49 @@ func TestObjectReconciler_Install(t *testing.T) {
 				}
 				if !assert.Equal(t, secret.Type, corev1.SecretTypeDockerConfigJson) {
 					return errors.New("type not equal")
+				}
+				return nil
+			},
+		},
+		{
+			name: "ObjectComponent BuildObject successful - Object already there - Update skipped",
+			obj: FakeObjectComponent{
+				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
+					return &corev1.Secret{}, types.NamespacedName{
+						Name:      "test",
+						Namespace: "default",
+					}, nil
+				},
+				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
+					secret := obj.(*corev1.Secret)
+					secret.Type = corev1.SecretTypeDockerConfigJson
+					secret.Labels = map[string]string{testLabelComponentKey: "do-not-apply"}
+					return nil
+				},
+				name: "FakeObjectComponent",
+			},
+			remoteObjects: []client.Object{
+				&corev1.Secret{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "test",
+						Namespace: "default",
+						Annotations: map[string]string{
+							constants.AnnotationSkipReconciliation: "true",
+						},
+					},
+					Type: corev1.SecretTypeOpaque,
+				},
+			},
+			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
+				secret := &corev1.Secret{}
+				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret); err != nil {
+					return err
+				}
+				if !assert.Equal(t, secret.Type, corev1.SecretTypeOpaque) {
+					return errors.New("secret type has changed")
+				}
+				if !assert.Empty(t, secret.Labels) {
+					return errors.New("secret labels have changed")
 				}
 				return nil
 			},

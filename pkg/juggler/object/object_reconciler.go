@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"reflect"
+	"strings"
 
 	"github.com/go-logr/logr"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -11,6 +12,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
+	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
@@ -203,9 +205,40 @@ func (r *ObjectReconciler) applyObject(ctx context.Context, component juggler.Co
 	obj.SetName(key.Name)
 	obj.SetNamespace(key.Namespace)
 
+	existing := obj.DeepCopyObject().(client.Object)
+
+	err = r.remoteClient.Get(ctx, key, existing)
+	if err != nil && !apierrors.IsNotFound(err) {
+		return err
+	}
+
+	// Only evaluate skip-reconciliation annotation on existing objects
+	if err == nil && shouldSkipReconciliation(existing) {
+		r.logger.Info("Skipping update due to skip-reconciliation annotation on object", "name", key.Name, "namespace", key.Namespace)
+		return nil
+	}
+
 	_, err = controllerutil.CreateOrUpdate(ctx, r.remoteClient, obj, func() error {
 		utils.SetLabels(obj, r.labelFunc(component))
 		return objectComponent.ReconcileObject(ctx, obj)
 	})
 	return err
+}
+
+func shouldSkipReconciliation(obj client.Object) bool {
+	if obj == nil {
+		return false
+	}
+
+	annotations := obj.GetAnnotations()
+	if annotations == nil {
+		return false
+	}
+
+	value, exists := annotations[constants.AnnotationSkipReconciliation]
+	if !exists {
+		return false
+	}
+
+	return strings.EqualFold(value, "true")
 }
