@@ -4,6 +4,9 @@
     "enabled": true
   },
   "minimumReleaseAge": "0 days",
+  "gitIgnoredAuthors": [
+    "github-actions[bot]@users.noreply.github.com"
+  ],
   "extends": [
     "config:recommended",
     "config:best-practices",
