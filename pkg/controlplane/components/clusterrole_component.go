@@ -63,7 +63,7 @@ func (*ClusterRole) OrphanDetectorContext() object.DetectorContext {
 			utils.HasComponentLabel(),
 		},
 		ConvertFunc: func(list client.ObjectList) []juggler.Component {
-			clusterRoles := []juggler.Component{}
+			clusterRoles := make([]juggler.Component, 0, len((list.(*rbacv1.ClusterRoleList)).Items))
 			for _, role := range (list.(*rbacv1.ClusterRoleList)).Items {
 				name, _ := strings.CutPrefix(role.Name, fmt.Sprintf("%s:", v1beta1.GroupVersion.Group))
 				clusterRoles = append(clusterRoles, &ClusterRole{Name: name, Rules: role.Rules})

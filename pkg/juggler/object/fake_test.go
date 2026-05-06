@@ -46,7 +46,7 @@ func (f FakeObjectComponent) OrphanDetectorContext() DetectorContext {
 			client.HasLabels{fakeFilterLabel},
 		},
 		ConvertFunc: func(list client.ObjectList) []juggler.Component {
-			comps := []juggler.Component{}
+			comps := make([]juggler.Component, 0, len((list.(*corev1.ConfigMapList)).Items))
 			for _, cm := range (list.(*corev1.ConfigMapList)).Items {
 				comps = append(comps, FakeObjectComponent{name: cm.Name})
 			}

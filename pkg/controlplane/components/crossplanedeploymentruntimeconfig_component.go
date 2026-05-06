@@ -107,7 +107,7 @@ func (c *CrossplaneDeploymentRuntimeConfig) OrphanDetectorContext() object.Detec
 			utils.HasComponentLabel(),
 		},
 		ConvertFunc: func(list client.ObjectList) []juggler.Component {
-			cdrcs := []juggler.Component{}
+			cdrcs := make([]juggler.Component, 0, len((list.(*crossplanev1beta1.DeploymentRuntimeConfigList)).Items))
 			for _, role := range (list.(*crossplanev1beta1.DeploymentRuntimeConfigList)).Items {
 				name, _ := strings.CutPrefix(role.Name, fmt.Sprintf("%s:", v1beta1.GroupVersion.Group))
 				cdrcs = append(cdrcs, &CrossplaneDeploymentRuntimeConfig{Name: name})

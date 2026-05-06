@@ -74,7 +74,7 @@ func (*Secret) OrphanDetectorContext() object.DetectorContext {
 			utils.HasComponentLabel(),
 		},
 		ConvertFunc: func(list client.ObjectList) []juggler.Component {
-			secrets := []juggler.Component{}
+			secrets := make([]juggler.Component, 0, len((list.(*corev1.SecretList)).Items))
 			for _, secret := range (list.(*corev1.SecretList)).Items {
 				secrets = append(secrets, &Secret{Target: client.ObjectKeyFromObject(&secret)})
 			}
