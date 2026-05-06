@@ -74,6 +74,11 @@ func (btp *BTPServiceOperator) IsInstallable(ctx context.Context) (bool, error) 
 	return true, nil
 }
 
+func (btp *BTPServiceOperator) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.VersionsResolver(ctx)
+	return resolve(btpServiceOperatorRelease)
+}
+
 func (btp *BTPServiceOperator) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {
 	rfn := rcontext.VersionResolver(ctx)
 	btp.applyDefaultChartSpec(rfn)

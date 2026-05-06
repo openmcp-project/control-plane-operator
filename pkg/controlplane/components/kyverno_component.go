@@ -164,6 +164,11 @@ func (k *Kyverno) IsInstallable(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+func (k *Kyverno) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.VersionsResolver(ctx)
+	return resolve(kyvernoRelease)
+}
+
 func (k *Kyverno) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {
 	rfn := rcontext.VersionResolver(ctx)
 	k.applyDefaultChartSpec(rfn)

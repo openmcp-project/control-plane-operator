@@ -107,6 +107,11 @@ func (c *Crossplane) IsInstallable(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+func (c *Crossplane) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.VersionsResolver(ctx)
+	return resolve(crossplaneRelease)
+}
+
 func (c *Crossplane) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {
 	rfn := rcontext.VersionResolver(ctx)
 	c.applyDefaultChartSpec(rfn)

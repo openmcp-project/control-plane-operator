@@ -45,6 +45,11 @@ func (c *CertManager) IsInstallable(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+func (c *CertManager) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.VersionsResolver(ctx)
+	return resolve(certManagerRelease)
+}
+
 func (c *CertManager) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {
 	rfn := rcontext.VersionResolver(ctx)
 	c.applyDefaultChartSpec(rfn)

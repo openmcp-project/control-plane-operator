@@ -119,6 +119,11 @@ func (e *ExternalSecretsOperator) IsInstallable(ctx context.Context) (bool, erro
 	return true, nil
 }
 
+func (e *ExternalSecretsOperator) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.VersionsResolver(ctx)
+	return resolve(esoRelease)
+}
+
 func (e *ExternalSecretsOperator) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {
 	rfn := rcontext.VersionResolver(ctx)
 	e.applyDefaultChartSpec(rfn)

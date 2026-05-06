@@ -99,6 +99,11 @@ func (f *Flux) IsInstallable(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+func (f *Flux) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.VersionsResolver(ctx)
+	return resolve(fluxRelease)
+}
+
 func (f *Flux) applyDefaultChartSpec(rfn v1beta1.VersionResolverFn) {
 	if f.Config == nil {
 		f.Config = &v1beta1.FluxConfig{}

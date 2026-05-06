@@ -11,10 +11,11 @@ import (
 
 func Test_Flux(t *testing.T) {
 	testCases := []struct {
-		desc            string
-		config          *v1beta1.FluxConfig
-		versionResolver v1beta1.VersionResolverFn
-		validationFuncs []validationFunc
+		desc             string
+		config           *v1beta1.FluxConfig
+		versionResolver  v1beta1.VersionResolverFn
+		versionsResolver v1beta1.VersionsResolverFn
+		validationFuncs  []validationFunc
 	}{
 		{
 			desc: "should be disabled",
@@ -33,6 +34,28 @@ func Test_Flux(t *testing.T) {
 				hasName("Flux"),
 				isEnabled(true),
 				isAllowed(false),
+			},
+		},
+		{
+			desc: "returns available versions from context resolver",
+			config: &v1beta1.FluxConfig{
+				Version: "1.2.3",
+			},
+			versionsResolver: fakeVersionsResolver(false),
+			validationFuncs: []validationFunc{
+				hasName("Flux"),
+				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+			},
+		},
+		{
+			desc: "returns error when available versions resolver fails",
+			config: &v1beta1.FluxConfig{
+				Version: "1.2.3",
+			},
+			versionsResolver: fakeVersionsResolver(true),
+			validationFuncs: []validationFunc{
+				hasName("Flux"),
+				hasAvailableVersionsError(errFake),
 			},
 		},
 		{
@@ -66,7 +89,7 @@ func Test_Flux(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, tC.versionResolver)
+			ctx := newContext(nil, tC.versionResolver, tC.versionsResolver)
 			c := &Flux{Config: tC.config}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)

@@ -117,6 +117,12 @@ func (c *CrossplaneProvider) IsInstallable(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+// GetAvailableVersions implements Component.
+func (c *CrossplaneProvider) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.VersionsResolver(ctx)
+	return resolve(crossplane.ProviderNameForProviderConfig(c.Config))
+}
+
 // GetName implements Component.
 func (c *CrossplaneProvider) GetName() string {
 	return formatProviderName(c.Config.Name)

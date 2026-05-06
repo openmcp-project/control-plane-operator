@@ -106,6 +106,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 		enabled           bool
 		config            *v1beta1.CrossplaneProviderConfig
 		versionResolver   v1beta1.VersionResolverFn
+		versionsResolver  v1beta1.VersionsResolverFn
 		secretRefResolver secretresolver.ResolveFunc
 		validationFuncs   []validationFunc
 	}{
@@ -166,6 +167,28 @@ func Test_CrossplaneProvider(t *testing.T) {
 			},
 		},
 		{
+			desc:    "returns available versions from context resolver",
+			enabled: true,
+			config: &v1beta1.CrossplaneProviderConfig{
+				Name: "kubernetes",
+			},
+			versionsResolver: fakeVersionsResolver(false),
+			validationFuncs: []validationFunc{
+				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+			},
+		},
+		{
+			desc:    "returns error when available versions resolver fails",
+			enabled: true,
+			config: &v1beta1.CrossplaneProviderConfig{
+				Name: "kubernetes",
+			},
+			versionsResolver: fakeVersionsResolver(true),
+			validationFuncs: []validationFunc{
+				hasAvailableVersionsError(errFake),
+			},
+		},
+		{
 			desc:    "should be enabled",
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
@@ -217,7 +240,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(tC.secretRefResolver, tC.versionResolver)
+			ctx := newContext(tC.secretRefResolver, tC.versionResolver, tC.versionsResolver)
 			c := &CrossplaneProvider{Config: tC.config, Enabled: tC.enabled}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)

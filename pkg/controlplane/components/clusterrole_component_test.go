@@ -97,7 +97,7 @@ func Test_ClusterRole(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, nil)
+			ctx := newContext(nil, nil, nil)
 			c := &ClusterRole{Name: tC.name, Rules: tC.rules, Enabled: tC.enabled}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)
