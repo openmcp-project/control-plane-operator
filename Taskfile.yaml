@@ -17,7 +17,7 @@ includes:
     vars:
       API_DIRS: '{{.ROOT_DIR}}/api/v1beta1/...'
       MANIFEST_OUT: '{{.ROOT_DIR}}/api/crds/manifests'
-      CODE_DIRS: '{{.ROOT_DIR}}/... {{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
+      CODE_DIRS: '{{.ROOT_DIR}}/cmd/... {{.ROOT_DIR}}/internal/... {{.ROOT_DIR}}/pkg/... {{.ROOT_DIR}}/test/... {{.ROOT_DIR}}/api/v1beta1/...'
       COMPONENTS: 'control-plane-operator'
       REPO_URL: 'https://github.com/openmcp-project/control-plane-operator'
       ENVTEST_REQUIRED: "true"

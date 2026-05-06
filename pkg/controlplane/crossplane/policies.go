@@ -273,7 +273,7 @@ func (om *oldObjectCompareValidationBuilder) String() string {
 	vs := om.Build()
 
 	for _, v := range vs {
-		sb.WriteString(fmt.Sprintf("    - expression: %q\n", v.Expression))
+		sb.WriteString(fmt.Sprintf("    - expression: %q\n", v.Expression)) //nolint:staticcheck
 	}
 	return sb.String()
 }
