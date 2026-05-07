@@ -23,7 +23,7 @@ require (
 	k8s.io/klog/v2 v2.140.0
 	ocm.software/ocm v0.41.0
 	sigs.k8s.io/controller-runtime v0.23.3
-	sigs.k8s.io/e2e-framework v0.6.0
+	sigs.k8s.io/e2e-framework v0.7.0
 )
 
 require (
