@@ -66,6 +66,17 @@ func (k *Kyverno) GetPolicyRules() PolicyRules {
 				},
 				Verbs: VerbsAdmin,
 			},
+			{
+				APIGroups: []string{"policies.kyverno.io"},
+				Resources: []string{
+					"validatingpolicies",
+					"mutatingpolicies",
+					"generatingpolicies",
+					"deletingpolicies",
+					"imagevalidatingpolicies",
+				},
+				Verbs: VerbsAdmin,
+			},
 		},
 		View: []rbacv1.PolicyRule{
 			{
@@ -99,6 +110,17 @@ func (k *Kyverno) GetPolicyRules() PolicyRules {
 				},
 				Verbs: VerbsView,
 			},
+			{
+				APIGroups: []string{"policies.kyverno.io"},
+				Resources: []string{
+					"validatingpolicies",
+					"mutatingpolicies",
+					"generatingpolicies",
+					"deletingpolicies",
+					"imagevalidatingpolicies",
+				},
+				Verbs: VerbsView,
+			},
 		},
 	}
 }
@@ -125,6 +147,11 @@ func (k *Kyverno) Hooks() juggler.ComponentHooks {
 		PreUninstall: hooks.PreventOrphanedResources([]schema.GroupVersionKind{
 			{Group: "kyverno.io", Version: "v1", Kind: "ClusterPolicy"},
 			{Group: "kyverno.io", Version: "v1", Kind: "Policy"},
+			{Group: "policies.kyverno.io", Version: "v1", Kind: "ValidatingPolicy"},
+			{Group: "policies.kyverno.io", Version: "v1", Kind: "MutatingPolicy"},
+			{Group: "policies.kyverno.io", Version: "v1", Kind: "GeneratingPolicy"},
+			{Group: "policies.kyverno.io", Version: "v1", Kind: "DeletingPolicy"},
+			{Group: "policies.kyverno.io", Version: "v1", Kind: "ImageValidatingPolicy"},
 		}),
 	}
 }
