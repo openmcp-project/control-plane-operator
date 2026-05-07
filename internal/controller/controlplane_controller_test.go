@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"k8s.io/client-go/tools/events"
+
 	testutils "github.com/openmcp-project/control-plane-operator/test/utils"
 
 	"github.com/openmcp-project/controller-utils/pkg/clientconfig"
@@ -19,7 +21,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/record"
 	"k8s.io/utils/ptr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -355,7 +356,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 				FluxTokenLifetime:  1 * time.Hour,
 				WebhookMiddleware:  types.NamespacedName{},
 				ReconcilePeriod:    time.Second * 30,
-				Recorder:           record.NewFakeRecorder(100),
+				Recorder:           events.NewFakeRecorder(100),
 				RemoteConfigBuilder: func(target corev1beta1.Target) (*rest.Config, clientconfig.ReloadFunc, error) {
 					return testCfg, nil, nil
 				},

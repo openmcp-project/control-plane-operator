@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"k8s.io/client-go/tools/record"
+	"k8s.io/client-go/tools/events"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 
@@ -231,7 +231,7 @@ func TestJuggler_Reconcile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			cp := v1beta1.ControlPlane{}
 			am := NewJuggler(testr.New(t), &ObjectEventRecorder{
-				recorder: record.NewFakeRecorder(3),
+				recorder: events.NewFakeRecorder(3),
 				object:   &cp,
 			})
 			am.RegisterComponent(tt.fields.components...)
@@ -287,7 +287,7 @@ func TestJuggler_RegisterComponent(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			cp := v1beta1.ControlPlane{}
 			am := NewJuggler(testr.New(t), &ObjectEventRecorder{
-				recorder: record.NewFakeRecorder(3),
+				recorder: events.NewFakeRecorder(3),
 				object:   &cp,
 			})
 			am.RegisterComponent(tt.fields...)
@@ -544,7 +544,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			cp := v1beta1.ControlPlane{}
 			am := NewJuggler(testr.New(t), &ObjectEventRecorder{
-				recorder: record.NewFakeRecorder(3),
+				recorder: events.NewFakeRecorder(3),
 				object:   &cp,
 			})
 			am.RegisterReconciler(tt.args.reconciler)

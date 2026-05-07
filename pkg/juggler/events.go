@@ -3,7 +3,7 @@ package juggler
 import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/tools/record"
+	"k8s.io/client-go/tools/events"
 )
 
 type EventType string
@@ -41,7 +41,7 @@ type EventRecorder interface {
 }
 
 // NewEventRecorder returns a new (opinionated) EventRecorder for a given record.EventRecorder and a runtime.Object.
-func NewEventRecorder(recorder record.EventRecorder, object runtime.Object) EventRecorder {
+func NewEventRecorder(recorder events.EventRecorder, object runtime.Object) EventRecorder {
 	return &ObjectEventRecorder{
 		recorder: recorder,
 		object:   object,
@@ -50,22 +50,22 @@ func NewEventRecorder(recorder record.EventRecorder, object runtime.Object) Even
 
 // ObjectEventRecorder is the EventRecorder for the Juggler. It encapsulates the record.EventRecorder interface.
 type ObjectEventRecorder struct {
-	recorder record.EventRecorder
+	recorder events.EventRecorder
 	object   runtime.Object
 }
 
 func (oer *ObjectEventRecorder) Event(eventtype EventType, reason, message string) {
-	oer.recorder.Event(oer.object, string(eventtype), reason, message)
+	oer.recorder.Eventf(oer.object, nil, string(eventtype), reason, reason, message)
 }
 
 func (oer *ObjectEventRecorder) Eventf(eventtype EventType, reason, messageFmt string, args ...interface{}) {
-	oer.recorder.Eventf(oer.object, string(eventtype), reason, messageFmt, args...)
+	oer.recorder.Eventf(oer.object, nil, string(eventtype), reason, reason, messageFmt, args...)
 }
 
-func (oer *ObjectEventRecorder) AnnotatedEventf(annotations map[string]string, eventtype EventType, reason,
+func (oer *ObjectEventRecorder) AnnotatedEventf(_ map[string]string, eventtype EventType, reason,
 	messageFmt string, args ...interface{}) {
 
-	oer.recorder.AnnotatedEventf(oer.object, annotations, string(eventtype), reason, messageFmt, args...)
+	oer.recorder.Eventf(oer.object, nil, string(eventtype), reason, reason, messageFmt, args...)
 }
 
 // ComponentEventRecorder returns a new (opinionated) EventRecorder for a given EventRecorder and a Component.

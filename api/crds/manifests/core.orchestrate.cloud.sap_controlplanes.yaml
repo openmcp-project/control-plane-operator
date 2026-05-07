@@ -165,18 +165,6 @@ spec:
                         CrossplaneProviderConfig represents configuration for Crossplane providers in a ControlPlane.
                         Primarily based on the Crossplane open source API.
                       properties:
-                        controllerConfigRef:
-                          description: |-
-                            ControllerConfigRef references a ControllerConfig resource that will be
-                            used to configure the packaged controller Deployment.
-                            Deprecated: Use RuntimeConfigReference instead.
-                          properties:
-                            name:
-                              description: Name of the ControllerConfig.
-                              type: string
-                          required:
-                          - name
-                          type: object
                         name:
                           description: |-
                             Name of the provider.

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
+	crossplanev1 "github.com/crossplane/crossplane/v2/apis/pkg/v1"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	corev1 "k8s.io/api/core/v1"

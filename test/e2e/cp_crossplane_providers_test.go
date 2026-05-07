@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	xpres "github.com/crossplane-contrib/xp-testing/pkg/resources"
-	xcommonv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
-	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
+	xcommonv1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	crossplanev1 "github.com/crossplane/crossplane/v2/apis/pkg/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/e2e-framework/klient/k8s"

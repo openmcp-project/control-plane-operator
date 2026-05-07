@@ -7,8 +7,8 @@ import (
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 
-	crossplanev1 "github.com/crossplane/crossplane/apis/pkg/v1"
-	crossplanev1beta1 "github.com/crossplane/crossplane/apis/pkg/v1beta1"
+	crossplanev1 "github.com/crossplane/crossplane/v2/apis/pkg/v1"
+	crossplanev1beta1 "github.com/crossplane/crossplane/v2/apis/pkg/v1beta1"
 	helmv2 "github.com/fluxcd/helm-controller/api/v2"
 	kustomizev1 "github.com/fluxcd/kustomize-controller/api/v1"
 	sourcev1 "github.com/fluxcd/source-controller/api/v1"

@@ -74,8 +74,8 @@ func runInit(setupClient client.Client) {
 			initContext,
 			setupClient,
 			schemes.Local,
-			[]client.Object{
-				&corev1beta1.ControlPlane{},
+			[]webhooks.APITypes{
+				{Obj: &corev1beta1.ControlPlane{}, Validator: false, Defaulter: false},
 			},
 		)
 		if err != nil {
@@ -198,7 +198,7 @@ func main() {
 		},
 		ReconcilePeriod:     reconcilePeriod,
 		RemoteConfigBuilder: controller.NewRemoteConfigBuilder(),
-		Recorder:            mgr.GetEventRecorderFor("controlplane-controller"),
+		Recorder:            mgr.GetEventRecorder("controlplane-controller"),
 		EmbeddedCRDs:        crdFiles,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ControlPlane")
