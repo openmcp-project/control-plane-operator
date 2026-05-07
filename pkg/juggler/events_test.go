@@ -6,14 +6,14 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/client-go/tools/record"
+	"k8s.io/client-go/tools/events"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
 func TestObjectEventRecorder_Event(t *testing.T) {
 	cp := v1beta1.ControlPlane{}
-	recorder := record.NewFakeRecorder(1)
+	recorder := events.NewFakeRecorder(1)
 	fer := ObjectEventRecorder{object: &cp, recorder: recorder}
 	fer.Event("FakeType", "FakeReason", "FakeMessage")
 
@@ -32,7 +32,7 @@ func TestObjectEventRecorder_Event(t *testing.T) {
 
 func TestObjectEventRecorder_Eventf(t *testing.T) {
 	cp := v1beta1.ControlPlane{}
-	recorder := record.NewFakeRecorder(1)
+	recorder := events.NewFakeRecorder(1)
 	fer := ObjectEventRecorder{object: &cp, recorder: recorder}
 	fer.Eventf("FakeType", "FakeReason", "FakeMessage with %s", "FakeAddition")
 

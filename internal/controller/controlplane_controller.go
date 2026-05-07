@@ -24,6 +24,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/events"
 
 	"github.com/openmcp-project/control-plane-operator/internal/ocm"
 
@@ -45,7 +46,6 @@ import (
 	condApi "k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -88,7 +88,7 @@ var (
 type ControlPlaneReconciler struct {
 	client.Client
 	Scheme              *runtime.Scheme
-	Recorder            record.EventRecorder
+	Recorder            events.EventRecorder
 	Kubeconfiggen       kubeconfiggen.Generator
 	FluxSecretResolver  secretresolver.SecretResolver
 	WebhookMiddleware   types.NamespacedName
