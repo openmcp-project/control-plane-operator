@@ -142,6 +142,7 @@ func (r *ObjectReconciler) Observe(ctx context.Context, comp juggler.Component) 
 
 	return juggler.ComponentObservation{
 		ResourceExists:      true,
+		ResourceSkipped:     shouldSkipReconciliation(obj),
 		ResourceHealthiness: objectComponent.IsObjectHealthy(obj),
 	}, nil
 }
@@ -205,20 +206,11 @@ func (r *ObjectReconciler) applyObject(ctx context.Context, component juggler.Co
 	obj.SetName(key.Name)
 	obj.SetNamespace(key.Namespace)
 
-	existing := obj.DeepCopyObject().(client.Object)
-
-	err = r.remoteClient.Get(ctx, key, existing)
-	if err != nil && !apierrors.IsNotFound(err) {
-		return err
-	}
-
-	// Only evaluate skip-reconciliation annotation on existing objects
-	if err == nil && shouldSkipReconciliation(existing) {
-		r.logger.Info("Skipping update due to skip-reconciliation annotation on object", "name", key.Name, "namespace", key.Namespace)
-		return nil
-	}
-
 	_, err = controllerutil.CreateOrUpdate(ctx, r.remoteClient, obj, func() error {
+		if shouldSkipReconciliation(obj) {
+			r.logger.Info("Skipping update due to skip-reconciliation annotation on object", "name", key.Name, "namespace", key.Namespace)
+			return nil
+		}
 		utils.SetLabels(obj, r.labelFunc(component))
 		return objectComponent.ReconcileObject(ctx, obj)
 	})

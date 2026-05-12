@@ -94,6 +94,39 @@ func TestObjectReconciler_Install(t *testing.T) {
 			},
 		},
 		{
+			name: "ObjectComponent BuildObject successful - Creation successful - Labels not set due to skip annotation",
+			obj: FakeObjectComponent{
+				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
+					return &corev1.Secret{
+							ObjectMeta: metav1.ObjectMeta{
+								Annotations: map[string]string{
+									constants.AnnotationSkipReconciliation: "true",
+								},
+							},
+						}, types.NamespacedName{
+
+							Name:      "test",
+							Namespace: "default",
+						}, nil
+				},
+				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
+					return nil
+				},
+				name: "FakeObjectComponent",
+			},
+			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
+				secret := &corev1.Secret{}
+				err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret)
+				if err != nil {
+					return err
+				}
+				if !assert.Empty(t, secret.GetLabels()) {
+					return errors.New("labels not empty")
+				}
+				return nil
+			},
+		},
+		{
 			name: "ObjectComponent BuildObject successful - Object already there - Update successful",
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
@@ -612,6 +645,48 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			},
 			expectedObservation: juggler.ComponentObservation{
 				ResourceExists: true,
+				ResourceHealthiness: juggler.ResourceHealthiness{
+					Healthy: true,
+					Message: "",
+				},
+			},
+		},
+		{
+			name: "ObjectComponent BuildObject successful - Object found - Skip annotation set",
+			obj: FakeObjectComponent{
+				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
+					return &corev1.Secret{
+							ObjectMeta: metav1.ObjectMeta{
+								Annotations: map[string]string{
+									constants.AnnotationSkipReconciliation: "true",
+								},
+							},
+						}, types.NamespacedName{
+							Name:      "test",
+							Namespace: "default",
+						}, nil
+				},
+				IsObjectHealthyFunc: func(obj client.Object) juggler.ResourceHealthiness {
+					return juggler.ResourceHealthiness{
+						Healthy: true,
+						Message: "",
+					}
+				},
+			},
+			remoteObjects: []client.Object{
+				&corev1.Secret{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "test",
+						Namespace: "default",
+						Annotations: map[string]string{
+							constants.AnnotationSkipReconciliation: "true",
+						},
+					},
+				},
+			},
+			expectedObservation: juggler.ComponentObservation{
+				ResourceExists:  true,
+				ResourceSkipped: true,
 				ResourceHealthiness: juggler.ResourceHealthiness{
 					Healthy: true,
 					Message: "",

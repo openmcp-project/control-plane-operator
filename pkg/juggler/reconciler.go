@@ -28,7 +28,8 @@ type ComponentReconciler interface {
 }
 
 type ComponentObservation struct {
-	ResourceExists bool
+	ResourceExists  bool
+	ResourceSkipped bool
 	ResourceHealthiness
 }
 

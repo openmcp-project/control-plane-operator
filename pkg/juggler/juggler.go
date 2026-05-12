@@ -240,10 +240,27 @@ func (am *Juggler) reconcileComponent(ctx context.Context, component Component) 
 
 	// Resource is not healthy
 	if !observation.Healthy {
+		// Resource is skipped
+		if observation.ResourceSkipped {
+			return ComponentResult{
+				Component: component,
+				Result:    StatusUnhealthyReconciliationSkipped,
+				Message:   fmt.Sprintf("Reconciliation of %s skipped due to skip-reconciliation annotation.", component.GetName()),
+			}
+		}
 		return ComponentResult{
 			Component: component,
 			Result:    StatusUnhealthy,
 			Message:   observation.Message,
+		}
+	}
+
+	// Resource is healthy but reconciliation is skipped
+	if observation.ResourceSkipped {
+		return ComponentResult{
+			Component: component,
+			Result:    StatusHealthyReconciliationSkipped,
+			Message:   fmt.Sprintf("Reconciliation of %s skipped due to skip-reconciliation annotation.", component.GetName()),
 		}
 	}
 
