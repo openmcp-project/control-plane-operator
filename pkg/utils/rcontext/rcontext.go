@@ -55,11 +55,13 @@ func WithAvailableVersionsResolver(ctx context.Context, fn v1beta1.AvailableVers
 }
 
 func VersionResolver(ctx context.Context) v1beta1.VersionResolverFn {
-	return ctx.Value(versionResolverFnKey{}).(v1beta1.VersionResolverFn)
+	fn, _ := ctx.Value(versionResolverFnKey{}).(v1beta1.VersionResolverFn)
+	return fn
 }
 
 func AvailableVersionsResolver(ctx context.Context) v1beta1.AvailableVersionsResolverFn {
-	return ctx.Value(availableVersionsResolverFnKey{}).(v1beta1.AvailableVersionsResolverFn)
+	fn, _ := ctx.Value(availableVersionsResolverFnKey{}).(v1beta1.AvailableVersionsResolverFn)
+	return fn
 }
 
 //
@@ -73,5 +75,6 @@ func WithSecretRefResolver(ctx context.Context, fn secretresolver.ResolveFunc) c
 }
 
 func SecretRefResolver(ctx context.Context) secretresolver.ResolveFunc {
-	return ctx.Value(secretRefResolverFnKey{}).(secretresolver.ResolveFunc)
+	fn, _ := ctx.Value(secretRefResolverFnKey{}).(secretresolver.ResolveFunc)
+	return fn
 }
