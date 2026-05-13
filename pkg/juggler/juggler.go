@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-logr/logr"
 
+	"github.com/openmcp-project/control-plane-operator/internal/ocm"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
 )
 
@@ -150,7 +151,7 @@ func (am *Juggler) reconcileComponent(ctx context.Context, component Component) 
 	}
 
 	is, err := component.IsInstallable(ctx)
-	if observation.ResourceExists && err != nil {
+	if observation.ResourceExists && errors.Is(err, ocm.ErrComponentVersionNotFound) {
 		message := fmt.Sprintf("%s is installed but current version is not in release channel", component.GetName())
 		message = am.appendAvailableVersionsToMessage(ctx, component, message)
 		return ComponentResult{

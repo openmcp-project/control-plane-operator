@@ -199,6 +199,8 @@ func GetOCMComponentsWithVersions(ctx context.Context, repo ocm.Repository, comp
 	return componentList, nil
 }
 
+var ErrComponentVersionNotFound = errors.New("component version not found")
+
 // GetOCMComponent takes a component name and a version as input and searches in an OCM registry if the component
 // with version is available. The function returns a Component object with the repository and version of the component.
 func GetOCMComponent(
@@ -226,7 +228,7 @@ func GetOCMComponent(
 		}
 	}
 
-	return v1beta1.ComponentVersion{}, fmt.Errorf("component %s with version %s not found", componentName, version)
+	return v1beta1.ComponentVersion{}, fmt.Errorf("%w: component %s with version %s", ErrComponentVersionNotFound, componentName, version)
 }
 
 func GetOCMComponentAvailableVersions(

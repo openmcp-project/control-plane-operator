@@ -10,6 +10,7 @@ import (
 	"k8s.io/client-go/tools/events"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/internal/ocm"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
 
 	"github.com/go-logr/logr"
@@ -546,7 +547,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 			args: args{
 				component: FakeComponent3{
 					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
-					InstallableErr: errBoom,
+					InstallableErr: ocm.ErrComponentVersionNotFound,
 					Versions:       []string{"1.1.0", "1.2.0"},
 				},
 				reconciler: FakeReconciler{
@@ -559,7 +560,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 			want: ComponentResult{
 				Component: FakeComponent3{
 					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
-					InstallableErr: errBoom,
+					InstallableErr: ocm.ErrComponentVersionNotFound,
 					Versions:       []string{"1.1.0", "1.2.0"},
 				},
 				Result:  StatusHealthy,
@@ -571,7 +572,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 			args: args{
 				component: FakeComponent3{
 					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
-					InstallableErr: errBoom,
+					InstallableErr: ocm.ErrComponentVersionNotFound,
 					VersionsErr:    errBoom,
 				},
 				reconciler: FakeReconciler{
@@ -584,7 +585,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 			want: ComponentResult{
 				Component: FakeComponent3{
 					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
-					InstallableErr: errBoom,
+					InstallableErr: ocm.ErrComponentVersionNotFound,
 					VersionsErr:    errBoom,
 				},
 				Result:  StatusHealthy,

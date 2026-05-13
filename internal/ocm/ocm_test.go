@@ -2,7 +2,6 @@ package ocm
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"testing"
 
@@ -46,7 +45,7 @@ func TestGetOCMComponent(t *testing.T) {
 			},
 			want: want{
 				component: corev1beta1.ComponentVersion{},
-				err:       errors.New("Component %s with version %s not found."),
+				err:       fmt.Errorf("%w: component %s with version %s", ErrComponentVersionNotFound, "invalidComponent", ""),
 			},
 		},
 		{
@@ -59,7 +58,7 @@ func TestGetOCMComponent(t *testing.T) {
 			},
 			want: want{
 				component: corev1beta1.ComponentVersion{},
-				err:       errors.New("Component %s with version %s not found."),
+				err:       fmt.Errorf("%w: component %s with version %s", ErrComponentVersionNotFound, "crossplane", "0.0.0"),
 			},
 		},
 		{
@@ -134,7 +133,9 @@ func TestGetOCMComponent(t *testing.T) {
 			if tt.want.err == nil {
 				assert.NoError(t, err)
 			} else {
-				assert.Errorf(t, err, tt.want.err.Error())
+				assert.Error(t, err)
+				assert.EqualError(t, err, tt.want.err.Error())
+				assert.ErrorIs(t, err, ErrComponentVersionNotFound)
 			}
 			assert.Equal(t, got, tt.want.component)
 		})
