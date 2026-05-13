@@ -307,7 +307,7 @@ func (am *Juggler) componentsOfReconciler(r ComponentReconciler) []Component {
 }
 
 func (am *Juggler) appendAvailableVersionsToMessage(ctx context.Context, component Component, message string) string {
-	if rcontext.VersionsResolver(ctx) == nil {
+	if rcontext.AvailableVersionsResolver(ctx) == nil {
 		return message
 	}
 

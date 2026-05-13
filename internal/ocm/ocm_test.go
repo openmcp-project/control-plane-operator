@@ -141,7 +141,7 @@ func TestGetOCMComponent(t *testing.T) {
 	}
 }
 
-func TestGetOCMComponentVersions(t *testing.T) {
+func TestGetOCMComponentAvailableVersions(t *testing.T) {
 	type input struct {
 		componentName    string
 		dockerconfigjson []byte
@@ -248,7 +248,7 @@ func TestGetOCMComponentVersions(t *testing.T) {
 				assert.NoError(t, testutils.SetEnvironmentVariableForLocalOCMTar(testutils.RepositoryPathInvalid))
 			}
 
-			got, err := GetOCMComponentVersions(ctx, c, tt.input.componentName)
+			got, err := GetOCMComponentAvailableVersions(ctx, c, tt.input.componentName)
 
 			if tt.want.err == nil {
 				assert.NoError(t, err)

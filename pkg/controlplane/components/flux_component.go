@@ -100,7 +100,7 @@ func (f *Flux) IsInstallable(ctx context.Context) (bool, error) {
 }
 
 func (f *Flux) GetAvailableVersions(ctx context.Context) ([]string, error) {
-	resolve := rcontext.VersionsResolver(ctx)
+	resolve := rcontext.AvailableVersionsResolver(ctx)
 	return resolve(fluxRelease)
 }
 

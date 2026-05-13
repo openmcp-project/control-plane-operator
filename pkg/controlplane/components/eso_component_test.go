@@ -14,7 +14,7 @@ func Test_ExternalSecretsOperator(t *testing.T) {
 		desc             string
 		config           *v1beta1.ExternalSecretsOperatorConfig
 		versionResolver  v1beta1.VersionResolverFn
-		versionsResolver v1beta1.VersionsResolverFn
+		versionsResolver v1beta1.AvailableVersionsResolverFn
 		validationFuncs  []validationFunc
 	}{
 		{
@@ -41,7 +41,7 @@ func Test_ExternalSecretsOperator(t *testing.T) {
 			config: &v1beta1.ExternalSecretsOperatorConfig{
 				Version: "1.2.3",
 			},
-			versionsResolver: fakeVersionsResolver(false),
+			versionsResolver: fakeAvailableVersionsResolver(false),
 			validationFuncs: []validationFunc{
 				hasName("ExternalSecretsOperator"),
 				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
@@ -52,7 +52,7 @@ func Test_ExternalSecretsOperator(t *testing.T) {
 			config: &v1beta1.ExternalSecretsOperatorConfig{
 				Version: "1.2.3",
 			},
-			versionsResolver: fakeVersionsResolver(true),
+			versionsResolver: fakeAvailableVersionsResolver(true),
 			validationFuncs: []validationFunc{
 				hasName("ExternalSecretsOperator"),
 				hasAvailableVersionsError(errFake),

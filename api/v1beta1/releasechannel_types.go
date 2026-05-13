@@ -25,7 +25,7 @@ import (
 type VersionResolverFn func(componentName string, version string) (ComponentVersion, error)
 
 // +kubebuilder:object:generate=false
-type VersionsResolverFn func(componentName string) ([]string, error)
+type AvailableVersionsResolverFn func(componentName string) ([]string, error)
 
 // ReleaseChannelSpec defines the desired state of ReleaseChannel
 type ReleaseChannelSpec struct {

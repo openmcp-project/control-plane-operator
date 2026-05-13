@@ -42,7 +42,7 @@ func fakeVersionResolver(shouldFail bool) v1beta1.VersionResolverFn {
 	}
 }
 
-func fakeVersionsResolver(shouldFail bool) v1beta1.VersionsResolverFn {
+func fakeAvailableVersionsResolver(shouldFail bool) v1beta1.AvailableVersionsResolverFn {
 	return func(componentName string) ([]string, error) {
 		if shouldFail {
 			return nil, errFake
@@ -138,13 +138,13 @@ func hasAvailableVersionsError(expected error) validationFunc {
 	}
 }
 
-func newContext(fn secretresolver.ResolveFunc, fn2 v1beta1.VersionResolverFn, fn3 v1beta1.VersionsResolverFn) context.Context {
+func newContext(fn secretresolver.ResolveFunc, fn2 v1beta1.VersionResolverFn, fn3 v1beta1.AvailableVersionsResolverFn) context.Context {
 	ctx := context.Background()
 	ctx = rcontext.WithTenantNamespace(ctx, tenantNamespace)
 	ctx = rcontext.WithFluxKubeconfigRef(ctx, &corev1.SecretReference{Name: fluxSecretRef.SecretRef.Name})
 	ctx = rcontext.WithSecretRefResolver(ctx, fn)
 	ctx = rcontext.WithVersionResolver(ctx, fn2)
-	ctx = rcontext.WithVersionsResolver(ctx, fn3)
+	ctx = rcontext.WithAvailableVersionsResolver(ctx, fn3)
 	return ctx
 }
 

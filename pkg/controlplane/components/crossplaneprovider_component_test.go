@@ -106,7 +106,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 		enabled           bool
 		config            *v1beta1.CrossplaneProviderConfig
 		versionResolver   v1beta1.VersionResolverFn
-		versionsResolver  v1beta1.VersionsResolverFn
+		versionsResolver  v1beta1.AvailableVersionsResolverFn
 		secretRefResolver secretresolver.ResolveFunc
 		validationFuncs   []validationFunc
 	}{
@@ -172,7 +172,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 			config: &v1beta1.CrossplaneProviderConfig{
 				Name: "kubernetes",
 			},
-			versionsResolver: fakeVersionsResolver(false),
+			versionsResolver: fakeAvailableVersionsResolver(false),
 			validationFuncs: []validationFunc{
 				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
 			},
@@ -183,7 +183,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 			config: &v1beta1.CrossplaneProviderConfig{
 				Name: "kubernetes",
 			},
-			versionsResolver: fakeVersionsResolver(true),
+			versionsResolver: fakeAvailableVersionsResolver(true),
 			validationFuncs: []validationFunc{
 				hasAvailableVersionsError(errFake),
 			},

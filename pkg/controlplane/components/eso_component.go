@@ -120,7 +120,7 @@ func (e *ExternalSecretsOperator) IsInstallable(ctx context.Context) (bool, erro
 }
 
 func (e *ExternalSecretsOperator) GetAvailableVersions(ctx context.Context) ([]string, error) {
-	resolve := rcontext.VersionsResolver(ctx)
+	resolve := rcontext.AvailableVersionsResolver(ctx)
 	return resolve(esoRelease)
 }
 

@@ -44,22 +44,22 @@ func FluxKubeconfigRef(ctx context.Context) *meta.KubeConfigReference {
 //
 
 type versionResolverFnKey struct{}
-type versionsResolverFnKey struct{}
+type availableVersionsResolverFnKey struct{}
 
 func WithVersionResolver(ctx context.Context, fn v1beta1.VersionResolverFn) context.Context {
 	return context.WithValue(ctx, versionResolverFnKey{}, fn)
 }
 
-func WithVersionsResolver(ctx context.Context, fn v1beta1.VersionsResolverFn) context.Context {
-	return context.WithValue(ctx, versionsResolverFnKey{}, fn)
+func WithAvailableVersionsResolver(ctx context.Context, fn v1beta1.AvailableVersionsResolverFn) context.Context {
+	return context.WithValue(ctx, availableVersionsResolverFnKey{}, fn)
 }
 
 func VersionResolver(ctx context.Context) v1beta1.VersionResolverFn {
 	return ctx.Value(versionResolverFnKey{}).(v1beta1.VersionResolverFn)
 }
 
-func VersionsResolver(ctx context.Context) v1beta1.VersionsResolverFn {
-	return ctx.Value(versionsResolverFnKey{}).(v1beta1.VersionsResolverFn)
+func AvailableVersionsResolver(ctx context.Context) v1beta1.AvailableVersionsResolverFn {
+	return ctx.Value(availableVersionsResolverFnKey{}).(v1beta1.AvailableVersionsResolverFn)
 }
 
 //

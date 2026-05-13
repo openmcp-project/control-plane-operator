@@ -75,7 +75,7 @@ func (btp *BTPServiceOperator) IsInstallable(ctx context.Context) (bool, error) 
 }
 
 func (btp *BTPServiceOperator) GetAvailableVersions(ctx context.Context) ([]string, error) {
-	resolve := rcontext.VersionsResolver(ctx)
+	resolve := rcontext.AvailableVersionsResolver(ctx)
 	return resolve(btpServiceOperatorRelease)
 }
 

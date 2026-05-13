@@ -46,7 +46,7 @@ func (c *CertManager) IsInstallable(ctx context.Context) (bool, error) {
 }
 
 func (c *CertManager) GetAvailableVersions(ctx context.Context) ([]string, error) {
-	resolve := rcontext.VersionsResolver(ctx)
+	resolve := rcontext.AvailableVersionsResolver(ctx)
 	return resolve(certManagerRelease)
 }
 

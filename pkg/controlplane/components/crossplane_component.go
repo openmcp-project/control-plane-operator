@@ -108,7 +108,7 @@ func (c *Crossplane) IsInstallable(ctx context.Context) (bool, error) {
 }
 
 func (c *Crossplane) GetAvailableVersions(ctx context.Context) ([]string, error) {
-	resolve := rcontext.VersionsResolver(ctx)
+	resolve := rcontext.AvailableVersionsResolver(ctx)
 	return resolve(crossplaneRelease)
 }
 

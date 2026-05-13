@@ -229,7 +229,7 @@ func GetOCMComponent(
 	return v1beta1.ComponentVersion{}, fmt.Errorf("component %s with version %s not found", componentName, version)
 }
 
-func GetOCMComponentVersions(
+func GetOCMComponentAvailableVersions(
 	ctx context.Context,
 	client client.Client,
 	componentName string,

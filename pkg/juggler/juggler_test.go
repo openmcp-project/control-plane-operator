@@ -601,7 +601,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 				object:   &cp,
 			})
 			am.RegisterReconciler(tt.args.reconciler)
-			ctx := rcontext.WithVersionsResolver(context.TODO(), func(componentName string) ([]string, error) {
+			ctx := rcontext.WithAvailableVersionsResolver(context.TODO(), func(componentName string) ([]string, error) {
 				return nil, nil
 			})
 			result := am.reconcileComponent(ctx, tt.args.component)
