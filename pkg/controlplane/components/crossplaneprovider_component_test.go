@@ -102,13 +102,13 @@ func Test_formatProviderName(t *testing.T) {
 
 func Test_CrossplaneProvider(t *testing.T) {
 	testCases := []struct {
-		desc              string
-		enabled           bool
-		config            *v1beta1.CrossplaneProviderConfig
-		versionResolver   v1beta1.VersionResolverFn
-		versionsResolver  v1beta1.AvailableVersionsResolverFn
-		secretRefResolver secretresolver.ResolveFunc
-		validationFuncs   []validationFunc
+		desc                      string
+		enabled                   bool
+		config                    *v1beta1.CrossplaneProviderConfig
+		versionResolver           v1beta1.VersionResolverFn
+		availableVersionsResolver v1beta1.AvailableVersionsResolverFn
+		secretRefResolver         secretresolver.ResolveFunc
+		validationFuncs           []validationFunc
 	}{
 		{
 			desc:    "should be disabled",
@@ -172,7 +172,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 			config: &v1beta1.CrossplaneProviderConfig{
 				Name: "kubernetes",
 			},
-			versionsResolver: fakeAvailableVersionsResolver(false),
+			availableVersionsResolver: fakeAvailableVersionsResolver(false),
 			validationFuncs: []validationFunc{
 				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
 			},
@@ -183,7 +183,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 			config: &v1beta1.CrossplaneProviderConfig{
 				Name: "kubernetes",
 			},
-			versionsResolver: fakeAvailableVersionsResolver(true),
+			availableVersionsResolver: fakeAvailableVersionsResolver(true),
 			validationFuncs: []validationFunc{
 				hasAvailableVersionsError(errFake),
 			},
@@ -240,7 +240,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(tC.secretRefResolver, tC.versionResolver, tC.versionsResolver)
+			ctx := newContext(tC.secretRefResolver, tC.versionResolver, tC.availableVersionsResolver)
 			c := &CrossplaneProvider{Config: tC.config, Enabled: tC.enabled}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)

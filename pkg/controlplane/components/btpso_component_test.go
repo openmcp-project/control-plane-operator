@@ -11,11 +11,11 @@ import (
 
 func Test_BTPServiceOperator(t *testing.T) {
 	testCases := []struct {
-		desc             string
-		config           *v1beta1.BTPServiceOperatorConfig
-		versionResolver  v1beta1.VersionResolverFn
-		versionsResolver v1beta1.AvailableVersionsResolverFn
-		validationFuncs  []validationFunc
+		desc                      string
+		config                    *v1beta1.BTPServiceOperatorConfig
+		versionResolver           v1beta1.VersionResolverFn
+		availableVersionsResolver v1beta1.AvailableVersionsResolverFn
+		validationFuncs           []validationFunc
 	}{
 		{
 			desc: "should be disabled",
@@ -37,22 +37,18 @@ func Test_BTPServiceOperator(t *testing.T) {
 			},
 		},
 		{
-			desc: "returns available versions from context resolver",
-			config: &v1beta1.BTPServiceOperatorConfig{
-				Version: "1.2.3",
-			},
-			versionsResolver: fakeAvailableVersionsResolver(false),
+			desc:                      "returns available versions from context resolver",
+			config:                    &v1beta1.BTPServiceOperatorConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(false),
 			validationFuncs: []validationFunc{
 				hasName("BTPServiceOperator"),
 				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
 			},
 		},
 		{
-			desc: "returns error when available versions resolver fails",
-			config: &v1beta1.BTPServiceOperatorConfig{
-				Version: "1.2.3",
-			},
-			versionsResolver: fakeAvailableVersionsResolver(true),
+			desc:                      "returns error when available versions resolver fails",
+			config:                    &v1beta1.BTPServiceOperatorConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(true),
 			validationFuncs: []validationFunc{
 				hasName("BTPServiceOperator"),
 				hasAvailableVersionsError(errFake),
@@ -90,7 +86,7 @@ func Test_BTPServiceOperator(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, tC.versionResolver, tC.versionsResolver)
+			ctx := newContext(nil, tC.versionResolver, tC.availableVersionsResolver)
 			c := &BTPServiceOperator{Config: tC.config}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)
