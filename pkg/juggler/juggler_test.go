@@ -3,12 +3,15 @@ package juggler
 import (
 	"context"
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 
 	"k8s.io/client-go/tools/events"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
+	"github.com/openmcp-project/control-plane-operator/internal/ocm"
+	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
@@ -247,6 +250,7 @@ func knowsAll() func() []reflect.Type {
 		return []reflect.Type{
 			reflect.TypeOf(FakeComponent{}),
 			reflect.TypeOf(FakeComponent2{}),
+			reflect.TypeOf(FakeComponent3{}),
 		}
 	}
 }
@@ -538,6 +542,56 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 				Message:   "not healthy",
 			},
 		},
+		{
+			name: "component exists but not installable",
+			args: args{
+				component: FakeComponent3{
+					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
+					InstallableErr: ocm.ErrComponentVersionNotFound,
+					Versions:       []string{"1.1.0", "1.2.0"},
+				},
+				reconciler: FakeReconciler{
+					KnownTypesFunc: knowsAll(),
+					ObserverFunc: func(ctx context.Context, component Component) (ComponentObservation, error) {
+						return ComponentObservation{ResourceExists: true}, nil
+					},
+				},
+			},
+			want: ComponentResult{
+				Component: FakeComponent3{
+					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
+					InstallableErr: ocm.ErrComponentVersionNotFound,
+					Versions:       []string{"1.1.0", "1.2.0"},
+				},
+				Result:  StatusHealthy,
+				Message: "FakeComponent is installed but current version is not in release channel: available versions: 1.1.0, 1.2.0",
+			},
+		},
+		{
+			name: "component exists but not installable, no versions found",
+			args: args{
+				component: FakeComponent3{
+					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
+					InstallableErr: ocm.ErrComponentVersionNotFound,
+					VersionsErr:    errBoom,
+				},
+				reconciler: FakeReconciler{
+					KnownTypesFunc: knowsAll(),
+					ObserverFunc: func(ctx context.Context, component Component) (ComponentObservation, error) {
+						return ComponentObservation{ResourceExists: true}, nil
+					},
+				},
+			},
+			want: ComponentResult{
+				Component: FakeComponent3{
+					FakeComponent:  FakeComponent{Enabled: true, Allowed: true},
+					InstallableErr: ocm.ErrComponentVersionNotFound,
+					VersionsErr:    errBoom,
+				},
+				Result:  StatusHealthy,
+				Message: fmt.Sprintf("FakeComponent is installed but current version is not in release channel: available versions: %s", errBoom),
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -548,7 +602,10 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 				object:   &cp,
 			})
 			am.RegisterReconciler(tt.args.reconciler)
-			result := am.reconcileComponent(context.TODO(), tt.args.component)
+			ctx := rcontext.WithAvailableVersionsResolver(context.TODO(), func(componentName string) ([]string, error) {
+				return nil, nil
+			})
+			result := am.reconcileComponent(ctx, tt.args.component)
 			assert.Equal(t, tt.want, result)
 		})
 	}

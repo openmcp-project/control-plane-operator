@@ -11,10 +11,11 @@ import (
 
 func Test_ExternalSecretsOperator(t *testing.T) {
 	testCases := []struct {
-		desc            string
-		config          *v1beta1.ExternalSecretsOperatorConfig
-		versionResolver v1beta1.VersionResolverFn
-		validationFuncs []validationFunc
+		desc                      string
+		config                    *v1beta1.ExternalSecretsOperatorConfig
+		versionResolver           v1beta1.VersionResolverFn
+		availableVersionsResolver v1beta1.AvailableVersionsResolverFn
+		validationFuncs           []validationFunc
 	}{
 		{
 			desc: "should be disabled",
@@ -33,6 +34,24 @@ func Test_ExternalSecretsOperator(t *testing.T) {
 				hasName("ExternalSecretsOperator"),
 				isEnabled(true),
 				isAllowed(false),
+			},
+		},
+		{
+			desc:                      "returns available versions from context resolver",
+			config:                    &v1beta1.ExternalSecretsOperatorConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(false),
+			validationFuncs: []validationFunc{
+				hasName("ExternalSecretsOperator"),
+				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+			},
+		},
+		{
+			desc:                      "returns error when available versions resolver fails",
+			config:                    &v1beta1.ExternalSecretsOperatorConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(true),
+			validationFuncs: []validationFunc{
+				hasName("ExternalSecretsOperator"),
+				hasAvailableVersionsError(errFake),
 			},
 		},
 		{
@@ -66,7 +85,7 @@ func Test_ExternalSecretsOperator(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, tC.versionResolver)
+			ctx := newContext(nil, tC.versionResolver, tC.availableVersionsResolver)
 			c := &ExternalSecretsOperator{Config: tC.config}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)

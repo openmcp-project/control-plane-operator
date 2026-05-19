@@ -16,6 +16,7 @@ import (
 	"ocm.software/ocm/api/ocm/ocmutils"
 	"ocm.software/ocm/api/tech/oci/identity"
 	"ocm.software/ocm/api/utils/accessobj"
+	"ocm.software/ocm/api/utils/semverutils"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
@@ -198,6 +199,8 @@ func GetOCMComponentsWithVersions(ctx context.Context, repo ocm.Repository, comp
 	return componentList, nil
 }
 
+var ErrComponentVersionNotFound = errors.New("component version not found")
+
 // GetOCMComponent takes a component name and a version as input and searches in an OCM registry if the component
 // with version is available. The function returns a Component object with the repository and version of the component.
 func GetOCMComponent(
@@ -225,5 +228,33 @@ func GetOCMComponent(
 		}
 	}
 
-	return v1beta1.ComponentVersion{}, fmt.Errorf("component %s with version %s not found", componentName, version)
+	return v1beta1.ComponentVersion{}, fmt.Errorf("%w: component %s with version %s", ErrComponentVersionNotFound, componentName, version)
+}
+
+func GetOCMComponentAvailableVersions(
+	ctx context.Context,
+	client client.Client,
+	componentName string,
+) ([]string, error) {
+	releasechannels := v1beta1.ReleaseChannelList{}
+	err := client.List(ctx, &releasechannels)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, releasechannel := range releasechannels.Items {
+		components := releasechannel.Status.Components
+		for _, component := range components {
+			if component.Name == componentName {
+				versions := make([]string, 0, len(component.Versions))
+				for _, componentVersion := range component.Versions {
+					versions = append(versions, componentVersion.Version)
+				}
+				_ = semverutils.SortVersions(versions)
+				return versions, nil
+			}
+		}
+	}
+
+	return nil, fmt.Errorf("no versions found for component %s", componentName)
 }

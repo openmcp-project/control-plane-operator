@@ -158,10 +158,18 @@ func (k *Kyverno) Hooks() juggler.ComponentHooks {
 
 func (k *Kyverno) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(kyvernoRelease, k.Config.Version); err != nil {
 		return false, err
 	}
 	return true, nil
+}
+
+func (k *Kyverno) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.AvailableVersionsResolver(ctx)
+	return resolve(kyvernoRelease)
 }
 
 func (k *Kyverno) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {

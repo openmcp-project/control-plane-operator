@@ -24,6 +24,9 @@ import (
 // +kubebuilder:object:generate=false
 type VersionResolverFn func(componentName string, version string) (ComponentVersion, error)
 
+// +kubebuilder:object:generate=false
+type AvailableVersionsResolverFn func(componentName string) ([]string, error)
+
 // ReleaseChannelSpec defines the desired state of ReleaseChannel
 type ReleaseChannelSpec struct {
 	// Specify a ocm registry url where the releasechannel components are uploaded

@@ -39,10 +39,18 @@ func (c *CertManager) GetNamespace() string {
 
 func (c *CertManager) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(certManagerRelease, c.Config.Version); err != nil {
 		return false, err
 	}
 	return true, nil
+}
+
+func (c *CertManager) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.AvailableVersionsResolver(ctx)
+	return resolve(certManagerRelease)
 }
 
 func (c *CertManager) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {

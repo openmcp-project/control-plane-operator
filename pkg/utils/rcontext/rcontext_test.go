@@ -38,6 +38,17 @@ func TestWithVersionResolver(t *testing.T) {
 	}
 }
 
+func TestWithAvailableVersionsResolver(t *testing.T) {
+	fn := func(componentName string) ([]string, error) {
+		return []string{"1.0.0"}, nil
+	}
+	ctx := WithAvailableVersionsResolver(context.TODO(), fn)
+	actual := AvailableVersionsResolver(ctx)
+	if reflect.ValueOf(actual).Pointer() != reflect.ValueOf(fn).Pointer() {
+		t.Error("Functions are not equal")
+	}
+}
+
 func TestSecretRefResolver(t *testing.T) {
 	fn := func(urlType secretresolver.UrlSecretType) (*corev1.LocalObjectReference, error) {
 		return nil, nil

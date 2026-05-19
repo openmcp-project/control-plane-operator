@@ -105,7 +105,7 @@ func Test_GenericObjectComponent(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, nil)
+			ctx := newContext(nil, nil, nil)
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, tC.comp)
 			}

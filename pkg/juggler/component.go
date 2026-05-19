@@ -56,6 +56,11 @@ type KeepOnUninstall interface {
 	KeepOnUninstall() bool
 }
 
+// GetAvailableVersions can be implemented by components that need a release-channel version lookup.
+type GetAvailableVersions interface {
+	GetAvailableVersions(ctx context.Context) ([]string, error)
+}
+
 // ComponentStatus indicates the status of a component.
 type ComponentStatus struct {
 	Name       string

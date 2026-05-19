@@ -5,8 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/go-logr/logr"
+
+	"github.com/openmcp-project/control-plane-operator/internal/ocm"
+	"github.com/openmcp-project/control-plane-operator/pkg/utils/rcontext"
 )
 
 var (
@@ -147,6 +151,15 @@ func (am *Juggler) reconcileComponent(ctx context.Context, component Component) 
 	}
 
 	is, err := component.IsInstallable(ctx)
+	if observation.ResourceExists && errors.Is(err, ocm.ErrComponentVersionNotFound) {
+		message := fmt.Sprintf("%s is installed but current version is not in release channel", component.GetName())
+		message = am.appendAvailableVersionsToMessage(ctx, component, message)
+		return ComponentResult{
+			Component: component,
+			Result:    StatusHealthy,
+			Message:   message,
+		}
+	}
 	if err != nil {
 		return ComponentResult{
 			Component: component,
@@ -292,4 +305,22 @@ func (am *Juggler) componentsOfReconciler(r ComponentReconciler) []Component {
 		}
 	}
 	return configuredComponents
+}
+
+func (am *Juggler) appendAvailableVersionsToMessage(ctx context.Context, component Component, message string) string {
+	if rcontext.AvailableVersionsResolver(ctx) == nil {
+		return message
+	}
+
+	gv, ok := component.(GetAvailableVersions)
+	if !ok {
+		return message
+	}
+
+	versions, err := gv.GetAvailableVersions(ctx)
+	if err != nil {
+		return fmt.Sprintf("%s: available versions: %s", message, err)
+	}
+
+	return fmt.Sprintf("%s: available versions: %s", message, strings.Join(versions, ", "))
 }

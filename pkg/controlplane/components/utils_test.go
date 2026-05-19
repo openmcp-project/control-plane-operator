@@ -42,6 +42,15 @@ func fakeVersionResolver(shouldFail bool) v1beta1.VersionResolverFn {
 	}
 }
 
+func fakeAvailableVersionsResolver(shouldFail bool) v1beta1.AvailableVersionsResolverFn {
+	return func(componentName string) ([]string, error) {
+		if shouldFail {
+			return nil, errFake
+		}
+		return []string{"1.1.0", "1.2.0"}, nil
+	}
+}
+
 func fakeSecretRefResolver(shouldFail, shouldReturn bool) secretresolver.ResolveFunc {
 	return func(urlType secretresolver.UrlSecretType) (*corev1.LocalObjectReference, error) {
 		if shouldFail {
@@ -111,12 +120,31 @@ func hasDependencies(count int) validationFunc {
 	}
 }
 
-func newContext(fn secretresolver.ResolveFunc, fn2 v1beta1.VersionResolverFn) context.Context {
+func hasAvailableVersions(expected []string) validationFunc {
+	return func(t *testing.T, ctx context.Context, c juggler.Component) {
+		gv := c.(juggler.GetAvailableVersions)
+		versions, err := gv.GetAvailableVersions(ctx)
+		assert.NoError(t, err)
+		assert.Equal(t, expected, versions)
+	}
+}
+
+func hasAvailableVersionsError(expected error) validationFunc {
+	return func(t *testing.T, ctx context.Context, c juggler.Component) {
+		gv := c.(juggler.GetAvailableVersions)
+		versions, err := gv.GetAvailableVersions(ctx)
+		assert.ErrorIs(t, err, expected)
+		assert.Nil(t, versions)
+	}
+}
+
+func newContext(fn secretresolver.ResolveFunc, fn2 v1beta1.VersionResolverFn, fn3 v1beta1.AvailableVersionsResolverFn) context.Context {
 	ctx := context.Background()
 	ctx = rcontext.WithTenantNamespace(ctx, tenantNamespace)
 	ctx = rcontext.WithFluxKubeconfigRef(ctx, &corev1.SecretReference{Name: fluxSecretRef.SecretRef.Name})
 	ctx = rcontext.WithSecretRefResolver(ctx, fn)
 	ctx = rcontext.WithVersionResolver(ctx, fn2)
+	ctx = rcontext.WithAvailableVersionsResolver(ctx, fn3)
 	return ctx
 }
 

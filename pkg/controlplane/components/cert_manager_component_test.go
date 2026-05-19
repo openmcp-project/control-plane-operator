@@ -11,10 +11,11 @@ import (
 
 func Test_CertManager(t *testing.T) {
 	testCases := []struct {
-		desc            string
-		config          *v1beta1.CertManagerConfig
-		versionResolver v1beta1.VersionResolverFn
-		validationFuncs []validationFunc
+		desc                      string
+		config                    *v1beta1.CertManagerConfig
+		versionResolver           v1beta1.VersionResolverFn
+		availableVersionsResolver v1beta1.AvailableVersionsResolverFn
+		validationFuncs           []validationFunc
 	}{
 		{
 			desc: "should be disabled",
@@ -33,6 +34,24 @@ func Test_CertManager(t *testing.T) {
 				hasName("CertManager"),
 				isEnabled(true),
 				isAllowed(false),
+			},
+		},
+		{
+			desc:                      "returns available versions from context resolver",
+			config:                    &v1beta1.CertManagerConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(false),
+			validationFuncs: []validationFunc{
+				hasName("CertManager"),
+				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+			},
+		},
+		{
+			desc:                      "returns error when available versions resolver fails",
+			config:                    &v1beta1.CertManagerConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(true),
+			validationFuncs: []validationFunc{
+				hasName("CertManager"),
+				hasAvailableVersionsError(errFake),
 			},
 		},
 		{
@@ -64,7 +83,7 @@ func Test_CertManager(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, tC.versionResolver)
+			ctx := newContext(nil, tC.versionResolver, tC.availableVersionsResolver)
 			c := &CertManager{Config: tC.config}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)

@@ -1,10 +1,14 @@
 package components
 
 import (
+	"errors"
+
 	rbacv1 "k8s.io/api/rbac/v1"
 
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 )
+
+var ErrVersionResolverNotConfigured = errors.New("version resolver is not configured in context")
 
 // TargetComponent is a component that should be installed on the Target (remote/workload) cluster.
 type TargetComponent interface {

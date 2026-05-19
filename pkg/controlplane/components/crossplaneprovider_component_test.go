@@ -102,12 +102,13 @@ func Test_formatProviderName(t *testing.T) {
 
 func Test_CrossplaneProvider(t *testing.T) {
 	testCases := []struct {
-		desc              string
-		enabled           bool
-		config            *v1beta1.CrossplaneProviderConfig
-		versionResolver   v1beta1.VersionResolverFn
-		secretRefResolver secretresolver.ResolveFunc
-		validationFuncs   []validationFunc
+		desc                      string
+		enabled                   bool
+		config                    *v1beta1.CrossplaneProviderConfig
+		versionResolver           v1beta1.VersionResolverFn
+		availableVersionsResolver v1beta1.AvailableVersionsResolverFn
+		secretRefResolver         secretresolver.ResolveFunc
+		validationFuncs           []validationFunc
 	}{
 		{
 			desc:    "should be disabled",
@@ -166,6 +167,28 @@ func Test_CrossplaneProvider(t *testing.T) {
 			},
 		},
 		{
+			desc:    "returns available versions from context resolver",
+			enabled: true,
+			config: &v1beta1.CrossplaneProviderConfig{
+				Name: "kubernetes",
+			},
+			availableVersionsResolver: fakeAvailableVersionsResolver(false),
+			validationFuncs: []validationFunc{
+				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+			},
+		},
+		{
+			desc:    "returns error when available versions resolver fails",
+			enabled: true,
+			config: &v1beta1.CrossplaneProviderConfig{
+				Name: "kubernetes",
+			},
+			availableVersionsResolver: fakeAvailableVersionsResolver(true),
+			validationFuncs: []validationFunc{
+				hasAvailableVersionsError(errFake),
+			},
+		},
+		{
 			desc:    "should be enabled",
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
@@ -217,7 +240,7 @@ func Test_CrossplaneProvider(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(tC.secretRefResolver, tC.versionResolver)
+			ctx := newContext(tC.secretRefResolver, tC.versionResolver, tC.availableVersionsResolver)
 			c := &CrossplaneProvider{Config: tC.config, Enabled: tC.enabled}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)

@@ -122,6 +122,7 @@ func (r *ControlPlaneReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	resolverFn := r.getReleaseChannels(ctx)
 	ctx = rcontext.WithVersionResolver(ctx, resolverFn)
+	ctx = rcontext.WithAvailableVersionsResolver(ctx, r.getComponentAvailableVersions(ctx))
 	ctx = rcontext.WithSecretRefResolver(ctx, r.FluxSecretResolver.Resolve)
 
 	// get a remote config for the target cluster
@@ -186,6 +187,13 @@ func (r *ControlPlaneReconciler) Reconcile(ctx context.Context, req ctrl.Request
 func (r *ControlPlaneReconciler) getReleaseChannels(ctx context.Context) corev1beta1.VersionResolverFn {
 	return func(componentName string, version string) (corev1beta1.ComponentVersion, error) {
 		return ocm.GetOCMComponent(ctx, r.Client, componentName, version)
+	}
+}
+
+// getComponentAvailableVersions returns a function that can be used to get all available versions of a component.
+func (r *ControlPlaneReconciler) getComponentAvailableVersions(ctx context.Context) corev1beta1.AvailableVersionsResolverFn {
+	return func(componentName string) ([]string, error) {
+		return ocm.GetOCMComponentAvailableVersions(ctx, r.Client, componentName)
 	}
 }
 

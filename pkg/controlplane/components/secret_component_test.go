@@ -158,7 +158,7 @@ func Test_Secret(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, nil)
+			ctx := newContext(nil, nil, nil)
 			fakeClient := fake.NewClientBuilder().WithInterceptorFuncs(tC.interceptorFuncs).WithObjects(sourceSecret).Build()
 			c := &Secret{
 				Enabled:      tC.enabled,

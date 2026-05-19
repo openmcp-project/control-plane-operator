@@ -101,10 +101,18 @@ func (c *Crossplane) GetNamespace() string {
 
 func (c *Crossplane) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(crossplaneRelease, c.Config.Version); err != nil {
 		return false, err
 	}
 	return true, nil
+}
+
+func (c *Crossplane) GetAvailableVersions(ctx context.Context) ([]string, error) {
+	resolve := rcontext.AvailableVersionsResolver(ctx)
+	return resolve(crossplaneRelease)
 }
 
 func (c *Crossplane) BuildSourceRepository(ctx context.Context) (fluxcd.SourceAdapter, error) {

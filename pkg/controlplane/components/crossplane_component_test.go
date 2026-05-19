@@ -11,10 +11,11 @@ import (
 
 func Test_Crossplane(t *testing.T) {
 	testCases := []struct {
-		desc            string
-		config          *v1beta1.CrossplaneConfig
-		versionResolver v1beta1.VersionResolverFn
-		validationFuncs []validationFunc
+		desc                      string
+		config                    *v1beta1.CrossplaneConfig
+		versionResolver           v1beta1.VersionResolverFn
+		availableVersionsResolver v1beta1.AvailableVersionsResolverFn
+		validationFuncs           []validationFunc
 	}{
 		{
 			desc: "should be disabled",
@@ -33,6 +34,24 @@ func Test_Crossplane(t *testing.T) {
 				hasName("Crossplane"),
 				isEnabled(true),
 				isAllowed(false),
+			},
+		},
+		{
+			desc:                      "returns available versions from context resolver",
+			config:                    &v1beta1.CrossplaneConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(false),
+			validationFuncs: []validationFunc{
+				hasName("Crossplane"),
+				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+			},
+		},
+		{
+			desc:                      "returns error when available versions resolver fails",
+			config:                    &v1beta1.CrossplaneConfig{},
+			availableVersionsResolver: fakeAvailableVersionsResolver(true),
+			validationFuncs: []validationFunc{
+				hasName("Crossplane"),
+				hasAvailableVersionsError(errFake),
 			},
 		},
 		{
@@ -63,7 +82,7 @@ func Test_Crossplane(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			ctx := newContext(nil, tC.versionResolver)
+			ctx := newContext(nil, tC.versionResolver, tC.availableVersionsResolver)
 			c := &Crossplane{Config: tC.config}
 			for _, vfn := range tC.validationFuncs {
 				vfn(t, ctx, c)

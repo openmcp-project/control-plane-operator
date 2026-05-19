@@ -91,6 +91,25 @@ func (f FakeComponent2) Hooks() ComponentHooks {
 
 // ---------------------------------------------------------------------------------------------------
 
+var _ Component = FakeComponent3{}
+
+type FakeComponent3 struct {
+	FakeComponent
+	InstallableErr error
+	Versions       []string
+	VersionsErr    error
+}
+
+func (f FakeComponent3) IsInstallable(context.Context) (bool, error) {
+	return false, f.InstallableErr
+}
+
+func (f FakeComponent3) GetAvailableVersions(context.Context) ([]string, error) {
+	return f.Versions, f.VersionsErr
+}
+
+// ---------------------------------------------------------------------------------------------------
+
 var _ ComponentReconciler = FakeReconciler{}
 var _ OrphanedComponentsDetector = FakeReconciler{}
 
