@@ -39,6 +39,9 @@ func (c *CertManager) GetNamespace() string {
 
 func (c *CertManager) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(certManagerRelease, c.Config.Version); err != nil {
 		return false, err
 	}

@@ -68,6 +68,9 @@ func (btp *BTPServiceOperator) GetNamespace() string {
 
 func (btp *BTPServiceOperator) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(btpServiceOperatorRelease, btp.Config.Version); err != nil {
 		return false, err
 	}

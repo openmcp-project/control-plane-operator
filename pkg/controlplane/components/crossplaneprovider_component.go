@@ -111,6 +111,9 @@ func (c *CrossplaneProvider) GetNamespace() string {
 // IsInstallable implements Component.
 func (c *CrossplaneProvider) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(crossplane.ProviderNameForProviderConfig(c.Config), c.Config.Version); err != nil {
 		return false, err
 	}

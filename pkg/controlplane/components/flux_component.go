@@ -93,6 +93,9 @@ func (f *Flux) Hooks() juggler.ComponentHooks {
 
 func (f *Flux) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(fluxRelease, f.Config.Version); err != nil {
 		return false, err
 	}

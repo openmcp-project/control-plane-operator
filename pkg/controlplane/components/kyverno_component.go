@@ -158,6 +158,9 @@ func (k *Kyverno) Hooks() juggler.ComponentHooks {
 
 func (k *Kyverno) IsInstallable(ctx context.Context) (bool, error) {
 	rfn := rcontext.VersionResolver(ctx)
+	if rfn == nil {
+		return false, ErrVersionResolverNotConfigured
+	}
 	if _, err := rfn(kyvernoRelease, k.Config.Version); err != nil {
 		return false, err
 	}
