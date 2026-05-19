@@ -11,6 +11,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
+	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 	"github.com/openmcp-project/control-plane-operator/pkg/juggler"
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
@@ -140,6 +141,7 @@ func (r *ObjectReconciler) Observe(ctx context.Context, comp juggler.Component) 
 
 	return juggler.ComponentObservation{
 		ResourceExists:      true,
+		ResourceSkipped:     shouldSkipReconciliation(obj),
 		ResourceHealthiness: objectComponent.IsObjectHealthy(obj),
 	}, nil
 }
@@ -204,8 +206,20 @@ func (r *ObjectReconciler) applyObject(ctx context.Context, component juggler.Co
 	obj.SetNamespace(key.Namespace)
 
 	_, err = controllerutil.CreateOrUpdate(ctx, r.remoteClient, obj, func() error {
+		if shouldSkipReconciliation(obj) {
+			r.logger.Info("Skipping update due to skip-reconciliation annotation on object", "name", key.Name, "namespace", key.Namespace)
+			return nil
+		}
 		utils.SetLabels(obj, r.labelFunc(component))
 		return objectComponent.ReconcileObject(ctx, obj)
 	})
 	return err
+}
+
+func shouldSkipReconciliation(obj client.Object) bool {
+	if obj == nil {
+		return false
+	}
+
+	return obj.GetAnnotations()[constants.AnnotationSkipReconciliation] == "true"
 }

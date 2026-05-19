@@ -592,6 +592,54 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 				Message: fmt.Sprintf("FakeComponent is installed but current version is not in release channel: available versions: %s", errBoom),
 			},
 		},
+		{
+			name: "is not healthy and skipped",
+			args: args{
+				component: FakeComponent{Enabled: true, Allowed: true},
+				reconciler: FakeReconciler{
+					KnownTypesFunc: knowsAll(),
+					ObserverFunc: func(ctx context.Context, component Component) (ComponentObservation, error) {
+						return ComponentObservation{
+							ResourceExists: true,
+							ResourceHealthiness: ResourceHealthiness{
+								Healthy: false,
+								Message: "not healthy",
+							},
+							ResourceSkipped: true,
+						}, nil
+					},
+				},
+			},
+			want: ComponentResult{
+				Component: FakeComponent{Enabled: true, Allowed: true},
+				Result:    StatusUnhealthyReconciliationSkipped,
+				Message:   "Reconciliation of FakeComponent skipped due to skip-reconciliation annotation.",
+			},
+		},
+		{
+			name: "is healthy and skipped",
+			args: args{
+				component: FakeComponent{Enabled: true, Allowed: true},
+				reconciler: FakeReconciler{
+					KnownTypesFunc: knowsAll(),
+					ObserverFunc: func(ctx context.Context, component Component) (ComponentObservation, error) {
+						return ComponentObservation{
+							ResourceExists: true,
+							ResourceHealthiness: ResourceHealthiness{
+								Healthy: true,
+								Message: "",
+							},
+							ResourceSkipped: true,
+						}, nil
+					},
+				},
+			},
+			want: ComponentResult{
+				Component: FakeComponent{Enabled: true, Allowed: true},
+				Result:    StatusHealthyReconciliationSkipped,
+				Message:   "Reconciliation of FakeComponent skipped due to skip-reconciliation annotation.",
+			},
+		},
 	}
 
 	for _, tt := range tests {

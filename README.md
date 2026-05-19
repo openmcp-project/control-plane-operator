@@ -139,6 +139,21 @@ cluster.
 
 More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
 
+## FAQ
+
+### How can I stop the operator from managing an existing resource?
+
+Add the annotation `core.orchestrate.cloud.sap/skip-reconciliation: "true"` to the existing managed object.
+
+When this annotation is present, the operator skips reconciliation for that resource entirely. This means neither desired-state changes nor drift from the expected state will be applied granting manual control over the resource.
+The annotation works on the following components:
+
+- CrossplaneProvider
+- CrossplaneDeploymentRuntimeConfig
+- Secret
+- ClusterRole
+- GenericObjectComponent
+
 
 ## Support, Feedback, Contributing
 

@@ -223,7 +223,7 @@ func (r *ControlPlaneReconciler) updateControlPlaneComponents(ctx context.Contex
 		if componentResult.Component.IsEnabled() {
 			enabledComponents++
 		}
-		if componentResult.Result == juggler.StatusHealthy {
+		if componentResult.Result == juggler.StatusHealthy || componentResult.Result == juggler.StatusHealthyReconciliationSkipped {
 			healthyComponents++
 		}
 
