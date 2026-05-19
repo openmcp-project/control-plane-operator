@@ -101,13 +101,13 @@ var (
 	// StatusUpdateFailed states that a component could not be updated.
 	StatusUpdateFailed = ComponentStatus{Name: "UpdateFailed", IsReady: false, EmitsEvent: ComponentEventWarning}
 
-	// StatusSkipped states that a component is healthy but reconciliation is skipped.
+	// StatusUnhealthyReconciliationSkipped states that a component is unhealthy and the reconciliation is skipped.
 	StatusUnhealthyReconciliationSkipped = ComponentStatus{Name: "ReconciliationSkipped", IsReady: false, EmitsEvent: ComponentEventNormal}
 
 	// StatusUnhealthy states that a component is unhealthy.
 	StatusUnhealthy = ComponentStatus{Name: "Unhealthy", IsReady: false, EmitsEvent: ComponentEventNone}
 
-	// StatusSkipped states that a component is healthy but reconciliation is skipped.
+	// StatusHealthyReconciliationSkipped states that a component is healthy but reconciliation is skipped.
 	StatusHealthyReconciliationSkipped = ComponentStatus{Name: "ReconciliationSkipped", IsReady: true, EmitsEvent: ComponentEventNormal}
 
 	// StatusHealthy states that a component is healthy and no action has been taken.

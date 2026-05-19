@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"reflect"
-	"strings"
 
 	"github.com/go-logr/logr"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -222,15 +221,5 @@ func shouldSkipReconciliation(obj client.Object) bool {
 		return false
 	}
 
-	annotations := obj.GetAnnotations()
-	if annotations == nil {
-		return false
-	}
-
-	value, exists := annotations[constants.AnnotationSkipReconciliation]
-	if !exists {
-		return false
-	}
-
-	return strings.EqualFold(value, "true")
+	return obj.GetAnnotations()[constants.AnnotationSkipReconciliation] == "true"
 }
