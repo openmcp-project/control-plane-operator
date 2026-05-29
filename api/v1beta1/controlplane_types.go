@@ -20,6 +20,7 @@ import (
 	"github.com/openmcp-project/controller-utils/pkg/api"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 const (
@@ -144,7 +145,10 @@ type ControlPlaneList struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&ControlPlane{}, &ControlPlaneList{})
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &ControlPlane{}, &ControlPlaneList{})
+		return nil
+	})
 }
 
 // Condition types.

@@ -18,6 +18,7 @@ package v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // CrossplanePackageRestrictionSpec defines the desired state of CrossplanePackageRestriction
@@ -60,5 +61,8 @@ type CrossplanePackageRestrictionList struct {
 }
 
 func init() {
-	SchemeBuilder.Register(&CrossplanePackageRestriction{}, &CrossplanePackageRestrictionList{})
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &CrossplanePackageRestriction{}, &CrossplanePackageRestrictionList{})
+		return nil
+	})
 }
