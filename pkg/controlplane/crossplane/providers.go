@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	crossplanev1 "github.com/crossplane/crossplane/v2/apis/pkg/v1"
+	crossplanev1 "github.com/crossplane/crossplane/apis/v2/pkg/v1"
 	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"

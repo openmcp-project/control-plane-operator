@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	crossplanev1 "github.com/crossplane/crossplane/v2/apis/pkg/v1"
-	crossplanev1beta "github.com/crossplane/crossplane/v2/apis/pkg/v1beta1"
+	crossplanev1 "github.com/crossplane/crossplane/apis/v2/pkg/v1"
+	crossplanev1beta "github.com/crossplane/crossplane/apis/v2/pkg/v1beta1"
 	arv1 "k8s.io/api/admissionregistration/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

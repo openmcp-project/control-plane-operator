@@ -1,7 +1,7 @@
 package v1beta1
 
 import (
-	crossplanev1 "github.com/crossplane/crossplane/v2/apis/pkg/v1"
+	crossplanev1 "github.com/crossplane/crossplane/apis/v2/pkg/v1"
 	corev1 "k8s.io/api/core/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
