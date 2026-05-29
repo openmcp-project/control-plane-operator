@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	commonv1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	crossplanev1 "github.com/crossplane/crossplane/v2/apis/pkg/v1"
+	commonv1 "github.com/crossplane/crossplane/apis/v2/core/v2"
+	crossplanev1 "github.com/crossplane/crossplane/apis/v2/pkg/v1"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
