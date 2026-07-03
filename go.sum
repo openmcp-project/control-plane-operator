@@ -780,8 +780,8 @@ github.com/opencontainers/image-spec v1.1.1 h1:y0fUlFfIZhPF1W537XOLg0/fcx6zcHCJw
 github.com/opencontainers/image-spec v1.1.1/go.mod h1:qpqAh3Dmcf36wStyyWU+kCeDgrGnAve2nCC8+7h8Q0M=
 github.com/opencontainers/runtime-spec v1.3.0 h1:YZupQUdctfhpZy3TM39nN9Ika5CBWT5diQ8ibYCRkxg=
 github.com/opencontainers/runtime-spec v1.3.0/go.mod h1:jwyrGlmzljRJv/Fgzds9SsS/C5hL+LL3ko9hs6T5lQ0=
-github.com/openmcp-project/controller-utils v0.29.1 h1:GpqngwPdopOfNc6D2HY6Fx3B8/SnVa/VRew/IAGvmd4=
-github.com/openmcp-project/controller-utils v0.29.1/go.mod h1:JDq+Tqd+j0wUwQIqpoyuvpx1GXzqGKauxIa8oVmJJUQ=
+github.com/openmcp-project/controller-utils v0.30.0 h1:x/lO7x6m2pI2P743psb1JT3ENw4q06PqukOq+3i0LIw=
+github.com/openmcp-project/controller-utils v0.30.0/go.mod h1:0cTnMHPjrH+FUdazOTD637KTQZ4JZ+5SSiGQkY6vC4g=
 github.com/pborman/getopt v0.0.0-20170112200414-7148bc3a4c30/go.mod h1:85jBQOZwpVEaDAr341tbn15RS4fCAsIst0qp7i8ex1o=
 github.com/pborman/uuid v1.2.1 h1:+ZZIw58t/ozdjRaXh/3awHfmWRbzYxJoAdNJxe/3pvw=
 github.com/pborman/uuid v1.2.1/go.mod h1:X/NO0urCmaxf9VXbdlT7C2Yzkj2IKimNn4k+gtPdI/k=

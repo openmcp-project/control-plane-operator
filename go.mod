@@ -11,7 +11,7 @@ require (
 	github.com/fluxcd/source-controller/api v1.8.5
 	github.com/go-logr/logr v1.4.3
 	github.com/google/go-cmp v0.7.0
-	github.com/openmcp-project/controller-utils v0.29.1
+	github.com/openmcp-project/controller-utils v0.30.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/text v0.38.0
@@ -249,8 +249,6 @@ require (
 	github.com/nozzle/throttler v0.0.0-20180817012639-2ea982251481 // indirect
 	github.com/oklog/ulid/v2 v2.1.1 // indirect
 	github.com/oleiade/reflections v1.1.0 // indirect
-	github.com/onsi/ginkgo/v2 v2.31.0 // indirect
-	github.com/onsi/gomega v1.42.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/opencontainers/runtime-spec v1.3.0 // indirect
