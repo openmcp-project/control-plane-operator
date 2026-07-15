@@ -3,7 +3,7 @@ module github.com/openmcp-project/control-plane-operator
 go 1.26.5
 
 require (
-	github.com/crossplane-contrib/xp-testing v1.9.2
+	github.com/crossplane-contrib/xp-testing v1.10.0
 	github.com/crossplane/crossplane/apis/v2 v2.3.3
 	github.com/fluxcd/helm-controller/api v1.6.2
 	github.com/fluxcd/kustomize-controller/api v1.9.3
@@ -181,7 +181,7 @@ require (
 	github.com/google/btree v1.1.3 // indirect
 	github.com/google/certificate-transparency-go v1.3.3 // indirect
 	github.com/google/gnostic-models v0.7.1 // indirect
-	github.com/google/go-containerregistry v0.21.6 // indirect
+	github.com/google/go-containerregistry v0.21.7 // indirect
 	github.com/google/go-github/v45 v45.2.0 // indirect
 	github.com/google/go-github/v73 v73.0.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
