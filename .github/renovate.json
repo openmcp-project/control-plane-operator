@@ -1,5 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>openmcp-project/.github:renovate-config"
+  ],
   "git-submodules": {
     "enabled": true
   },
@@ -7,29 +10,7 @@
   "gitIgnoredAuthors": [
     "github-actions[bot]@users.noreply.github.com"
   ],
-  "extends": [
-    "config:recommended",
-    "config:best-practices",
-    "security:openssf-scorecard",
-    "helpers:pinGitHubActionDigests",
-    ":rebaseStalePrs"
-  ],
-  "postUpdateOptions": [
-    "gomodTidy"
-  ],
   "packageRules": [
-    {
-      "matchManagers": [
-        "gomod"
-      ],
-      "matchDepNames": [
-        "go"
-      ],
-      "matchDepTypes": [
-        "golang"
-      ],
-      "rangeStrategy": "bump"
-    },
     {
       "description": "Combine crossplane updates in a single PR",
       "matchDatasources": [
@@ -61,14 +42,6 @@
         "helm-values"
       ],
       "enabled": false
-    },
-    {
-      "description": "Group openmcp-project/build submodule and workflow updates",
-      "matchDepNames": [
-        "hack/common",
-        "openmcp-project/build"
-      ],
-      "groupName": "openmcp-project/build"
     }
   ]
 }
