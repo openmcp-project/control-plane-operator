@@ -3,16 +3,9 @@
   "extends": [
     "github>openmcp-project/.github:renovate-config"
   ],
-  "git-submodules": {
-    "enabled": true
-  },
-  "minimumReleaseAge": "0 days",
-  "gitIgnoredAuthors": [
-    "github-actions[bot]@users.noreply.github.com"
-  ],
   "packageRules": [
     {
-      "description": "Combine crossplane updates in a single PR",
+      "description": "Group crossplane updates in a single PR",
       "matchDatasources": [
         "go"
       ],
@@ -23,7 +16,7 @@
       "groupSlug": "crossplane-dependencies"
     },
     {
-      "description": "Combine fluxcd updates in a single PR",
+      "description": "Group fluxcd updates in a single PR",
       "matchDatasources": [
         "go"
       ],
@@ -32,16 +25,6 @@
       "matchPackageNames": [
         "/^github\\.com/fluxcd/"
       ]
-    },
-    {
-      "description": "Ignore our own image in chart as it will be updated on release",
-      "matchPackageNames": [
-        "ghcr.io/openmcp-project/images/control-plane-operator"
-      ],
-      "matchManagers": [
-        "helm-values"
-      ],
-      "enabled": false
     }
   ]
 }
