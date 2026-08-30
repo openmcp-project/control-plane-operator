@@ -27,6 +27,9 @@ require (
 	sigs.k8s.io/e2e-framework v0.7.0
 )
 
+// The repository renamed from ThalesIgnite (and later ThalesGroup) to eclipse-keypont because the project was donated to the Eclipse Foundation.
+replace github.com/ThalesIgnite/crypto11 => github.com/eclipse-keypont/crypto11 v1.6.8
+
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20260415201107-50325440f8f2.1 // indirect
 	cloud.google.com/go/auth v0.20.0 // indirect
@@ -366,5 +369,3 @@ require (
 	sigs.k8s.io/structured-merge-diff/v6 v6.4.0 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
-
-replace github.com/ThalesIgnite/crypto11 => github.com/ThalesGroup/crypto11 v1.6.2
