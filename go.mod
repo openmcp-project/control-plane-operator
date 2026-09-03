@@ -1,6 +1,6 @@
 module github.com/openmcp-project/control-plane-operator
 
-go 1.26.6
+go 1.27.0
 
 require (
 	github.com/crossplane-contrib/xp-testing v1.9.2
