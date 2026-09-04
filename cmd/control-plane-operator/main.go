@@ -35,6 +35,7 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
@@ -109,6 +110,10 @@ func main() {
 
 	var syncPeriod string
 	flag.StringVar(&syncPeriod, "sync-period", "1m", "The period at which the controller will sync the resources.")
+	var cacheResyncPeriodStr string
+	flag.StringVar(&cacheResyncPeriodStr, "cache-resync-period", "10m",
+		"The period at which the informer cache does a full relist. Repairs a silently-stale "+
+			"cache (e.g. a wedged reflector) within one interval instead of the client-go default (~10h).")
 	var fluxTokenLifetimeStr string
 	flag.StringVar(&fluxTokenLifetimeStr, "flux-token-lifetime", "1h", "The desired lifetime of the flux service account token used to access the MCP.")
 
@@ -151,12 +156,27 @@ func main() {
 		os.Exit(1)
 	}
 
+	// SyncPeriod forces a periodic full relist of every informer, which repairs a
+	// silently-stale cache (e.g. a wedged reflector that stopped receiving watch
+	// events) within one interval instead of waiting for the client-go default (~10h).
+	// Decoupled from the reconcile requeue period to avoid an expensive full relist
+	// of every watched type every minute.
+	cacheResyncPeriod, errResync := time.ParseDuration(cacheResyncPeriodStr)
+	if errResync != nil {
+		cacheResyncPeriod = 10 * time.Minute
+	}
+	setupLog.Info("cache resync period set to", "cacheResyncPeriod", cacheResyncPeriod)
+
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 schemes.Local,
 		Metrics:                metricsserver.Options{BindAddress: metricsAddr},
 		HealthProbeBindAddress: probeAddr,
-		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "c627d721.core.orchestrate.cloud.sap",
+		Cache:                  cache.Options{SyncPeriod: &cacheResyncPeriod},
+		// TEMP diagnostics: exposes /debug/pprof/* for goroutine + heap dumps.
+		// Use: kubectl port-forward ... 6060; curl localhost:6060/debug/pprof/goroutine?debug=2
+		PprofBindAddress: ":6060",
+		LeaderElection:   enableLeaderElection,
+		LeaderElectionID: "c627d721.core.orchestrate.cloud.sap",
 		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
 		// when the Manager ends. This requires the binary to immediately end when the
 		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
