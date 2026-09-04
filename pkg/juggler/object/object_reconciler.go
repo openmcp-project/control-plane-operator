@@ -136,6 +136,13 @@ func (r *ObjectReconciler) Observe(ctx context.Context, comp juggler.Component) 
 		return juggler.ComponentObservation{ResourceExists: false}, nil
 	}
 	if err != nil {
+		// Log target-cluster access failures (e.g. expired kubeconfig -> 401, unreachable
+		// API server). Otherwise this only becomes an ObservationFailed condition with no log.
+		r.logger.Error(err, "failed to observe object on target cluster",
+			"component", comp.GetName(),
+			"name", key.Name,
+			"namespace", key.Namespace,
+		)
 		return juggler.ComponentObservation{}, err
 	}
 
@@ -213,6 +220,17 @@ func (r *ObjectReconciler) applyObject(ctx context.Context, component juggler.Co
 		utils.SetLabels(obj, r.labelFunc(component))
 		return objectComponent.ReconcileObject(ctx, obj)
 	})
+	if err != nil {
+		// Surface failures to reach/write the target cluster (e.g. expired kubeconfig -> 401,
+		// unreachable API server). Without this the error is only propagated into a component
+		// condition and never logged, making stale copied resources hard to diagnose.
+		r.logger.Error(err, "failed to apply object to target cluster",
+			"component", component.GetName(),
+			"gvk", obj.GetObjectKind().GroupVersionKind().String(),
+			"name", key.Name,
+			"namespace", key.Namespace,
+		)
+	}
 	return err
 }
 

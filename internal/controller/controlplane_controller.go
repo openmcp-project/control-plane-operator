@@ -128,12 +128,14 @@ func (r *ControlPlaneReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	// get a remote config for the target cluster
 	remoteCfg, _, err := r.RemoteConfigBuilder(cp.Spec.Target)
 	if err != nil {
+		log.Error(err, "failed to build REST config for ControlPlane target cluster")
 		return ctrl.Result{}, errors.Join(errFailedToBuildRESTConfig, err)
 	}
 
 	// create a remote client
 	remoteClient, err := client.New(remoteCfg, client.Options{Scheme: schemes.Remote})
 	if err != nil {
+		log.Error(err, "failed to build client for ControlPlane target cluster")
 		return ctrl.Result{}, errors.Join(errFailedToRemoteClient, err)
 	}
 
