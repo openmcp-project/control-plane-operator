@@ -5,10 +5,10 @@ go 1.26.6
 require (
 	github.com/crossplane-contrib/xp-testing v1.9.2
 	github.com/crossplane/crossplane/apis/v2 v2.3.4
-	github.com/fluxcd/helm-controller/api v1.6.2
-	github.com/fluxcd/kustomize-controller/api v1.9.3
+	github.com/fluxcd/helm-controller/api v1.6.4
+	github.com/fluxcd/kustomize-controller/api v1.9.5
 	github.com/fluxcd/pkg/apis/meta v1.31.0
-	github.com/fluxcd/source-controller/api v1.9.3
+	github.com/fluxcd/source-controller/api v1.9.5
 	github.com/go-logr/logr v1.4.4
 	github.com/google/go-cmp v0.7.0
 	github.com/openmcp-project/controller-utils v0.31.0
