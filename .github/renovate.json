@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>openmcp-project/.github:renovate-config"
+  ],
+  "packageRules": [
+    {
+      "description": "Group crossplane updates in a single PR",
+      "matchDatasources": [
+        "go"
+      ],
+      "matchPackageNames": [
+        "^github\\.com/crossplane"
+      ],
+      "groupName": "crossplane dependencies",
+      "groupSlug": "crossplane-dependencies"
+    },
+    {
+      "description": "Group fluxcd updates in a single PR",
+      "matchDatasources": [
+        "go"
+      ],
+      "groupName": "fluxcd dependencies",
+      "groupSlug": "fluxcd-dependencies",
+      "matchPackageNames": [
+        "/^github\\.com/fluxcd/"
+      ]
+    }
+  ]
+}
