@@ -18,9 +18,11 @@ import (
 )
 
 const (
-	fluxRelease       = "flux"
-	fluxNamespace     = "flux-system"
-	ComponentNameFlux = "Flux"
+	fluxRelease                  = "flux"
+	fluxNamespace                = "flux-system"
+	ComponentNameFlux            = "Flux"
+	helmToolkitFluxAPIGroup      = "helm.toolkit.fluxcd.io"
+	kustomizeToolkitFluxAPIGroup = "kustomize.toolkit.fluxcd.io"
 )
 
 var _ fluxcd.FluxComponent = &Flux{}
@@ -38,9 +40,9 @@ func (f *Flux) GetPolicyRules() PolicyRules {
 				APIGroups: []string{
 					"notification.toolkit.fluxcd.io",
 					"source.toolkit.fluxcd.io",
-					"helm.toolkit.fluxcd.io",
+					helmToolkitFluxAPIGroup,
 					"image.toolkit.fluxcd.io",
-					"kustomize.toolkit.fluxcd.io",
+					kustomizeToolkitFluxAPIGroup,
 				},
 				Resources: []string{
 					"*",
@@ -53,9 +55,9 @@ func (f *Flux) GetPolicyRules() PolicyRules {
 				APIGroups: []string{
 					"notification.toolkit.fluxcd.io",
 					"source.toolkit.fluxcd.io",
-					"helm.toolkit.fluxcd.io",
+					helmToolkitFluxAPIGroup,
 					"image.toolkit.fluxcd.io",
-					"kustomize.toolkit.fluxcd.io",
+					kustomizeToolkitFluxAPIGroup,
 				},
 				Resources: []string{
 					"*",
@@ -85,8 +87,8 @@ func (f *Flux) IsEnabled() bool {
 func (f *Flux) Hooks() juggler.ComponentHooks {
 	return juggler.ComponentHooks{
 		PreUninstall: hooks.PreventOrphanedResources([]schema.GroupVersionKind{
-			{Group: "helm.toolkit.fluxcd.io", Version: "v2", Kind: "HelmRelease"},
-			{Group: "kustomize.toolkit.fluxcd.io", Version: "v1", Kind: "Kustomization"},
+			{Group: helmToolkitFluxAPIGroup, Version: "v2", Kind: "HelmRelease"},
+			{Group: kustomizeToolkitFluxAPIGroup, Version: "v1", Kind: "Kustomization"},
 		}),
 	}
 }
@@ -154,7 +156,7 @@ func (f *Flux) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, error) {
 					Chart:   f.Config.Chart.Name,
 					Version: f.Config.Chart.Version,
 					SourceRef: helmv2.CrossNamespaceObjectReference{
-						Kind: "HelmRepository",
+						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameFlux),
 					},
 				},

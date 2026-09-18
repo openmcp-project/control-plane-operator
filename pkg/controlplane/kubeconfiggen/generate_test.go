@@ -21,10 +21,16 @@ import (
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
+const (
+	testSvcAccName    = "kubeconfiggen-test"
+	testSomeNamespace = "some-namespace"
+	testSomeName      = "some-name"
+)
+
 var (
 	testSvcAcc = &corev1.ServiceAccount{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "kubeconfiggen-test",
+			Name:      testSvcAccName,
 			Namespace: metav1.NamespaceDefault,
 		},
 	}
@@ -46,14 +52,14 @@ func Test_ForServiceAccount(t *testing.T) {
 			desc:       "should generate kubeconfig and be able to connect to API server",
 			tryConnect: true,
 			svcAccRef: v1beta1.ServiceAccountReference{
-				Name:      "kubeconfiggen-test",
+				Name:      testSvcAccName,
 				Namespace: metav1.NamespaceDefault,
 			},
 		},
 		{
 			desc: "should generate kubeconfig with host override",
 			svcAccRef: v1beta1.ServiceAccountReference{
-				Name:      "kubeconfiggen-test",
+				Name:      testSvcAccName,
 				Namespace: metav1.NamespaceDefault,
 				Overrides: v1beta1.KubeconfigOverrides{
 					Host: "http://custom-host.example.com",
@@ -64,7 +70,7 @@ func Test_ForServiceAccount(t *testing.T) {
 		{
 			desc: "should generate kubeconfig with host override",
 			svcAccRef: v1beta1.ServiceAccountReference{
-				Name:      "kubeconfiggen-test",
+				Name:      testSvcAccName,
 				Namespace: metav1.NamespaceDefault,
 			},
 			writeCACertToTempFile: true,
@@ -136,35 +142,35 @@ func Test_ForServiceAccount_Validation(t *testing.T) {
 		{
 			desc:       "should fail with invalid service account name",
 			cfg:        &rest.Config{},
-			svcAccRef:  v1beta1.ServiceAccountReference{Name: "", Namespace: "some-namespace"},
+			svcAccRef:  v1beta1.ServiceAccountReference{Name: "", Namespace: testSomeNamespace},
 			expiration: time.Hour,
 			expected:   ErrSANameOrNamespaceEmpty,
 		},
 		{
 			desc:       "should fail with invalid service account namespace",
 			cfg:        &rest.Config{},
-			svcAccRef:  v1beta1.ServiceAccountReference{Name: "some-name", Namespace: ""},
+			svcAccRef:  v1beta1.ServiceAccountReference{Name: testSomeName, Namespace: ""},
 			expiration: time.Hour,
 			expected:   ErrSANameOrNamespaceEmpty,
 		},
 		{
 			desc:       "should fail with invalid rest config",
 			cfg:        nil,
-			svcAccRef:  v1beta1.ServiceAccountReference{Name: "some-name", Namespace: "some-namespace"},
+			svcAccRef:  v1beta1.ServiceAccountReference{Name: testSomeName, Namespace: testSomeNamespace},
 			expiration: time.Hour,
 			expected:   ErrRestConfigNil,
 		},
 		{
 			desc:       "should fail with invalid expiration - negative",
 			cfg:        &rest.Config{},
-			svcAccRef:  v1beta1.ServiceAccountReference{Name: "some-name", Namespace: "some-namespace"},
+			svcAccRef:  v1beta1.ServiceAccountReference{Name: testSomeName, Namespace: testSomeNamespace},
 			expiration: -time.Hour,
 			expected:   ErrExpirationInvalid,
 		},
 		{
 			desc:       "should fail with invalid expiration - too short",
 			cfg:        &rest.Config{},
-			svcAccRef:  v1beta1.ServiceAccountReference{Name: "some-name", Namespace: "some-namespace"},
+			svcAccRef:  v1beta1.ServiceAccountReference{Name: testSomeName, Namespace: testSomeNamespace},
 			expiration: time.Minute,
 			expected:   ErrExpirationInvalid,
 		},
@@ -188,7 +194,7 @@ func setupTestServiceAcc(ctx context.Context, cfg *rest.Config) error {
 }
 
 func writeCACertToTempFile(cfg *rest.Config) (func() error, error) {
-	file, err := os.CreateTemp("", "kubeconfiggen-test")
+	file, err := os.CreateTemp("", testSvcAccName)
 	if err != nil {
 		return nil, err
 	}

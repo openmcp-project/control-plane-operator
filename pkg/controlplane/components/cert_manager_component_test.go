@@ -18,16 +18,16 @@ func Test_CertManager(t *testing.T) {
 		validationFuncs           []validationFunc
 	}{
 		{
-			desc: "should be disabled",
+			desc: testDescShouldBeDisabled,
 			validationFuncs: []validationFunc{
 				hasName("CertManager"),
 				isEnabled(false),
 			},
 		},
 		{
-			desc: "should not be allowed",
+			desc: testDescShouldNotBeAllowed,
 			config: &v1beta1.CertManagerConfig{
-				Version: "1.2.3",
+				Version: testVersion123,
 			},
 			versionResolver: fakeVersionResolver(true),
 			validationFuncs: []validationFunc{
@@ -37,16 +37,16 @@ func Test_CertManager(t *testing.T) {
 			},
 		},
 		{
-			desc:                      "returns available versions from context resolver",
+			desc:                      testDescAvailVersions,
 			config:                    &v1beta1.CertManagerConfig{},
 			availableVersionsResolver: fakeAvailableVersionsResolver(false),
 			validationFuncs: []validationFunc{
 				hasName("CertManager"),
-				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+				hasAvailableVersions([]string{testVersion110, testVersion120}),
 			},
 		},
 		{
-			desc:                      "returns error when available versions resolver fails",
+			desc:                      testDescAvailVersionsErr,
 			config:                    &v1beta1.CertManagerConfig{},
 			availableVersionsResolver: fakeAvailableVersionsResolver(true),
 			validationFuncs: []validationFunc{
@@ -55,9 +55,9 @@ func Test_CertManager(t *testing.T) {
 			},
 		},
 		{
-			desc: "should be enabled",
+			desc: testDescShouldBeEnabled,
 			config: &v1beta1.CertManagerConfig{
-				Version: "1.2.3",
+				Version: testVersion123,
 				Values:  &apiextensionsv1.JSON{Raw: []byte(`{"global":{"logLevel": 3}}`)},
 			},
 			versionResolver: fakeVersionResolver(false),

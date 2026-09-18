@@ -28,14 +28,14 @@ func Test_SetNested(t *testing.T) {
 		{
 			desc: "should fail when field path leads to wrong map type",
 			m: map[string]any{
-				"item": map[string]int{
-					"count": 1,
+				testItem: map[string]int{
+					testCount: 1,
 				},
 			},
-			path: []string{"item", "count"},
+			path: []string{testItem, testCount},
 			expected: map[string]any{
-				"item": map[string]int{
-					"count": 1,
+				testItem: map[string]int{
+					testCount: 1,
 				},
 			},
 			expectedErr: ErrNotAStringAnyMap,
@@ -43,15 +43,15 @@ func Test_SetNested(t *testing.T) {
 		{
 			desc: "should not override nested field",
 			m: map[string]any{
-				"item": map[string]any{
-					"count": 1,
+				testItem: map[string]any{
+					testCount: 1,
 				},
 			},
-			path: []string{"item", "count"},
+			path: []string{testItem, testCount},
 			v:    2,
 			expected: map[string]any{
-				"item": map[string]any{
-					"count": 1,
+				testItem: map[string]any{
+					testCount: 1,
 				},
 			},
 			expectedErr: nil,
@@ -59,13 +59,13 @@ func Test_SetNested(t *testing.T) {
 		{
 			desc: "should set nested field",
 			m: map[string]any{
-				"item": map[string]any{},
+				testItem: map[string]any{},
 			},
-			path: []string{"item", "count"},
+			path: []string{testItem, testCount},
 			v:    2,
 			expected: map[string]any{
-				"item": map[string]any{
-					"count": 2,
+				testItem: map[string]any{
+					testCount: 2,
 				},
 			},
 			expectedErr: nil,
@@ -73,11 +73,11 @@ func Test_SetNested(t *testing.T) {
 		{
 			desc: "should create sub-map and set nested field",
 			m:    map[string]any{},
-			path: []string{"item", "count"},
+			path: []string{testItem, testCount},
 			v:    2,
 			expected: map[string]any{
-				"item": map[string]any{
-					"count": 2,
+				testItem: map[string]any{
+					testCount: 2,
 				},
 			},
 			expectedErr: nil,
@@ -112,41 +112,41 @@ func Test_GetNestedValue(t *testing.T) {
 		{
 			desc:        "should return error when value was not found",
 			m:           map[string]any{},
-			path:        []string{"item"},
+			path:        []string{testItem},
 			expectedErr: ErrValueNotFound,
 		},
 		{
 			desc:        "should return error when value was not found because nested map is missing",
 			m:           map[string]any{},
-			path:        []string{"item", "count"},
+			path:        []string{testItem, testCount},
 			expectedErr: ErrValueNotFound,
 		},
 		{
 			desc: "should return error when value was not found in nested map",
 			m: map[string]any{
-				"item": map[string]any{},
+				testItem: map[string]any{},
 			},
-			path:        []string{"item", "count"},
+			path:        []string{testItem, testCount},
 			expectedErr: ErrValueNotFound,
 		},
 		{
 			desc: "should fail when field path leads to wrong map type",
 			m: map[string]any{
-				"item": map[string]int{
-					"count": 1,
+				testItem: map[string]int{
+					testCount: 1,
 				},
 			},
-			path:        []string{"item", "count"},
+			path:        []string{testItem, testCount},
 			expectedErr: ErrNotAStringAnyMap,
 		},
 		{
 			desc: "should find value in nested map",
 			m: map[string]any{
-				"item": map[string]any{
-					"count": 1,
+				testItem: map[string]any{
+					testCount: 1,
 				},
 			},
-			path:        []string{"item", "count"},
+			path:        []string{testItem, testCount},
 			expected:    1,
 			expectedErr: nil,
 		},

@@ -9,6 +9,21 @@ import (
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
+const (
+	testVersion123             = "1.2.3"
+	testVersion110             = "1.1.0"
+	testVersion120             = "1.2.0"
+	testExampleObjName         = "example"
+	testDescShouldBeDisabled   = "should be disabled"
+	testDescShouldNotBeAllowed = "should not be allowed"
+	testDescShouldBeEnabled    = "should be enabled"
+	testDescAvailVersions      = "returns available versions from context resolver"
+	testDescAvailVersionsErr   = "returns error when available versions resolver fails"
+	testProviderKubernetes     = "provider-kubernetes"
+	testKubernetes             = "kubernetes"
+	testStr                    = "test"
+)
+
 func Test_BTPServiceOperator(t *testing.T) {
 	testCases := []struct {
 		desc                      string
@@ -18,16 +33,16 @@ func Test_BTPServiceOperator(t *testing.T) {
 		validationFuncs           []validationFunc
 	}{
 		{
-			desc: "should be disabled",
+			desc: testDescShouldBeDisabled,
 			validationFuncs: []validationFunc{
 				hasName("BTPServiceOperator"),
 				isEnabled(false),
 			},
 		},
 		{
-			desc: "should not be allowed",
+			desc: testDescShouldNotBeAllowed,
 			config: &v1beta1.BTPServiceOperatorConfig{
-				Version: "1.2.3",
+				Version: testVersion123,
 			},
 			versionResolver: fakeVersionResolver(true),
 			validationFuncs: []validationFunc{
@@ -37,16 +52,16 @@ func Test_BTPServiceOperator(t *testing.T) {
 			},
 		},
 		{
-			desc:                      "returns available versions from context resolver",
+			desc:                      testDescAvailVersions,
 			config:                    &v1beta1.BTPServiceOperatorConfig{},
 			availableVersionsResolver: fakeAvailableVersionsResolver(false),
 			validationFuncs: []validationFunc{
 				hasName("BTPServiceOperator"),
-				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+				hasAvailableVersions([]string{testVersion110, testVersion120}),
 			},
 		},
 		{
-			desc:                      "returns error when available versions resolver fails",
+			desc:                      testDescAvailVersionsErr,
 			config:                    &v1beta1.BTPServiceOperatorConfig{},
 			availableVersionsResolver: fakeAvailableVersionsResolver(true),
 			validationFuncs: []validationFunc{
@@ -55,9 +70,9 @@ func Test_BTPServiceOperator(t *testing.T) {
 			},
 		},
 		{
-			desc: "should be enabled",
+			desc: testDescShouldBeEnabled,
 			config: &v1beta1.BTPServiceOperatorConfig{
-				Version: "1.2.3",
+				Version: testVersion123,
 				Values:  &apiextensionsv1.JSON{Raw: []byte(`{"manager":{"replica_count":2}}`)},
 			},
 			versionResolver: fakeVersionResolver(false),

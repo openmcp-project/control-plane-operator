@@ -17,7 +17,7 @@ func TestMustMarshal(t *testing.T) {
 		},
 		{
 			name: "string",
-			v:    "foo",
+			v:    testFoo,
 			want: `"foo"`,
 		},
 		{
@@ -27,17 +27,17 @@ func TestMustMarshal(t *testing.T) {
 		},
 		{
 			name: "struct",
-			v:    struct{ Foo string }{Foo: "bar"},
+			v:    struct{ Foo string }{Foo: testBar},
 			want: `{"Foo":"bar"}`,
 		},
 		{
 			name: "slice",
-			v:    []string{"foo", "bar"},
+			v:    []string{testFoo, testBar},
 			want: `["foo","bar"]`,
 		},
 		{
 			name: "map",
-			v:    map[string]string{"foo": "bar"},
+			v:    map[string]string{testFoo: testBar},
 			want: `{"foo":"bar"}`,
 		},
 	}

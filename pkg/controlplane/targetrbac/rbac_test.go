@@ -19,6 +19,13 @@ import (
 	"github.com/openmcp-project/control-plane-operator/pkg/utils"
 )
 
+const (
+	testDefaultNS      = "default"
+	testTestName       = "test"
+	testManagedName    = "managed"
+	testNotManagedName = "not-managed"
+)
+
 func TestApply(t *testing.T) {
 	tests := []struct {
 		name                    string
@@ -38,8 +45,8 @@ func TestApply(t *testing.T) {
 		{
 			name: "Check ServiceAccountReference - valid - no error",
 			serviceAccountReference: v1beta1.ServiceAccountReference{
-				Namespace: "default",
-				Name:      "test",
+				Namespace: testDefaultNS,
+				Name:      testTestName,
 			},
 
 			expectedError: nil,
@@ -47,8 +54,8 @@ func TestApply(t *testing.T) {
 		{
 			name: "Check ServiceAccountReference - valid - Create ServiceAccount error",
 			serviceAccountReference: v1beta1.ServiceAccountReference{
-				Namespace: "default",
-				Name:      "test",
+				Namespace: testDefaultNS,
+				Name:      testTestName,
 			},
 			interceptorFuncs: interceptor.Funcs{
 				Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
@@ -63,8 +70,8 @@ func TestApply(t *testing.T) {
 		{
 			name: "Check ServiceAccountReference - valid, Create ClusterRoleBinding error",
 			serviceAccountReference: v1beta1.ServiceAccountReference{
-				Namespace: "default",
-				Name:      "test",
+				Namespace: testDefaultNS,
+				Name:      testTestName,
 			},
 			interceptorFuncs: interceptor.Funcs{
 				Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
@@ -141,13 +148,13 @@ func TestDelete(t *testing.T) {
 			objs: []client.Object{
 				&corev1.ServiceAccount{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:   "managed",
+						Name:   testManagedName,
 						Labels: utils.IsManaged(),
 					},
 				},
 				&corev1.ServiceAccount{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "not-managed",
+						Name: testNotManagedName,
 					},
 				},
 			},
@@ -198,13 +205,13 @@ func TestDelete(t *testing.T) {
 			objs: []client.Object{
 				&corev1.ServiceAccount{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:   "managed",
+						Name:   testManagedName,
 						Labels: utils.IsManaged(),
 					},
 				},
 				&corev1.ServiceAccount{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "not-managed",
+						Name: testNotManagedName,
 					},
 				},
 			},
@@ -225,13 +232,13 @@ func TestDelete(t *testing.T) {
 			objs: []client.Object{
 				&corev1.ServiceAccount{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:   "managed",
+						Name:   testManagedName,
 						Labels: utils.IsManaged(),
 					},
 				},
 				&corev1.ServiceAccount{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "not-managed",
+						Name: testNotManagedName,
 					},
 				},
 			},

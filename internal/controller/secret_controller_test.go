@@ -23,7 +23,7 @@ import (
 var (
 	secretWithLabel = &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-secret",
+			Name:      testSecretName,
 			Namespace: corev1.NamespaceDefault,
 			Labels: map[string]string{
 				constants.LabelCopyToCPNamespace: "true",
@@ -32,7 +32,7 @@ var (
 	}
 	secretDeletedWithLabelAndFinalizer = &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-secret",
+			Name:      testSecretName,
 			Namespace: corev1.NamespaceDefault,
 			Labels: map[string]string{
 				constants.LabelCopyToCPNamespace: "true",
@@ -45,13 +45,13 @@ var (
 	}
 	secretWithoutLabel = &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-secret",
+			Name:      testSecretName,
 			Namespace: corev1.NamespaceDefault,
 		},
 	}
 	secretWithFinalizer = &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-secret",
+			Name:      testSecretName,
 			Namespace: corev1.NamespaceDefault,
 			Finalizers: []string{
 				finalizerOrphan,
@@ -60,7 +60,7 @@ var (
 	}
 	replicatedSecret = &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-secret",
+			Name:      testSecretName,
 			Namespace: tenantNamespace.Name,
 			Labels: map[string]string{
 				constants.LabelCopySourceName:      secretWithLabel.Name,
@@ -105,7 +105,7 @@ func Test_SecretReconciler_Reconcile(t *testing.T) {
 			},
 			interceptorFuncs: interceptor.Funcs{
 				Get: func(ctx context.Context, client client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
-					return apierrors.NewNotFound(corev1.Resource("secrets"), "some-secret")
+					return apierrors.NewNotFound(corev1.Resource("secrets"), testSecretName)
 				},
 			},
 		},

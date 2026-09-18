@@ -47,7 +47,7 @@ func Test_ClusterRole(t *testing.T) {
 		validationFuncs []validationFunc
 	}{
 		{
-			desc:    "should be disabled",
+			desc:    testDescShouldBeDisabled,
 			enabled: false,
 			name:    "Admin",
 			validationFuncs: []validationFunc{
@@ -56,7 +56,7 @@ func Test_ClusterRole(t *testing.T) {
 			},
 		},
 		{
-			desc:    "should be enabled",
+			desc:    testDescShouldBeEnabled,
 			enabled: true,
 			name:    "Admin",
 			rules: []rbacv1.PolicyRule{

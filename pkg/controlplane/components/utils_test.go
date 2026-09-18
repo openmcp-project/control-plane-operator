@@ -47,7 +47,7 @@ func fakeAvailableVersionsResolver(shouldFail bool) v1beta1.AvailableVersionsRes
 		if shouldFail {
 			return nil, errFake
 		}
-		return []string{"1.1.0", "1.2.0"}, nil
+		return []string{testVersion110, testVersion120}, nil
 	}
 }
 

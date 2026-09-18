@@ -17,6 +17,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 )
 
+const (
+	certManagerIOGroup = "cert-manager.io"
+	secretKind         = "Secret"
+)
+
 func Test_PreventOrphanedResources(t *testing.T) {
 	testCases := []struct {
 		desc             string
@@ -31,9 +36,9 @@ func Test_PreventOrphanedResources(t *testing.T) {
 		{
 			desc: "should not return error when CRD is not installed",
 			gvks: []schema.GroupVersionKind{
-				{Group: "cert-manager.io", Version: "v1", Kind: "Certificate"},
-				{Group: "cert-manager.io", Version: "v1", Kind: "Issuer"},
-				{Group: "cert-manager.io", Version: "v1", Kind: "ClusterIssuer"},
+				{Group: certManagerIOGroup, Version: "v1", Kind: "Certificate"},
+				{Group: certManagerIOGroup, Version: "v1", Kind: "Issuer"},
+				{Group: certManagerIOGroup, Version: "v1", Kind: "ClusterIssuer"},
 			},
 			interceptorFuncs: interceptor.Funcs{
 				List: func(ctx context.Context, client client.WithWatch, list client.ObjectList, opts ...client.ListOption) error {
@@ -46,13 +51,13 @@ func Test_PreventOrphanedResources(t *testing.T) {
 		{
 			desc: "should not return error when no resource of type exists",
 			gvks: []schema.GroupVersionKind{
-				{Group: "", Version: "v1", Kind: "Secret"},
+				{Group: "", Version: "v1", Kind: secretKind},
 			},
 		},
 		{
 			desc: "should return error when API server returns unknown error",
 			gvks: []schema.GroupVersionKind{
-				{Group: "", Version: "v1", Kind: "Secret"},
+				{Group: "", Version: "v1", Kind: secretKind},
 			},
 			interceptorFuncs: interceptor.Funcs{
 				List: func(ctx context.Context, client client.WithWatch, list client.ObjectList, opts ...client.ListOption) error {
@@ -64,7 +69,7 @@ func Test_PreventOrphanedResources(t *testing.T) {
 		{
 			desc: "should return error when resource of type exists",
 			gvks: []schema.GroupVersionKind{
-				{Group: "", Version: "v1", Kind: "Secret"},
+				{Group: "", Version: "v1", Kind: secretKind},
 			},
 			initObjs: []client.Object{
 				&corev1.Secret{

@@ -22,9 +22,11 @@ import (
 )
 
 const (
-	crossplaneRelease       = "crossplane"
-	CrossplaneNamespace     = "crossplane-system"
-	ComponentNameCrossplane = "Crossplane"
+	crossplaneRelease               = "crossplane"
+	CrossplaneNamespace             = "crossplane-system"
+	ComponentNameCrossplane         = "Crossplane"
+	apiextensionsCrossplaneAPIGroup = "apiextensions.crossplane.io"
+	pkgCrossplaneAPIGroup           = "pkg.crossplane.io"
 )
 
 var _ fluxcd.FluxComponent = &Crossplane{}
@@ -40,7 +42,7 @@ func (c *Crossplane) GetPolicyRules() PolicyRules {
 	rules := PolicyRules{
 		Admin: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"pkg.crossplane.io"},
+				APIGroups: []string{pkgCrossplaneAPIGroup},
 				Resources: []string{
 					"configurations",
 					"functions",
@@ -49,7 +51,7 @@ func (c *Crossplane) GetPolicyRules() PolicyRules {
 				Verbs: VerbsAdmin,
 			},
 			{
-				APIGroups: []string{"apiextensions.crossplane.io"},
+				APIGroups: []string{apiextensionsCrossplaneAPIGroup},
 				Resources: []string{
 					"compositeresourcedefinitions",
 					"compositions",
@@ -59,24 +61,24 @@ func (c *Crossplane) GetPolicyRules() PolicyRules {
 				Verbs: VerbsAdmin,
 			},
 			{
-				APIGroups: []string{"pkg.crossplane.io"},
+				APIGroups: []string{pkgCrossplaneAPIGroup},
 				Resources: []string{rbacv1.ResourceAll},
 				Verbs:     VerbsView,
 			},
 			{
-				APIGroups: []string{"apiextensions.crossplane.io"},
+				APIGroups: []string{apiextensionsCrossplaneAPIGroup},
 				Resources: []string{rbacv1.ResourceAll},
 				Verbs:     VerbsView,
 			},
 		},
 		View: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"pkg.crossplane.io"},
+				APIGroups: []string{pkgCrossplaneAPIGroup},
 				Resources: []string{rbacv1.ResourceAll},
 				Verbs:     VerbsView,
 			},
 			{
-				APIGroups: []string{"apiextensions.crossplane.io"},
+				APIGroups: []string{apiextensionsCrossplaneAPIGroup},
 				Resources: []string{rbacv1.ResourceAll},
 				Verbs:     VerbsView,
 			},
@@ -84,7 +86,7 @@ func (c *Crossplane) GetPolicyRules() PolicyRules {
 	}
 
 	rules.Admin = append(rules.Admin, rbacv1.PolicyRule{
-		APIGroups: []string{"pkg.crossplane.io"},
+		APIGroups: []string{pkgCrossplaneAPIGroup},
 		Resources: []string{
 			"deploymentruntimeconfigs",
 		},
@@ -152,7 +154,7 @@ func (c *Crossplane) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, erro
 					Chart:   c.Config.Chart.Name,
 					Version: c.Config.Chart.Version,
 					SourceRef: helmv2.CrossNamespaceObjectReference{
-						Kind: "HelmRepository",
+						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameCrossplane),
 					},
 				},
@@ -230,8 +232,8 @@ func (c *Crossplane) applyDefaultValues() error {
 func (*Crossplane) Hooks() juggler.ComponentHooks {
 	return juggler.ComponentHooks{
 		PreUninstall: hooks.PreventOrphanedResources([]schema.GroupVersionKind{
-			{Group: "pkg.crossplane.io", Version: "v1", Kind: "Provider"},
-			{Group: "pkg.crossplane.io", Version: "v1", Kind: "ProviderRevision"},
+			{Group: pkgCrossplaneAPIGroup, Version: "v1", Kind: "Provider"},
+			{Group: pkgCrossplaneAPIGroup, Version: "v1", Kind: "ProviderRevision"},
 		}),
 	}
 }

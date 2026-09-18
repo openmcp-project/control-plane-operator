@@ -39,6 +39,17 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+const (
+	testControlPlaneName   = "some-controlplane"
+	testFluxDeployerName   = "flux-deployer"
+	testDefaultNamespace   = "default"
+	testVersion1150        = "1.15.0"
+	testReleaseChannelName = "test-releasechannel"
+	testOCMRegistryURL     = "https://some.url"
+	testSecretName         = "some-secret"
+	testRegistryTarGz      = "registry.tar.gz"
+)
+
 var (
 	ocmSecret = &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
@@ -71,7 +82,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-controlplane",
+						Name: testControlPlaneName,
 					},
 				},
 				coSystemNamespace,
@@ -88,7 +99,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-controlplane",
+						Name: testControlPlaneName,
 					},
 				},
 				coSystemNamespace,
@@ -105,7 +116,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-controlplane",
+						Name: testControlPlaneName,
 					},
 				},
 				coSystemNamespace,
@@ -127,7 +138,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-controlplane",
+						Name: testControlPlaneName,
 					},
 					Spec: corev1beta1.ControlPlaneSpec{
 						Target: corev1beta1.Target{},
@@ -144,13 +155,13 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-controlplane",
+						Name: testControlPlaneName,
 					},
 					Spec: corev1beta1.ControlPlaneSpec{
 						Target: corev1beta1.Target{
 							FluxServiceAccount: corev1beta1.ServiceAccountReference{
-								Name:      "flux-deployer",
-								Namespace: "default",
+								Name:      testFluxDeployerName,
+								Namespace: testDefaultNamespace,
 							},
 						},
 					},
@@ -174,13 +185,13 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-controlplane",
+						Name: testControlPlaneName,
 					},
 					Spec: corev1beta1.ControlPlaneSpec{
 						Target: corev1beta1.Target{
 							FluxServiceAccount: corev1beta1.ServiceAccountReference{
-								Name:      "flux-deployer",
-								Namespace: "default",
+								Name:      testFluxDeployerName,
+								Namespace: testDefaultNamespace,
 							},
 						},
 					},
@@ -204,25 +215,25 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-controlplane",
+						Name: testControlPlaneName,
 					},
 					Spec: corev1beta1.ControlPlaneSpec{
 						Target: corev1beta1.Target{
 							FluxServiceAccount: corev1beta1.ServiceAccountReference{
-								Name:      "flux-deployer",
-								Namespace: "default",
+								Name:      testFluxDeployerName,
+								Namespace: testDefaultNamespace,
 							},
 						},
 						ComponentsConfig: corev1beta1.ComponentsConfig{
 							Crossplane: &corev1beta1.CrossplaneConfig{
-								Version: "1.15.0",
+								Version: testVersion1150,
 							},
 						},
 					},
 				},
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Status: corev1beta1.ReleaseChannelStatus{Components: []corev1beta1.Component{
 						{Name: "crossplane", Versions: []corev1beta1.ComponentVersion{{Version: "1.15.0", HelmRepo: "https://charts.crossplane.io/stable", HelmChart: "crossplane"}}},
@@ -234,7 +245,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			},
 			validate: func(t *testing.T, ctx context.Context, c client.Client) error {
 				cp := &corev1beta1.ControlPlane{}
-				if err := c.Get(ctx, client.ObjectKey{Name: "some-controlplane"}, cp); err != nil {
+				if err := c.Get(ctx, client.ObjectKey{Name: testControlPlaneName}, cp); err != nil {
 					return err
 				}
 				expectedComponentsEnabled := 10
@@ -255,7 +266,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:              "some-controlplane",
+						Name:              testControlPlaneName,
 						DeletionTimestamp: ptr.To(metav1.Now()),
 						Finalizers: []string{
 							corev1beta1.Finalizer,
@@ -264,13 +275,13 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 					Spec: corev1beta1.ControlPlaneSpec{
 						Target: corev1beta1.Target{
 							FluxServiceAccount: corev1beta1.ServiceAccountReference{
-								Name:      "flux-deployer",
-								Namespace: "default",
+								Name:      testFluxDeployerName,
+								Namespace: testDefaultNamespace,
 							},
 						},
 						ComponentsConfig: corev1beta1.ComponentsConfig{
 							Crossplane: &corev1beta1.CrossplaneConfig{
-								Version: "1.15.0",
+								Version: testVersion1150,
 							},
 						},
 					},
@@ -280,7 +291,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			},
 			validate: func(t *testing.T, ctx context.Context, c client.Client) error {
 				cp := &corev1beta1.ControlPlane{}
-				if err := c.Get(ctx, client.ObjectKey{Name: "some-controlplane"}, cp); err != nil {
+				if err := c.Get(ctx, client.ObjectKey{Name: testControlPlaneName}, cp); err != nil {
 					return err
 				}
 				assert.Equal(t, 0, cp.Status.ComponentsEnabled)
@@ -297,7 +308,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:              "some-controlplane",
+						Name:              testControlPlaneName,
 						DeletionTimestamp: ptr.To(metav1.Now()),
 						Finalizers: []string{
 							corev1beta1.Finalizer,
@@ -306,13 +317,13 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 					Spec: corev1beta1.ControlPlaneSpec{
 						Target: corev1beta1.Target{
 							FluxServiceAccount: corev1beta1.ServiceAccountReference{
-								Name:      "flux-deployer",
-								Namespace: "default",
+								Name:      testFluxDeployerName,
+								Namespace: testDefaultNamespace,
 							},
 						},
 						ComponentsConfig: corev1beta1.ComponentsConfig{
 							Crossplane: &corev1beta1.CrossplaneConfig{
-								Version: "1.15.0",
+								Version: testVersion1150,
 							},
 						},
 					},
@@ -322,7 +333,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			},
 			validate: func(t *testing.T, ctx context.Context, c client.Client) error {
 				cp := &corev1beta1.ControlPlane{}
-				err := c.Get(ctx, client.ObjectKey{Name: "some-controlplane"}, cp)
+				err := c.Get(ctx, client.ObjectKey{Name: testControlPlaneName}, cp)
 				assert.True(t, apierrors.IsNotFound(err))
 				return nil
 			},
