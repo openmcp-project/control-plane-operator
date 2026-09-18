@@ -20,6 +20,8 @@ import (
 
 var errBoom = errors.New("boom")
 
+const testMsgNotHealthy = "not healthy"
+
 // Test for function Reconcile
 func TestJuggler_Reconcile(t *testing.T) {
 	type fields struct {
@@ -68,7 +70,7 @@ func TestJuggler_Reconcile(t *testing.T) {
 								ResourceExists: true,
 								ResourceHealthiness: ResourceHealthiness{
 									Healthy: false,
-									Message: "not healthy",
+									Message: testMsgNotHealthy,
 								},
 							}, nil
 						},
@@ -79,7 +81,7 @@ func TestJuggler_Reconcile(t *testing.T) {
 				{
 					Component: FakeComponent{Enabled: true, Allowed: true},
 					Result:    StatusUnhealthy,
-					Message:   "not healthy",
+					Message:   testMsgNotHealthy,
 				},
 			},
 		},
@@ -530,7 +532,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 							ResourceExists: true,
 							ResourceHealthiness: ResourceHealthiness{
 								Healthy: false,
-								Message: "not healthy",
+								Message: testMsgNotHealthy,
 							},
 						}, nil
 					},
@@ -539,7 +541,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 			want: ComponentResult{
 				Component: FakeComponent{Enabled: true, Allowed: true},
 				Result:    StatusUnhealthy,
-				Message:   "not healthy",
+				Message:   testMsgNotHealthy,
 			},
 		},
 		{
@@ -603,7 +605,7 @@ func TestJuggler_reconcileComponent(t *testing.T) {
 							ResourceExists: true,
 							ResourceHealthiness: ResourceHealthiness{
 								Healthy: false,
-								Message: "not healthy",
+								Message: testMsgNotHealthy,
 							},
 							ResourceSkipped: true,
 						}, nil

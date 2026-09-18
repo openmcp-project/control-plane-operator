@@ -23,9 +23,9 @@ func TestCrossplaneDeploymentRuntimConfig(t *testing.T) {
 		validationFuncs []validationFunc
 	}{
 		{
-			desc:    "should be enabled",
+			desc:    testDescShouldBeEnabled,
 			enabled: true,
-			name:    "test",
+			name:    testStr,
 			validationFuncs: []validationFunc{
 				hasName("DeploymentRuntimeConfigProviderTest"),
 				isEnabled(true),
@@ -121,13 +121,13 @@ func TestApplyDeploymentTemplateDefaults(t *testing.T) {
 			inDt: &crossplanev1beta1.DeploymentTemplate{
 				Spec: &appsv1.DeploymentSpec{
 					Selector: &metav1.LabelSelector{
-						MatchLabels: map[string]string{"test": "test"},
+						MatchLabels: map[string]string{testStr: testStr},
 					},
 				},
 			},
 			expDt: func() *crossplanev1beta1.DeploymentTemplate {
 				dt := defaultDeployTemplate()
-				dt.Spec.Selector.MatchLabels = map[string]string{"test": "test"}
+				dt.Spec.Selector.MatchLabels = map[string]string{testStr: testStr}
 				return dt
 			},
 		},
@@ -137,14 +137,14 @@ func TestApplyDeploymentTemplateDefaults(t *testing.T) {
 				Spec: &appsv1.DeploymentSpec{
 					Template: v1.PodTemplateSpec{
 						Spec: v1.PodSpec{
-							DNSPolicy: "test",
+							DNSPolicy: testStr,
 						},
 					},
 				},
 			},
 			expDt: func() *crossplanev1beta1.DeploymentTemplate {
 				dt := defaultDeployTemplate()
-				dt.Spec.Template.Spec.DNSPolicy = "test"
+				dt.Spec.Template.Spec.DNSPolicy = testStr
 				return dt
 			},
 		},
@@ -164,7 +164,7 @@ func TestApplyDeploymentTemplateDefaults(t *testing.T) {
 }
 
 func TestApplyServiceAccountTemplateDefaults(t *testing.T) {
-	providerName := "test"
+	providerName := testStr
 	var defaultServiceAccountTemplate = func() *crossplanev1beta1.ServiceAccountTemplate {
 		return &crossplanev1beta1.ServiceAccountTemplate{
 			Metadata: &crossplanev1beta1.ObjectMeta{
@@ -197,12 +197,12 @@ func TestApplyServiceAccountTemplateDefaults(t *testing.T) {
 			desc: "custom metadata.name is respected",
 			inSt: &crossplanev1beta1.ServiceAccountTemplate{
 				Metadata: &crossplanev1beta1.ObjectMeta{
-					Name: ptr.To("test"),
+					Name: ptr.To(testStr),
 				},
 			},
 			expSt: func() *crossplanev1beta1.ServiceAccountTemplate {
 				st := defaultServiceAccountTemplate()
-				st.Metadata.Name = ptr.To("test")
+				st.Metadata.Name = ptr.To(testStr)
 				return st
 			},
 		},

@@ -7,6 +7,12 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	testFooName      = "Foo"
+	testFooReadyType = "FooReady"
+	testFalseStatus  = "False"
+)
+
 type test_externalImplementType struct {
 	FakeComponent
 }
@@ -67,13 +73,13 @@ func TestComponentResult_ToCondition(t *testing.T) {
 		{
 			name: "errored component maps to failing condition",
 			fields: fields{
-				Component: FakeComponent{Name: "Foo"},
+				Component: FakeComponent{Name: testFooName},
 				Result:    ComponentStatus{Name: "FailedStatus", IsReady: false},
 				Message:   "boom",
 			},
 			want: v1.Condition{
-				Type:    "FooReady",
-				Status:  "False",
+				Type:    testFooReadyType,
+				Status:  testFalseStatus,
 				Reason:  "FailedStatus",
 				Message: "boom",
 			},
@@ -81,11 +87,11 @@ func TestComponentResult_ToCondition(t *testing.T) {
 		{
 			name: "No error component maps to good condition",
 			fields: fields{
-				Component: FakeComponent{Name: "Foo"},
+				Component: FakeComponent{Name: testFooName},
 				Result:    ComponentStatus{Name: "GoodStatus", IsReady: true},
 			},
 			want: v1.Condition{
-				Type:   "FooReady",
+				Type:   testFooReadyType,
 				Status: "True",
 				Reason: "GoodStatus",
 			},
@@ -93,24 +99,24 @@ func TestComponentResult_ToCondition(t *testing.T) {
 		{
 			name: "No result returns unknown condition",
 			fields: fields{
-				Component: FakeComponent{Name: "Foo"},
+				Component: FakeComponent{Name: testFooName},
 				Result:    ComponentStatus{IsReady: false},
 			},
 			want: v1.Condition{
-				Type:   "FooReady",
-				Status: "False",
+				Type:   testFooReadyType,
+				Status: testFalseStatus,
 				Reason: "Unknown",
 			},
 		},
 		{
 			name: "Internal component's type starts with lowercase letter",
 			fields: fields{
-				Component: FakeComponent{Name: "Foo", Internal: true},
+				Component: FakeComponent{Name: testFooName, Internal: true},
 				Result:    ComponentStatus{IsReady: false},
 			},
 			want: v1.Condition{
 				Type:   "fooReady",
-				Status: "False",
+				Status: testFalseStatus,
 				Reason: "Unknown",
 			},
 		},

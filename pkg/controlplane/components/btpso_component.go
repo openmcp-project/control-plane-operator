@@ -24,6 +24,8 @@ const (
 	btpServiceOperatorNamespace = "sap-btp-service-operator"
 	btpServiceOperatorRelease   = "sap-btp-service-operator"
 	ComponentNameBTPSO          = "BTPServiceOperator"
+	helmRepositoryKind          = "HelmRepository"
+	btpSOAPIGroup               = "services.cloud.sap.com"
 )
 
 var _ fluxcd.FluxComponent = &BTPServiceOperator{}
@@ -40,7 +42,7 @@ func (btp *BTPServiceOperator) GetPolicyRules() PolicyRules {
 	return PolicyRules{
 		Admin: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"services.cloud.sap.com"},
+				APIGroups: []string{btpSOAPIGroup},
 				Resources: []string{
 					"servicebindings",
 					"serviceinstances",
@@ -50,7 +52,7 @@ func (btp *BTPServiceOperator) GetPolicyRules() PolicyRules {
 		},
 		View: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"services.cloud.sap.com"},
+				APIGroups: []string{btpSOAPIGroup},
 				Resources: []string{
 					"servicebindings",
 					"serviceinstances",
@@ -118,7 +120,7 @@ func (btp *BTPServiceOperator) BuildManifesto(ctx context.Context) (fluxcd.Manif
 					Chart:   btp.Config.Chart.Name,
 					Version: btp.Config.Chart.Version,
 					SourceRef: helmv2.CrossNamespaceObjectReference{
-						Kind: "HelmRepository",
+						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameBTPSO), // repo name
 					},
 				},
@@ -171,8 +173,8 @@ func (btp *BTPServiceOperator) applyDefaultChartSpec(rfn v1beta1.VersionResolver
 func (btp *BTPServiceOperator) Hooks() juggler.ComponentHooks {
 	return juggler.ComponentHooks{
 		PreUninstall: hooks.PreventOrphanedResources([]schema.GroupVersionKind{
-			{Group: "services.cloud.sap.com", Version: "v1", Kind: "ServiceBinding"},
-			{Group: "services.cloud.sap.com", Version: "v1", Kind: "ServiceInstance"},
+			{Group: btpSOAPIGroup, Version: "v1", Kind: "ServiceBinding"},
+			{Group: btpSOAPIGroup, Version: "v1", Kind: "ServiceInstance"},
 		}),
 	}
 }

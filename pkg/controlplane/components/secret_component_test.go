@@ -75,7 +75,7 @@ func Test_Secret(t *testing.T) {
 		interceptorFuncs interceptor.Funcs
 	}{
 		{
-			desc:    "should be disabled",
+			desc:    testDescShouldBeDisabled,
 			enabled: false,
 			source:  client.ObjectKeyFromObject(sourceSecret),
 			target:  client.ObjectKeyFromObject(secretA),
@@ -85,7 +85,7 @@ func Test_Secret(t *testing.T) {
 			},
 		},
 		{
-			desc:    "should be enabled",
+			desc:    testDescShouldBeEnabled,
 			enabled: true,
 			source:  client.ObjectKeyFromObject(sourceSecret),
 			target:  client.ObjectKeyFromObject(secretA),

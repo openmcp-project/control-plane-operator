@@ -38,7 +38,7 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 				},
 			},
@@ -51,12 +51,12 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
-						OcmRegistryUrl: "https://some.url",
+						OcmRegistryUrl: testOCMRegistryURL,
 						PullSecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
 					},
 				},
@@ -70,18 +70,18 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
-						OcmRegistryUrl: "https://some.url",
+						OcmRegistryUrl: testOCMRegistryURL,
 						PullSecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
 					},
 				},
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-secret",
+						Name: testSecretName,
 					},
 				},
 			},
@@ -94,18 +94,18 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
-						OcmRegistryUrl: "https://some.url",
+						OcmRegistryUrl: testOCMRegistryURL,
 						PullSecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
 					},
 				},
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-secret",
+						Name: testSecretName,
 					},
 					Data: map[string][]byte{
 						"username": []byte("some-username"),
@@ -121,18 +121,18 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
-						OcmRegistryUrl: "https://some.url",
+						OcmRegistryUrl: testOCMRegistryURL,
 						PullSecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
 					},
 				},
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-secret",
+						Name: testSecretName,
 					},
 					Data: map[string][]byte{
 						"username": []byte("some-username"),
@@ -150,13 +150,13 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
 						OcmRegistrySecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
-						OcmRegistrySecretKey: "registry.tar.gz",
+						OcmRegistrySecretKey: testRegistryTarGz,
 					},
 				},
 			},
@@ -170,18 +170,18 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
 						OcmRegistrySecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
-						OcmRegistrySecretKey: "registry.tar.gz",
+						OcmRegistrySecretKey: testRegistryTarGz,
 					},
 				},
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-secret",
+						Name: testSecretName,
 					},
 				},
 			},
@@ -194,21 +194,21 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
 						OcmRegistrySecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
-						OcmRegistrySecretKey: "registry.tar.gz",
+						OcmRegistrySecretKey: testRegistryTarGz,
 					},
 				},
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-secret",
+						Name: testSecretName,
 					},
 					Data: map[string][]byte{
-						"registry.tar.gz": []byte("some-data"),
+						testRegistryTarGz: []byte("some-data"),
 					},
 				},
 			},
@@ -221,22 +221,22 @@ func Test_ReleaseChannelReconciler_Reconcile(t *testing.T) {
 			initObjs: []client.Object{
 				&corev1beta1.ReleaseChannel{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-releasechannel",
+						Name: testReleaseChannelName,
 					},
 					Spec: corev1beta1.ReleaseChannelSpec{
 						OcmRegistrySecretRef: corev1.SecretReference{
-							Name: "some-secret",
+							Name: testSecretName,
 						},
-						OcmRegistrySecretKey: "registry.tar.gz",
+						OcmRegistrySecretKey: testRegistryTarGz,
 						Interval:             metav1.Duration{Duration: 15 * time.Minute},
 					},
 				},
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "some-secret",
+						Name: testSecretName,
 					},
 					Data: map[string][]byte{
-						"registry.tar.gz": ocmTestRegistry,
+						testRegistryTarGz: ocmTestRegistry,
 					},
 				},
 			},

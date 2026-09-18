@@ -20,6 +20,11 @@ var (
 	errFake = errors.New("fake")
 )
 
+const (
+	testField1 = "myfield1"
+	testField2 = "myfield2"
+)
+
 func Test_ReconcilePolicy(t *testing.T) {
 	policy := &arv1.ValidatingAdmissionPolicy{}
 	err := ReconcilePolicy(Providers, policy)
@@ -194,11 +199,11 @@ func TestOldObjectCompareValidationBuilder(t *testing.T) {
 			gf: []groupedFields{
 				{
 					PrefixPath: "test",
-					Fields:     []string{"myfield1", "myfield2"},
+					Fields:     []string{testField1, testField2},
 				},
 				{
 					PrefixPath: "test.nested",
-					Fields:     []string{"myfield1", "myfield2"},
+					Fields:     []string{testField1, testField2},
 				},
 			},
 			expOut: []string{
@@ -213,11 +218,11 @@ func TestOldObjectCompareValidationBuilder(t *testing.T) {
 			gf: []groupedFields{
 				{
 					PrefixPath: "test",
-					Fields:     []string{"myfield1", "myfield2"},
+					Fields:     []string{testField1, testField2},
 				},
 				{
 					PrefixPath: "test.nested",
-					Fields:     []string{"myfield1", "myfield2"},
+					Fields:     []string{testField1, testField2},
 				},
 			},
 			addVal: []arv1.Validation{

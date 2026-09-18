@@ -23,6 +23,7 @@ const (
 	certManagerRelease       = "cert-manager"
 	certManagerNamespace     = "cert-manager"
 	ComponentNameCertManager = "CertManager"
+	certManagerIOGroup       = "cert-manager.io"
 )
 
 var _ fluxcd.FluxComponent = &CertManager{}
@@ -89,7 +90,7 @@ func (c *CertManager) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, err
 					Chart:   c.Config.Chart.Name,
 					Version: c.Config.Chart.Version,
 					SourceRef: helmv2.CrossNamespaceObjectReference{
-						Kind: "HelmRepository",
+						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameCertManager),
 					},
 				},
@@ -142,9 +143,9 @@ func (c *CertManager) applyDefaultChartSpec(rfn v1beta1.VersionResolverFn) {
 func (*CertManager) Hooks() juggler.ComponentHooks {
 	return juggler.ComponentHooks{
 		PreUninstall: hooks.PreventOrphanedResources([]schema.GroupVersionKind{
-			{Group: "cert-manager.io", Version: "v1", Kind: "Certificate"},
-			{Group: "cert-manager.io", Version: "v1", Kind: "Issuer"},
-			{Group: "cert-manager.io", Version: "v1", Kind: "ClusterIssuer"},
+			{Group: certManagerIOGroup, Version: "v1", Kind: "Certificate"},
+			{Group: certManagerIOGroup, Version: "v1", Kind: "Issuer"},
+			{Group: certManagerIOGroup, Version: "v1", Kind: "ClusterIssuer"},
 		}),
 	}
 }

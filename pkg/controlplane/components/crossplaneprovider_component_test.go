@@ -71,11 +71,11 @@ func Test_formatProviderName(t *testing.T) {
 		expected     string
 	}{
 		{
-			providerName: "provider-kubernetes",
+			providerName: testProviderKubernetes,
 			expected:     "ProviderKubernetes",
 		},
 		{
-			providerName: "kubernetes",
+			providerName: testKubernetes,
 			expected:     "ProviderKubernetes",
 		},
 		{
@@ -111,17 +111,17 @@ func Test_CrossplaneProvider(t *testing.T) {
 		validationFuncs           []validationFunc
 	}{
 		{
-			desc:    "should be disabled",
+			desc:    testDescShouldBeDisabled,
 			enabled: false,
 			validationFuncs: []validationFunc{
 				isEnabled(false),
 			},
 		},
 		{
-			desc:    "should not be allowed",
+			desc:    testDescShouldNotBeAllowed,
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
-				Name: "kubernetes",
+				Name: testKubernetes,
 			},
 			versionResolver: fakeVersionResolver(true),
 			validationFuncs: []validationFunc{
@@ -134,10 +134,10 @@ func Test_CrossplaneProvider(t *testing.T) {
 			desc:    "should be allowed with prefix",
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
-				Name: "provider-kubernetes",
+				Name: testProviderKubernetes,
 			},
 			versionResolver: func(componentName string, channelName string) (v1beta1.ComponentVersion, error) {
-				if componentName == "provider-kubernetes" {
+				if componentName == testProviderKubernetes {
 					return v1beta1.ComponentVersion{}, nil
 				}
 				return v1beta1.ComponentVersion{}, errFake
@@ -152,10 +152,10 @@ func Test_CrossplaneProvider(t *testing.T) {
 			desc:    "should be allowed without prefix",
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
-				Name: "kubernetes",
+				Name: testKubernetes,
 			},
 			versionResolver: func(componentName string, channelName string) (v1beta1.ComponentVersion, error) {
-				if componentName == "provider-kubernetes" {
+				if componentName == testProviderKubernetes {
 					return v1beta1.ComponentVersion{}, nil
 				}
 				return v1beta1.ComponentVersion{}, errFake
@@ -167,21 +167,21 @@ func Test_CrossplaneProvider(t *testing.T) {
 			},
 		},
 		{
-			desc:    "returns available versions from context resolver",
+			desc:    testDescAvailVersions,
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
-				Name: "kubernetes",
+				Name: testKubernetes,
 			},
 			availableVersionsResolver: fakeAvailableVersionsResolver(false),
 			validationFuncs: []validationFunc{
-				hasAvailableVersions([]string{"1.1.0", "1.2.0"}),
+				hasAvailableVersions([]string{testVersion110, testVersion120}),
 			},
 		},
 		{
-			desc:    "returns error when available versions resolver fails",
+			desc:    testDescAvailVersionsErr,
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
-				Name: "kubernetes",
+				Name: testKubernetes,
 			},
 			availableVersionsResolver: fakeAvailableVersionsResolver(true),
 			validationFuncs: []validationFunc{
@@ -189,10 +189,10 @@ func Test_CrossplaneProvider(t *testing.T) {
 			},
 		},
 		{
-			desc:    "should be enabled",
+			desc:    testDescShouldBeEnabled,
 			enabled: true,
 			config: &v1beta1.CrossplaneProviderConfig{
-				Name: "kubernetes",
+				Name: testKubernetes,
 			},
 			versionResolver:   fakeVersionResolver(false),
 			secretRefResolver: fakeSecretRefResolver(false, true),

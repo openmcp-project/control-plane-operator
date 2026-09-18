@@ -14,7 +14,7 @@ import (
 func genComponent(enabled, healthy bool, reconcileErr error) *GenericObjectComponent {
 	return &GenericObjectComponent{
 		NamespacedName: types.NamespacedName{
-			Name:      "example",
+			Name:      testExampleObjName,
 			Namespace: "some-namespace",
 		},
 		Enabled: enabled,
@@ -35,7 +35,7 @@ func Test_GenericObjectComponent(t *testing.T) {
 		validationFuncs []validationFunc
 	}{
 		{
-			desc: "should be disabled",
+			desc: testDescShouldBeDisabled,
 			comp: genComponent(false, true, nil),
 			validationFuncs: []validationFunc{
 				hasName("SecretExample"),
@@ -43,7 +43,7 @@ func Test_GenericObjectComponent(t *testing.T) {
 			},
 		},
 		{
-			desc: "should be enabled",
+			desc: testDescShouldBeEnabled,
 			comp: genComponent(true, true, nil),
 			validationFuncs: []validationFunc{
 				hasName("SecretExample"),
@@ -80,7 +80,7 @@ func Test_GenericObjectComponent(t *testing.T) {
 			desc: "should use name override",
 			comp: &GenericObjectComponent{
 				NamespacedName: types.NamespacedName{
-					Name: "example",
+					Name: testExampleObjName,
 				},
 				Type:         &corev1.Secret{},
 				NameOverride: "SomeCustomName",
@@ -93,7 +93,7 @@ func Test_GenericObjectComponent(t *testing.T) {
 			desc: "should use type name override",
 			comp: &GenericObjectComponent{
 				NamespacedName: types.NamespacedName{
-					Name: "example",
+					Name: testExampleObjName,
 				},
 				Type:             &corev1.Secret{},
 				TypeNameOverride: "SomeCustomType",

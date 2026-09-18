@@ -19,6 +19,15 @@ import (
 	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
+const (
+	testCrossplaneName        = "crossplane"
+	testVersion1150           = "1.15.0"
+	testCrossplaneHelmRepo    = "https://charts.crossplane.io/stable"
+	testProviderHelm          = "provider-helm"
+	testVersion0190           = "0.19.0"
+	testProviderHelmDockerRef = "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.19.0"
+)
+
 func TestGetOCMComponent(t *testing.T) {
 	type input struct {
 		componentName    string
@@ -53,12 +62,12 @@ func TestGetOCMComponent(t *testing.T) {
 			input: input{
 				dockerconfigjson: []byte("{}"),
 				validLocalRepo:   true,
-				componentName:    "crossplane",
+				componentName:    testCrossplaneName,
 				version:          "0.0.0",
 			},
 			want: want{
 				component: corev1beta1.ComponentVersion{},
-				err:       fmt.Errorf("%w: component %s with version %s", ErrComponentVersionNotFound, "crossplane", "0.0.0"),
+				err:       fmt.Errorf("%w: component %s with version %s", ErrComponentVersionNotFound, testCrossplaneName, "0.0.0"),
 			},
 		},
 		{
@@ -66,14 +75,14 @@ func TestGetOCMComponent(t *testing.T) {
 			input: input{
 				dockerconfigjson: []byte("{}"),
 				validLocalRepo:   true,
-				componentName:    "crossplane",
-				version:          "1.15.0",
+				componentName:    testCrossplaneName,
+				version:          testVersion1150,
 			},
 			want: want{
 				component: corev1beta1.ComponentVersion{
-					Version:   "1.15.0",
-					HelmRepo:  "https://charts.crossplane.io/stable",
-					HelmChart: "crossplane",
+					Version:   testVersion1150,
+					HelmRepo:  testCrossplaneHelmRepo,
+					HelmChart: testCrossplaneName,
 				},
 			},
 		},
@@ -82,13 +91,13 @@ func TestGetOCMComponent(t *testing.T) {
 			input: input{
 				dockerconfigjson: []byte("{}"),
 				validLocalRepo:   true,
-				componentName:    "provider-helm",
-				version:          "0.19.0",
+				componentName:    testProviderHelm,
+				version:          testVersion0190,
 			},
 			want: want{
 				component: corev1beta1.ComponentVersion{
-					Version:   "0.19.0",
-					DockerRef: "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.19.0",
+					Version:   testVersion0190,
+					DockerRef: testProviderHelmDockerRef,
 				},
 			},
 		},
@@ -101,15 +110,15 @@ func TestGetOCMComponent(t *testing.T) {
 			},
 			Status: corev1beta1.ReleaseChannelStatus{Components: []corev1beta1.Component{
 				{
-					Name: "crossplane",
+					Name: testCrossplaneName,
 					Versions: []corev1beta1.ComponentVersion{
-						{Version: "1.15.0", HelmRepo: "https://charts.crossplane.io/stable", HelmChart: "crossplane"},
+						{Version: testVersion1150, HelmRepo: testCrossplaneHelmRepo, HelmChart: testCrossplaneName},
 					},
 				},
 				{
-					Name: "provider-helm",
+					Name: testProviderHelm,
 					Versions: []corev1beta1.ComponentVersion{
-						{Version: "0.19.0", DockerRef: "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.19.0"},
+						{Version: testVersion0190, DockerRef: testProviderHelmDockerRef},
 					},
 				},
 			}},
@@ -174,10 +183,10 @@ func TestGetOCMComponentAvailableVersions(t *testing.T) {
 			input: input{
 				dockerconfigjson: []byte("{}"),
 				validLocalRepo:   true,
-				componentName:    "crossplane",
+				componentName:    testCrossplaneName,
 			},
 			want: want{
-				versions: []string{"1.15.0"},
+				versions: []string{testVersion1150},
 				err:      nil,
 			},
 		},
@@ -186,10 +195,10 @@ func TestGetOCMComponentAvailableVersions(t *testing.T) {
 			input: input{
 				dockerconfigjson: []byte("{}"),
 				validLocalRepo:   true,
-				componentName:    "provider-helm",
+				componentName:    testProviderHelm,
 			},
 			want: want{
-				versions: []string{"0.19.0", "0.20.0"},
+				versions: []string{testVersion0190, "0.20.0"},
 				err:      nil,
 			},
 		},
@@ -214,15 +223,15 @@ func TestGetOCMComponentAvailableVersions(t *testing.T) {
 			},
 			Status: corev1beta1.ReleaseChannelStatus{Components: []corev1beta1.Component{
 				{
-					Name: "crossplane",
+					Name: testCrossplaneName,
 					Versions: []corev1beta1.ComponentVersion{
-						{Version: "1.15.0", HelmRepo: "https://charts.crossplane.io/stable", HelmChart: "crossplane"},
+						{Version: testVersion1150, HelmRepo: testCrossplaneHelmRepo, HelmChart: testCrossplaneName},
 					},
 				},
 				{
-					Name: "provider-helm",
+					Name: testProviderHelm,
 					Versions: []corev1beta1.ComponentVersion{
-						{Version: "0.19.0", DockerRef: "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.19.0"},
+						{Version: testVersion0190, DockerRef: testProviderHelmDockerRef},
 						{Version: "0.20.0", DockerRef: "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.20.0"},
 					},
 				},

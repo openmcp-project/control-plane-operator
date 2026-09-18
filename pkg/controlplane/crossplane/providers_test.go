@@ -12,6 +12,8 @@ import (
 	"github.com/openmcp-project/control-plane-operator/api/v1beta1"
 )
 
+const testProviderName = "myprovider"
+
 func TestReconcileProvider(t *testing.T) {
 	input := v1beta1.CrossplaneProviderConfig{
 		Name:              "sample",
@@ -68,13 +70,13 @@ func TestAddProviderPrefix(t *testing.T) {
 	}{
 		{
 			desc: "no prefix",
-			in:   "myprovider",
-			exp:  providerPrefix + "myprovider",
+			in:   testProviderName,
+			exp:  providerPrefix + testProviderName,
 		},
 		{
 			desc: "don't double prefix",
-			in:   providerPrefix + "myprovider",
-			exp:  providerPrefix + "myprovider",
+			in:   providerPrefix + testProviderName,
+			exp:  providerPrefix + testProviderName,
 		},
 	}
 
@@ -95,13 +97,13 @@ func TestTrimProviderPrefix(t *testing.T) {
 	}{
 		{
 			desc: "prefix",
-			in:   providerPrefix + "myprovider",
-			exp:  "myprovider",
+			in:   providerPrefix + testProviderName,
+			exp:  testProviderName,
 		},
 		{
 			desc: "no prefix",
-			in:   "myprovider",
-			exp:  "myprovider",
+			in:   testProviderName,
+			exp:  testProviderName,
 		},
 	}
 

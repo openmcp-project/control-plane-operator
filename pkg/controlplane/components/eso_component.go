@@ -18,9 +18,11 @@ import (
 )
 
 const (
-	esoRelease       = "external-secrets"
-	esoNamespace     = "external-secrets"
-	ComponentNameESO = "ExternalSecretsOperator"
+	esoRelease              = "external-secrets"
+	esoNamespace            = "external-secrets"
+	ComponentNameESO        = "ExternalSecretsOperator"
+	externalSecretsAPIGroup = "external-secrets.io"
+	esoAPIVersion           = "v1beta1"
 )
 
 var _ fluxcd.FluxComponent = &ExternalSecretsOperator{}
@@ -37,7 +39,7 @@ func (e *ExternalSecretsOperator) GetPolicyRules() PolicyRules {
 	return PolicyRules{
 		Admin: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"external-secrets.io"},
+				APIGroups: []string{externalSecretsAPIGroup},
 				Resources: []string{
 					"clusterexternalsecrets",
 					"clusterpushsecrets",
@@ -71,7 +73,7 @@ func (e *ExternalSecretsOperator) GetPolicyRules() PolicyRules {
 		},
 		View: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"external-secrets.io"},
+				APIGroups: []string{externalSecretsAPIGroup},
 				Resources: []string{
 					"clusterexternalsecrets",
 					"clusterpushsecrets",
@@ -158,7 +160,7 @@ func (e *ExternalSecretsOperator) BuildManifesto(ctx context.Context) (fluxcd.Ma
 					Chart:   e.Config.Chart.Name,
 					Version: e.Config.Chart.Version,
 					SourceRef: helmv2.CrossNamespaceObjectReference{
-						Kind: "HelmRepository",
+						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameESO),
 					},
 				},
@@ -209,9 +211,9 @@ func (e *ExternalSecretsOperator) applyDefaultChartSpec(rfn v1beta1.VersionResol
 func (e *ExternalSecretsOperator) Hooks() juggler.ComponentHooks {
 	return juggler.ComponentHooks{
 		PreUninstall: hooks.PreventOrphanedResources([]schema.GroupVersionKind{
-			{Group: "external-secrets.io", Version: "v1beta1", Kind: "ExternalSecret"},
-			{Group: "external-secrets.io", Version: "v1beta1", Kind: "SecretStore"},
-			{Group: "external-secrets.io", Version: "v1beta1", Kind: "ClusterSecretStore"},
+			{Group: externalSecretsAPIGroup, Version: esoAPIVersion, Kind: "ExternalSecret"},
+			{Group: externalSecretsAPIGroup, Version: esoAPIVersion, Kind: "SecretStore"},
+			{Group: externalSecretsAPIGroup, Version: esoAPIVersion, Kind: "ClusterSecretStore"},
 		}),
 	}
 }

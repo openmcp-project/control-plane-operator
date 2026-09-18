@@ -14,13 +14,15 @@ import (
 	"github.com/openmcp-project/control-plane-operator/pkg/constants"
 )
 
+const testURL = "https://test.com"
+
 var (
 	helmSecret = corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "helm-secret",
 			Namespace: "default",
 			Annotations: map[string]string{
-				constants.AnnotationCredentialsForUrl: "https://test.com",
+				constants.AnnotationCredentialsForUrl: testURL,
 			},
 			Labels: map[string]string{
 				constants.LabelCopyToCPNamespace: "true",
@@ -33,7 +35,7 @@ var (
 			Name:      "docker-secret",
 			Namespace: "default",
 			Annotations: map[string]string{
-				constants.AnnotationCredentialsForUrl: "https://test.com",
+				constants.AnnotationCredentialsForUrl: testURL,
 			},
 			Labels: map[string]string{
 				constants.LabelCopyToCPNamespace: "true",
@@ -65,8 +67,8 @@ func TestFluxSecretResolver_Start(t *testing.T) {
 			},
 			validateStart: func(ctx context.Context, t *testing.T, c client.Client, r SecretResolver, err error) error {
 				assert.Len(t, r.(*FluxSecretResolver).secrets, 2)
-				assert.Equal(t, "helm-secret", r.(*FluxSecretResolver).secrets[UrlSecretType{URL: "https://test.com", SecretType: corev1.SecretTypeBasicAuth}])
-				assert.Equal(t, "docker-secret", r.(*FluxSecretResolver).secrets[UrlSecretType{URL: "https://test.com", SecretType: corev1.SecretTypeDockerConfigJson}])
+				assert.Equal(t, "helm-secret", r.(*FluxSecretResolver).secrets[UrlSecretType{URL: testURL, SecretType: corev1.SecretTypeBasicAuth}])
+				assert.Equal(t, "docker-secret", r.(*FluxSecretResolver).secrets[UrlSecretType{URL: testURL, SecretType: corev1.SecretTypeDockerConfigJson}])
 				assert.NoError(t, err)
 				return nil
 			},
@@ -93,7 +95,7 @@ func TestFluxSecretResolver_Start(t *testing.T) {
 			},
 			validateStart: func(ctx context.Context, t *testing.T, c client.Client, r SecretResolver, err error) error {
 				assert.Len(t, r.(*FluxSecretResolver).secrets, 1)
-				assert.Equal(t, "helm-secret", r.(*FluxSecretResolver).secrets[UrlSecretType{URL: "https://test.com", SecretType: corev1.SecretTypeBasicAuth}])
+				assert.Equal(t, "helm-secret", r.(*FluxSecretResolver).secrets[UrlSecretType{URL: testURL, SecretType: corev1.SecretTypeBasicAuth}])
 				assert.NoError(t, err)
 				return nil
 			},
@@ -155,7 +157,7 @@ func TestFluxSecretResolver_Resolve(t *testing.T) {
 				}
 				return nil
 			},
-			input: UrlSecretType{URL: "https://test.com", SecretType: corev1.SecretTypeBasicAuth},
+			input: UrlSecretType{URL: testURL, SecretType: corev1.SecretTypeBasicAuth},
 			validateResolve: func(ctx context.Context, t *testing.T, c client.Client, r SecretResolver, actual *corev1.LocalObjectReference, err error) error {
 				assert2.DeepEqual(t, &corev1.LocalObjectReference{Name: "helm-secret"}, actual)
 				assert.NoError(t, err)
@@ -167,7 +169,7 @@ func TestFluxSecretResolver_Resolve(t *testing.T) {
 			setup: func(ctx context.Context, c client.Client) error {
 				return nil
 			},
-			input: UrlSecretType{URL: "https://test.com", SecretType: corev1.SecretTypeBasicAuth},
+			input: UrlSecretType{URL: testURL, SecretType: corev1.SecretTypeBasicAuth},
 			validateResolve: func(ctx context.Context, t *testing.T, c client.Client, r SecretResolver, actual *corev1.LocalObjectReference, err error) error {
 				assert.Nil(t, actual)
 				assert.NoError(t, err)

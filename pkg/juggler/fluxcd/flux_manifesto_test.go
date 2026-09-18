@@ -39,9 +39,9 @@ func TestHelmReleaseManifesto_GetHealthiness(t *testing.T) {
 					Status: helmv2.HelmReleaseStatus{
 						Conditions: []metav1.Condition{
 							{
-								Type:    "NotReady", // can not be found
+								Type:    testNotReadyType, // can not be found
 								Status:  metav1.ConditionTrue,
-								Message: "The release is ready",
+								Message: testMsgReleaseReady,
 							},
 						},
 					},
@@ -61,7 +61,7 @@ func TestHelmReleaseManifesto_GetHealthiness(t *testing.T) {
 							{
 								Type:    fluxmeta.ReadyCondition,
 								Status:  metav1.ConditionTrue,
-								Message: "The release is ready",
+								Message: testMsgReleaseReady,
 							},
 						},
 					},
@@ -69,7 +69,7 @@ func TestHelmReleaseManifesto_GetHealthiness(t *testing.T) {
 			},
 			expected: juggler.ResourceHealthiness{
 				Healthy: true,
-				Message: "The release is ready",
+				Message: testMsgReleaseReady,
 			},
 		},
 		{
@@ -81,7 +81,7 @@ func TestHelmReleaseManifesto_GetHealthiness(t *testing.T) {
 							{
 								Type:    fluxmeta.ReadyCondition,
 								Status:  metav1.ConditionFalse,
-								Message: "The release is not ready",
+								Message: testMsgReleaseNotReady,
 							},
 						},
 					},
@@ -89,7 +89,7 @@ func TestHelmReleaseManifesto_GetHealthiness(t *testing.T) {
 			},
 			expected: juggler.ResourceHealthiness{
 				Healthy: false,
-				Message: "The release is not ready",
+				Message: testMsgReleaseNotReady,
 			},
 		},
 	}

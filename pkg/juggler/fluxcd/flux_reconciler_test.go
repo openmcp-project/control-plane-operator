@@ -23,9 +23,16 @@ import (
 var errBoom = errors.New("boom")
 
 const (
-	testLabelComponentKey   = "flux.juggler.test.io/component"
-	testLabelManagedByKey   = "flux.juggler.test.io/managedBy"
-	testLabelManagedByValue = "flux.juggler.test.io/control-plane-operator"
+	testLabelComponentKey     = "flux.juggler.test.io/component"
+	testLabelManagedByKey     = "flux.juggler.test.io/managedBy"
+	testLabelManagedByValue   = "flux.juggler.test.io/control-plane-operator"
+	testName                  = "test"
+	testNamespace             = "default"
+	testURL                   = "test-url"
+	testFakeFluxComponentName = "FakeFluxComponent"
+	testNotReadyType          = "NotReady"
+	testMsgReleaseReady       = "The release is ready"
+	testMsgReleaseNotReady    = "The release is not ready"
 )
 
 func TestNewFluxReconciler(t *testing.T) {
@@ -112,8 +119,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -122,8 +129,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -146,8 +153,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -159,8 +166,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 			localObjects: []client.Object{
 				&sourcev1.HelmRepository{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 			},
@@ -174,8 +181,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -184,8 +191,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -194,8 +201,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 			localObjects: []client.Object{
 				&sourcev1.HelmRepository{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 			},
@@ -203,7 +210,7 @@ func TestFluxReconciler_Observe(t *testing.T) {
 				ResourceExists: true,
 				ResourceHealthiness: juggler.ResourceHealthiness{
 					Healthy: false,
-					Message: "Unable to check healthiness. Ready condition is not present.",
+					Message: msgReadyNotPresent,
 				},
 			},
 			expectedError: nil,
@@ -215,8 +222,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -225,8 +232,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -235,14 +242,14 @@ func TestFluxReconciler_Observe(t *testing.T) {
 			localObjects: []client.Object{
 				&sourcev1.HelmRepository{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 				&helmv2.HelmRelease{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 			},
@@ -262,8 +269,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -272,8 +279,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -282,8 +289,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 			localObjects: []client.Object{
 				&sourcev1.HelmRepository{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 					Spec: sourcev1.HelmRepositorySpec{
 						URL: "out-of-date-maker",
@@ -299,8 +306,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 				},
 				&helmv2.HelmRelease{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 			},
@@ -308,7 +315,7 @@ func TestFluxReconciler_Observe(t *testing.T) {
 				ResourceExists: true,
 				ResourceHealthiness: juggler.ResourceHealthiness{
 					Healthy: false,
-					Message: "Unable to check healthiness. Ready condition is not present.", // expected: because manifesto is not ready in status
+					Message: msgReadyNotPresent, // expected: because manifesto is not ready in status
 				},
 			},
 			expectedError: nil,
@@ -320,8 +327,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -330,8 +337,8 @@ func TestFluxReconciler_Observe(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -340,14 +347,14 @@ func TestFluxReconciler_Observe(t *testing.T) {
 			localObjects: []client.Object{
 				&sourcev1.HelmRepository{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 				&helmv2.HelmRelease{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 					Spec: helmv2.HelmReleaseSpec{
 						TargetNamespace: "out-of-date-maker",
@@ -366,7 +373,7 @@ func TestFluxReconciler_Observe(t *testing.T) {
 				ResourceExists: true,
 				ResourceHealthiness: juggler.ResourceHealthiness{
 					Healthy: false,
-					Message: "Unable to check healthiness. Ready condition is not present.", // expected: because source is not ready in status
+					Message: msgReadyNotPresent, // expected: because source is not ready in status
 				},
 			},
 			expectedError: nil,
@@ -564,8 +571,8 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -577,8 +584,8 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 			localObjects: []client.Object{
 				&sourcev1.HelmRepository{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 			},
@@ -591,8 +598,8 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -601,8 +608,8 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 						},
 					}, nil
@@ -611,14 +618,14 @@ func TestFluxReconciler_Uninstall(t *testing.T) {
 			localObjects: []client.Object{
 				&sourcev1.HelmRepository{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 				&helmv2.HelmRelease{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testName,
+						Namespace: testNamespace,
 					},
 				},
 			},
@@ -665,11 +672,11 @@ func TestFluxReconciler_Install(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 							Spec: sourcev1.HelmRepositorySpec{
-								URL: "test-url",
+								URL: testURL,
 							},
 						},
 					}, nil
@@ -677,11 +684,11 @@ func TestFluxReconciler_Install(t *testing.T) {
 				BuildManifestoFunc: func(ctx context.Context) (Manifesto, error) {
 					return nil, errBoom
 				},
-				GetNameFunc: "FakeFluxComponent",
+				GetNameFunc: testFakeFluxComponentName,
 			},
 			validateFunc: func(ctx context.Context, c client.Client, component juggler.Component) error {
 				helmRepo := &sourcev1.HelmRepository{}
-				err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, helmRepo)
+				err := c.Get(ctx, client.ObjectKey{Name: testName, Namespace: testNamespace}, helmRepo)
 				if err != nil {
 					return err
 				}
@@ -702,11 +709,11 @@ func TestFluxReconciler_Install(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 							Spec: sourcev1.HelmRepositorySpec{
-								URL: "test-url",
+								URL: testURL,
 							},
 						},
 					}, nil
@@ -715,18 +722,18 @@ func TestFluxReconciler_Install(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 							Spec: helmv2.HelmReleaseSpec{ReleaseName: "test-name"},
 						},
 					}, nil
 				},
-				GetNameFunc: "FakeFluxComponent",
+				GetNameFunc: testFakeFluxComponentName,
 			},
 			validateFunc: func(ctx context.Context, c client.Client, component juggler.Component) error {
 				helmRelease := &helmv2.HelmRelease{}
-				err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, helmRelease)
+				err := c.Get(ctx, client.ObjectKey{Name: testName, Namespace: testNamespace}, helmRelease)
 				if err != nil {
 					return err
 				}
@@ -753,11 +760,11 @@ func TestFluxReconciler_Install(t *testing.T) {
 					return &HelmRepositoryAdapter{
 						Source: &sourcev1.HelmRepository{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 							Spec: sourcev1.HelmRepositorySpec{
-								URL: "test-url",
+								URL: testURL,
 							},
 						},
 					}, nil
@@ -766,14 +773,14 @@ func TestFluxReconciler_Install(t *testing.T) {
 					return &HelmReleaseManifesto{
 						Manifest: &helmv2.HelmRelease{
 							ObjectMeta: metav1.ObjectMeta{
-								Name:      "test",
-								Namespace: "default",
+								Name:      testName,
+								Namespace: testNamespace,
 							},
 							Spec: helmv2.HelmReleaseSpec{ReleaseName: "test-name"},
 						},
 					}, nil
 				},
-				GetNameFunc: "FakeFluxComponent",
+				GetNameFunc: testFakeFluxComponentName,
 			},
 			validateFunc: func(ctx context.Context, c client.Client, component juggler.Component) error {
 				expectedLabels := map[string]string{
@@ -781,14 +788,14 @@ func TestFluxReconciler_Install(t *testing.T) {
 					testLabelManagedByKey: testLabelManagedByValue,
 				}
 				helmRepository := &sourcev1.HelmRepository{}
-				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, helmRepository); err != nil {
+				if err := c.Get(ctx, client.ObjectKey{Name: testName, Namespace: testNamespace}, helmRepository); err != nil {
 					return err
 				}
 				if !assert.Equal(t, helmRepository.GetLabels(), expectedLabels) {
 					return errors.New("labels not equal")
 				}
 				helmRelease := &helmv2.HelmRelease{}
-				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, helmRelease); err != nil {
+				if err := c.Get(ctx, client.ObjectKey{Name: testName, Namespace: testNamespace}, helmRelease); err != nil {
 					return err
 				}
 				if !assert.Equal(t, helmRelease.GetLabels(), expectedLabels) {

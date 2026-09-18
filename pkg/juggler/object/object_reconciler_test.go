@@ -32,6 +32,12 @@ const (
 	testLabelComponentKey   = "object.juggler.test.io/component"
 	testLabelManagedByKey   = "object.juggler.test.io/managedBy"
 	testLabelManagedByValue = "object.juggler.test.io/control-plane-operator"
+	testCaseNil             = "nil"
+	testObjName             = "test"
+	testObjNamespace        = "default"
+	fakeObjectComponentName = "FakeObjectComponent"
+	annotationTrue          = "true"
+	configuredCMName        = "configured-cm"
 )
 
 func TestObjectReconciler_Install(t *testing.T) {
@@ -44,13 +50,13 @@ func TestObjectReconciler_Install(t *testing.T) {
 		validateFunc  func(ctx context.Context, c client.Client, comp juggler.Component) error
 	}{
 		{
-			name: "nil",
+			name: testCaseNil,
 			obj:  nil,
 
 			error: errNotObjectComponent,
 		},
 		{
-			name: "nil",
+			name: testCaseNil,
 			obj:  FakeComponent{},
 
 			error: errNotObjectComponent,
@@ -69,18 +75,18 @@ func TestObjectReconciler_Install(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
 					return nil
 				},
-				name: "FakeObjectComponent",
+				name: fakeObjectComponentName,
 			},
 			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
 				secret := &corev1.Secret{}
-				err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret)
+				err := c.Get(ctx, client.ObjectKey{Name: testObjName, Namespace: testObjNamespace}, secret)
 				if err != nil {
 					return err
 				}
@@ -98,25 +104,25 @@ func TestObjectReconciler_Install(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{
-							ObjectMeta: metav1.ObjectMeta{
-								Annotations: map[string]string{
-									constants.AnnotationSkipReconciliation: "true",
-								},
+						ObjectMeta: metav1.ObjectMeta{
+							Annotations: map[string]string{
+								constants.AnnotationSkipReconciliation: annotationTrue,
 							},
-						}, types.NamespacedName{
+						},
+					}, types.NamespacedName{
 
-							Name:      "test",
-							Namespace: "default",
-						}, nil
+						Name:      testObjName,
+						Namespace: testObjNamespace,
+					}, nil
 				},
 				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
 					return nil
 				},
-				name: "FakeObjectComponent",
+				name: fakeObjectComponentName,
 			},
 			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
 				secret := &corev1.Secret{}
-				err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret)
+				err := c.Get(ctx, client.ObjectKey{Name: testObjName, Namespace: testObjNamespace}, secret)
 				if err != nil {
 					return err
 				}
@@ -131,8 +137,8 @@ func TestObjectReconciler_Install(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
@@ -140,20 +146,20 @@ func TestObjectReconciler_Install(t *testing.T) {
 					secret.Type = corev1.SecretTypeDockerConfigJson
 					return nil
 				},
-				name: "FakeObjectComponent",
+				name: fakeObjectComponentName,
 			},
 			remoteObjects: []client.Object{
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					},
 					Type: corev1.SecretTypeOpaque, // different type
 				},
 			},
 			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
 				secret := &corev1.Secret{}
-				err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret)
+				err := c.Get(ctx, client.ObjectKey{Name: testObjName, Namespace: testObjNamespace}, secret)
 				if err != nil {
 					return err
 				}
@@ -174,8 +180,8 @@ func TestObjectReconciler_Install(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
@@ -184,15 +190,15 @@ func TestObjectReconciler_Install(t *testing.T) {
 					secret.Labels = map[string]string{testLabelComponentKey: "do-not-apply"}
 					return nil
 				},
-				name: "FakeObjectComponent",
+				name: fakeObjectComponentName,
 			},
 			remoteObjects: []client.Object{
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 						Annotations: map[string]string{
-							constants.AnnotationSkipReconciliation: "true",
+							constants.AnnotationSkipReconciliation: annotationTrue,
 						},
 					},
 					Type: corev1.SecretTypeOpaque,
@@ -200,7 +206,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 			},
 			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
 				secret := &corev1.Secret{}
-				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret); err != nil {
+				if err := c.Get(ctx, client.ObjectKey{Name: testObjName, Namespace: testObjNamespace}, secret); err != nil {
 					return err
 				}
 				if !assert.Equal(t, secret.Type, corev1.SecretTypeOpaque) {
@@ -217,14 +223,14 @@ func TestObjectReconciler_Install(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
 					return nil
 				},
-				name: "FakeObjectComponent",
+				name: fakeObjectComponentName,
 			},
 			labelFunc: func(comp juggler.Component) map[string]string {
 				return map[string]string{
@@ -234,7 +240,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 			},
 			validateFunc: func(ctx context.Context, c client.Client, comp juggler.Component) error {
 				secret := &corev1.Secret{}
-				if err := c.Get(ctx, client.ObjectKey{Name: "test", Namespace: "default"}, secret); err != nil {
+				if err := c.Get(ctx, client.ObjectKey{Name: testObjName, Namespace: testObjNamespace}, secret); err != nil {
 					return err
 				}
 				if !assert.Equal(t, secret.GetLabels(), map[string]string{
@@ -449,8 +455,8 @@ func TestObjectReconciler_Uninstall(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 			},
@@ -462,16 +468,16 @@ func TestObjectReconciler_Uninstall(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 			},
 			remoteObjects: []client.Object{
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					},
 				},
 			},
@@ -578,8 +584,8 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 			},
@@ -592,8 +598,8 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 				IsObjectHealthyFunc: func(obj client.Object) juggler.ResourceHealthiness {
@@ -606,8 +612,8 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			remoteObjects: []client.Object{
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					},
 				},
 			},
@@ -624,8 +630,8 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{}, types.NamespacedName{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					}, nil
 				},
 				IsObjectHealthyFunc: func(obj client.Object) juggler.ResourceHealthiness {
@@ -638,8 +644,8 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			remoteObjects: []client.Object{
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 					},
 				},
 			},
@@ -656,15 +662,15 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{
-							ObjectMeta: metav1.ObjectMeta{
-								Annotations: map[string]string{
-									constants.AnnotationSkipReconciliation: "true",
-								},
+						ObjectMeta: metav1.ObjectMeta{
+							Annotations: map[string]string{
+								constants.AnnotationSkipReconciliation: annotationTrue,
 							},
-						}, types.NamespacedName{
-							Name:      "test",
-							Namespace: "default",
-						}, nil
+						},
+					}, types.NamespacedName{
+						Name:      testObjName,
+						Namespace: testObjNamespace,
+					}, nil
 				},
 				IsObjectHealthyFunc: func(obj client.Object) juggler.ResourceHealthiness {
 					return juggler.ResourceHealthiness{
@@ -676,10 +682,10 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			remoteObjects: []client.Object{
 				&corev1.Secret{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "test",
-						Namespace: "default",
+						Name:      testObjName,
+						Namespace: testObjNamespace,
 						Annotations: map[string]string{
-							constants.AnnotationSkipReconciliation: "true",
+							constants.AnnotationSkipReconciliation: annotationTrue,
 						},
 					},
 				},
@@ -738,7 +744,7 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 				},
 				&corev1.ConfigMap{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: "configured-cm",
+						Name: configuredCMName,
 						Labels: map[string]string{
 							fakeFilterLabel: "true",
 						},
@@ -751,7 +757,7 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 				},
 			},
 			configuredComponents: []juggler.Component{
-				FakeObjectComponent{name: "configured-cm", enabled: true},
+				FakeObjectComponent{name: configuredCMName, enabled: true},
 			},
 			expectedComps: []juggler.Component{
 				FakeObjectComponent{name: "orphaned-cm", enabled: false},
@@ -761,7 +767,7 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 		{
 			desc: "should not return error when CRD is not installed",
 			configuredComponents: []juggler.Component{
-				FakeObjectComponent{name: "configured-cm", enabled: true},
+				FakeObjectComponent{name: configuredCMName, enabled: true},
 			},
 			interceptorFuncs: interceptor.Funcs{
 				List: func(ctx context.Context, client client.WithWatch, list client.ObjectList, opts ...client.ListOption) error {
@@ -776,7 +782,7 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 		{
 			desc: "should return error when unexpected error happens",
 			configuredComponents: []juggler.Component{
-				FakeObjectComponent{name: "configured-cm", enabled: true},
+				FakeObjectComponent{name: configuredCMName, enabled: true},
 			},
 			interceptorFuncs: interceptor.Funcs{
 				List: func(ctx context.Context, client client.WithWatch, list client.ObjectList, opts ...client.ListOption) error {

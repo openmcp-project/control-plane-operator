@@ -18,9 +18,11 @@ import (
 )
 
 const (
-	kyvernoRelease       = "kyverno"
-	kyvernoNamespace     = "kyverno-system"
-	ComponentNameKyverno = "Kyverno"
+	kyvernoRelease         = "kyverno"
+	kyvernoNamespace       = "kyverno-system"
+	ComponentNameKyverno   = "Kyverno"
+	kyvernoIOGroup         = "kyverno.io"
+	policiesKyvernoIOGroup = "policies.kyverno.io"
 )
 
 var _ fluxcd.FluxComponent = &Kyverno{}
@@ -36,7 +38,7 @@ func (k *Kyverno) GetPolicyRules() PolicyRules {
 	return PolicyRules{
 		Admin: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"kyverno.io"},
+				APIGroups: []string{kyvernoIOGroup},
 				Resources: []string{
 					"cleanuppolicies",
 					"clustercleanuppolicies",
@@ -67,7 +69,7 @@ func (k *Kyverno) GetPolicyRules() PolicyRules {
 				Verbs: VerbsAdmin,
 			},
 			{
-				APIGroups: []string{"policies.kyverno.io"},
+				APIGroups: []string{policiesKyvernoIOGroup},
 				Resources: []string{
 					"validatingpolicies",
 					"mutatingpolicies",
@@ -80,7 +82,7 @@ func (k *Kyverno) GetPolicyRules() PolicyRules {
 		},
 		View: []rbacv1.PolicyRule{
 			{
-				APIGroups: []string{"kyverno.io"},
+				APIGroups: []string{kyvernoIOGroup},
 				Resources: []string{
 					"cleanuppolicies",
 					"clustercleanuppolicies",
@@ -111,7 +113,7 @@ func (k *Kyverno) GetPolicyRules() PolicyRules {
 				Verbs: VerbsView,
 			},
 			{
-				APIGroups: []string{"policies.kyverno.io"},
+				APIGroups: []string{policiesKyvernoIOGroup},
 				Resources: []string{
 					"validatingpolicies",
 					"mutatingpolicies",
@@ -145,13 +147,13 @@ func (k *Kyverno) IsEnabled() bool {
 func (k *Kyverno) Hooks() juggler.ComponentHooks {
 	return juggler.ComponentHooks{
 		PreUninstall: hooks.PreventOrphanedResources([]schema.GroupVersionKind{
-			{Group: "kyverno.io", Version: "v1", Kind: "ClusterPolicy"},
-			{Group: "kyverno.io", Version: "v1", Kind: "Policy"},
-			{Group: "policies.kyverno.io", Version: "v1", Kind: "ValidatingPolicy"},
-			{Group: "policies.kyverno.io", Version: "v1", Kind: "MutatingPolicy"},
-			{Group: "policies.kyverno.io", Version: "v1", Kind: "GeneratingPolicy"},
-			{Group: "policies.kyverno.io", Version: "v1", Kind: "DeletingPolicy"},
-			{Group: "policies.kyverno.io", Version: "v1", Kind: "ImageValidatingPolicy"},
+			{Group: kyvernoIOGroup, Version: "v1", Kind: "ClusterPolicy"},
+			{Group: kyvernoIOGroup, Version: "v1", Kind: "Policy"},
+			{Group: policiesKyvernoIOGroup, Version: "v1", Kind: "ValidatingPolicy"},
+			{Group: policiesKyvernoIOGroup, Version: "v1", Kind: "MutatingPolicy"},
+			{Group: policiesKyvernoIOGroup, Version: "v1", Kind: "GeneratingPolicy"},
+			{Group: policiesKyvernoIOGroup, Version: "v1", Kind: "DeletingPolicy"},
+			{Group: policiesKyvernoIOGroup, Version: "v1", Kind: "ImageValidatingPolicy"},
 		}),
 	}
 }
