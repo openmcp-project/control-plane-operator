@@ -47,4 +47,3 @@ formatters:
       - third_party$
       - builtin$
       - examples$
-      - pkg/juggler/object/object_reconciler_test.go
