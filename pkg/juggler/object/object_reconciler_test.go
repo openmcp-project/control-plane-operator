@@ -103,14 +103,14 @@ func TestObjectReconciler_Install(t *testing.T) {
 			name: "ObjectComponent BuildObject successful - Creation successful - Labels not set due to skip annotation",
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
-					return &corev1.Secret{
+					secret := (&corev1.Secret{
 						ObjectMeta: metav1.ObjectMeta{
 							Annotations: map[string]string{
 								constants.AnnotationSkipReconciliation: annotationTrue,
 							},
 						},
-					}, types.NamespacedName{
-
+					})
+					return secret, types.NamespacedName{
 						Name:      testObjName,
 						Namespace: testObjNamespace,
 					}, nil
@@ -661,13 +661,14 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			name: "ObjectComponent BuildObject successful - Object found - Skip annotation set",
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
-					return &corev1.Secret{
+					secret := (&corev1.Secret{
 						ObjectMeta: metav1.ObjectMeta{
 							Annotations: map[string]string{
 								constants.AnnotationSkipReconciliation: annotationTrue,
 							},
 						},
-					}, types.NamespacedName{
+					})
+					return secret, types.NamespacedName{
 						Name:      testObjName,
 						Namespace: testObjNamespace,
 					}, nil
