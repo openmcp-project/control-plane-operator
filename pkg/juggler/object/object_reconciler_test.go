@@ -104,16 +104,16 @@ func TestObjectReconciler_Install(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{
-						ObjectMeta: metav1.ObjectMeta{
-							Annotations: map[string]string{
-								constants.AnnotationSkipReconciliation: annotationTrue,
-							},
+							ObjectMeta: metav1.ObjectMeta{
+								Annotations: map[string]string{
+									constants.AnnotationSkipReconciliation: annotationTrue,
+								},
 						},
 					}, types.NamespacedName{
 
-						Name:      testObjName,
-						Namespace: testObjNamespace,
-					}, nil
+							Name:      testObjName,
+							Namespace: testObjNamespace,
+						}, nil
 				},
 				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
 					return nil
@@ -662,15 +662,15 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
 					return &corev1.Secret{
-						ObjectMeta: metav1.ObjectMeta{
-							Annotations: map[string]string{
-								constants.AnnotationSkipReconciliation: annotationTrue,
-							},
+							ObjectMeta: metav1.ObjectMeta{
+								Annotations: map[string]string{
+									constants.AnnotationSkipReconciliation: annotationTrue,
+								},
 						},
-					}, types.NamespacedName{
-						Name:      testObjName,
-						Namespace: testObjNamespace,
-					}, nil
+						}, types.NamespacedName{
+							Name:      testObjName,
+							Namespace: testObjNamespace,
+						}, nil
 				},
 				IsObjectHealthyFunc: func(obj client.Object) juggler.ResourceHealthiness {
 					return juggler.ResourceHealthiness{
