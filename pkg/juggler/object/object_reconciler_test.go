@@ -108,8 +108,8 @@ func TestObjectReconciler_Install(t *testing.T) {
 								Annotations: map[string]string{
 									constants.AnnotationSkipReconciliation: annotationTrue,
 								},
-						},
-					}, types.NamespacedName{
+							},
+						}, types.NamespacedName{
 
 							Name:      testObjName,
 							Namespace: testObjNamespace,
@@ -666,7 +666,7 @@ func TestObjectReconciler_Observe(t *testing.T) {
 								Annotations: map[string]string{
 									constants.AnnotationSkipReconciliation: annotationTrue,
 								},
-						},
+							},
 						}, types.NamespacedName{
 							Name:      testObjName,
 							Namespace: testObjNamespace,
