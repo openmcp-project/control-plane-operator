@@ -103,17 +103,17 @@ func TestObjectReconciler_Install(t *testing.T) {
 			name: "ObjectComponent BuildObject successful - Creation successful - Labels not set due to skip annotation",
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
-					return &corev1.Secret{
-							ObjectMeta: metav1.ObjectMeta{
-								Annotations: map[string]string{
-									constants.AnnotationSkipReconciliation: annotationTrue,
-								},
+					obj := &corev1.Secret{
+						ObjectMeta: metav1.ObjectMeta{
+							Annotations: map[string]string{
+								constants.AnnotationSkipReconciliation: annotationTrue,
 							},
-						}, types.NamespacedName{
-
-							Name:      testObjName,
-							Namespace: testObjNamespace,
-						}, nil
+						},
+					}
+					return obj, types.NamespacedName{
+						Name:      testObjName,
+						Namespace: testObjNamespace,
+					}, nil
 				},
 				ReconcileObjectFunc: func(ctx context.Context, obj client.Object) error {
 					return nil
@@ -661,16 +661,17 @@ func TestObjectReconciler_Observe(t *testing.T) {
 			name: "ObjectComponent BuildObject successful - Object found - Skip annotation set",
 			obj: FakeObjectComponent{
 				BuildObjectToReconcileFunc: func(ctx context.Context) (client.Object, types.NamespacedName, error) {
-					return &corev1.Secret{
-							ObjectMeta: metav1.ObjectMeta{
-								Annotations: map[string]string{
-									constants.AnnotationSkipReconciliation: annotationTrue,
-								},
+					obj := &corev1.Secret{
+						ObjectMeta: metav1.ObjectMeta{
+							Annotations: map[string]string{
+								constants.AnnotationSkipReconciliation: annotationTrue,
 							},
-						}, types.NamespacedName{
-							Name:      testObjName,
-							Namespace: testObjNamespace,
-						}, nil
+						},
+					}
+					return obj, types.NamespacedName{
+						Name:      testObjName,
+						Namespace: testObjNamespace,
+					}, nil
 				},
 				IsObjectHealthyFunc: func(obj client.Object) juggler.ResourceHealthiness {
 					return juggler.ResourceHealthiness{
