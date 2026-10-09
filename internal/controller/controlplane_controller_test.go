@@ -28,6 +28,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 
+	helmv2 "github.com/fluxcd/helm-controller/api/v2"
+
 	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/cmd/options"
 	"github.com/openmcp-project/control-plane-operator/internal/schemes"
@@ -256,6 +258,50 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 				cond := meta.FindStatusCondition(cp.Status.Conditions, "CrossplaneReady")
 				assert.Equal(t, metav1.ConditionFalse, cond.Status)
 				assert.Equal(t, "Installed", cond.Reason)
+				return nil
+			},
+			expectedResult: ctrl.Result{RequeueAfter: time.Second * 30},
+			expectedErr:    nil,
+		},
+		{
+			desc: "Uninstalled component does not emit a condition (regression: stuck Progressing after provider removal)",
+			initObjs: []client.Object{
+				&corev1beta1.ControlPlane{
+					ObjectMeta: metav1.ObjectMeta{
+						Name: testControlPlaneName,
+					},
+					Spec: corev1beta1.ControlPlaneSpec{
+						Target: corev1beta1.Target{
+							FluxServiceAccount: corev1beta1.ServiceAccountReference{
+								Name:      testFluxDeployerName,
+								Namespace: testDefaultNamespace,
+							},
+						},
+						// Crossplane intentionally absent from spec (removed by user)
+						ComponentsConfig: corev1beta1.ComponentsConfig{},
+					},
+				},
+				// Pre-existing HelmRelease left behind from a previous Crossplane installation.
+				// The juggler observes it, uninstalls it, and must NOT emit a CrossplaneReady=False/Uninstalled condition.
+				&helmv2.HelmRelease{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "crossplane",
+						Namespace: cpNamespacePrefix + testControlPlaneName,
+					},
+				},
+				&corev1.Namespace{
+					ObjectMeta: metav1.ObjectMeta{Name: cpNamespacePrefix + testControlPlaneName},
+				},
+				coSystemNamespace,
+				ocmSecret,
+			},
+			validate: func(t *testing.T, ctx context.Context, c client.Client) error {
+				cp := &corev1beta1.ControlPlane{}
+				if err := c.Get(ctx, client.ObjectKey{Name: testControlPlaneName}, cp); err != nil {
+					return err
+				}
+				cond := meta.FindStatusCondition(cp.Status.Conditions, "CrossplaneReady")
+				assert.Nil(t, cond, "CrossplaneReady condition must not be set after Crossplane is removed from spec")
 				return nil
 			},
 			expectedResult: ctrl.Result{RequeueAfter: time.Second * 30},
