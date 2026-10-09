@@ -29,6 +29,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 
 	helmv2 "github.com/fluxcd/helm-controller/api/v2"
+
 	corev1beta1 "github.com/openmcp-project/control-plane-operator/api/v1beta1"
 	"github.com/openmcp-project/control-plane-operator/cmd/options"
 	"github.com/openmcp-project/control-plane-operator/internal/schemes"
