@@ -50,6 +50,7 @@ const (
 	testOCMRegistryURL     = "https://some.url"
 	testSecretName         = "some-secret"
 	testRegistryTarGz      = "registry.tar.gz"
+	testCrossplane         = "crossplane"
 )
 
 var (
@@ -238,7 +239,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 						Name: testReleaseChannelName,
 					},
 					Status: corev1beta1.ReleaseChannelStatus{Components: []corev1beta1.Component{
-						{Name: "crossplane", Versions: []corev1beta1.ComponentVersion{{Version: "1.15.0", HelmRepo: "https://charts.crossplane.io/stable", HelmChart: "crossplane"}}},
+						{Name: testCrossplane, Versions: []corev1beta1.ComponentVersion{{Version: "1.15.0", HelmRepo: "https://charts.crossplane.io/stable", HelmChart: testCrossplane}}},
 						{Name: "provider-helm", Versions: []corev1beta1.ComponentVersion{{Version: "0.19.0", DockerRef: "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.19.0"}}},
 					}},
 				},
@@ -285,7 +286,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 				// The juggler observes it, uninstalls it, and must NOT emit a CrossplaneReady=False/Uninstalled condition.
 				&helmv2.HelmRelease{
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      "crossplane",
+						Name:      testCrossplane,
 						Namespace: cpNamespacePrefix + testControlPlaneName,
 					},
 				},
