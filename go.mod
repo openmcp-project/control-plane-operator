@@ -14,7 +14,7 @@ require (
 	github.com/openmcp-project/controller-utils v0.33.2
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.12.1
-	golang.org/x/text v0.42.0
+	golang.org/x/text v0.43.0
 	gotest.tools/v3 v3.5.2
 	k8s.io/api v0.37.1
 	k8s.io/apiextensions-apiserver v0.37.1
@@ -337,7 +337,7 @@ require (
 	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/net v0.59.0 // indirect
 	golang.org/x/oauth2 v0.37.0 // indirect
-	golang.org/x/sync v0.23.0 // indirect
+	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/term v0.46.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
