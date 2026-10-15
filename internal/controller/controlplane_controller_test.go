@@ -265,7 +265,7 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 			expectedErr:    nil,
 		},
 		{
-			desc: "Uninstalled component does not emit a condition (regression: stuck Progressing after provider removal)",
+			desc: "Uninstalled component emits True/Uninstalled condition (regression: stuck Progressing after provider removal)",
 			initObjs: []client.Object{
 				&corev1beta1.ControlPlane{
 					ObjectMeta: metav1.ObjectMeta{
@@ -282,8 +282,8 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 						ComponentsConfig: corev1beta1.ComponentsConfig{},
 					},
 				},
-				// Pre-existing HelmRelease left behind from a previous Crossplane installation.
-				// The juggler observes it, uninstalls it, and must NOT emit a CrossplaneReady=False/Uninstalled condition.
+			// Pre-existing HelmRelease left behind from a previous Crossplane installation.
+			// The juggler observes it, uninstalls it, and MUST emit CrossplaneReady=True/Uninstalled (not False).
 				&helmv2.HelmRelease{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      testCrossplane,
@@ -302,7 +302,10 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 					return err
 				}
 				cond := meta.FindStatusCondition(cp.Status.Conditions, "CrossplaneReady")
-				assert.Nil(t, cond, "CrossplaneReady condition must not be set after Crossplane is removed from spec")
+				if assert.NotNil(t, cond, "CrossplaneReady condition must be set after Crossplane is removed from spec") {
+					assert.Equal(t, metav1.ConditionTrue, cond.Status, "CrossplaneReady must be True/Uninstalled, not False")
+					assert.Equal(t, "Uninstalled", cond.Reason)
+				}
 				return nil
 			},
 			expectedResult: ctrl.Result{RequeueAfter: time.Second * 30},
