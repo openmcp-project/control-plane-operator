@@ -282,8 +282,8 @@ func TestControlPlaneReconciler_Reconcile(t *testing.T) {
 						ComponentsConfig: corev1beta1.ComponentsConfig{},
 					},
 				},
-			// Pre-existing HelmRelease left behind from a previous Crossplane installation.
-			// The juggler observes it, uninstalls it, and MUST emit CrossplaneReady=True/Uninstalled (not False).
+				// Pre-existing HelmRelease left behind from a previous Crossplane installation.
+				// The juggler observes it, uninstalls it, and MUST emit CrossplaneReady=True/Uninstalled (not False).
 				&helmv2.HelmRelease{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      testCrossplane,
