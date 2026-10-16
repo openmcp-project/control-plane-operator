@@ -228,11 +228,17 @@ func (r *ControlPlaneReconciler) updateControlPlaneComponents(ctx context.Contex
 		}
 
 		if !componentResult.Component.IsEnabled() && componentResult.Result == juggler.StatusDisabled {
-			// Component is not enabled and has been successfully uninstalled (or has never been installed).
+			// Component is not enabled and has never been installed or was disabled before being installed.
 			// Don't output a condition in this case.
 			continue
 		}
-		conditions = append(conditions, componentResult.ToCondition())
+		c := componentResult.ToCondition()
+		if componentResult.Result == juggler.StatusUninstalled {
+			// Component was cleanly removed. Emit Status=True so the condition overwrites any
+			// stale "Healthy/Installed" condition and does not block phase computation.
+			c.Status = metav1.ConditionTrue
+		}
+		conditions = append(conditions, c)
 	}
 
 	cp.Status.ComponentsEnabled = enabledComponents
