@@ -159,7 +159,7 @@ func (e *ExternalSecretsOperator) BuildManifesto(ctx context.Context) (fluxcd.Ma
 				Spec: helmv2.HelmChartTemplateSpec{
 					Chart:   e.Config.Chart.Name,
 					Version: e.Config.Chart.Version,
-					SourceRef: helmv2.CrossNamespaceObjectReference{
+					SourceRef: &helmv2.CrossNamespaceObjectReference{
 						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameESO),
 					},
