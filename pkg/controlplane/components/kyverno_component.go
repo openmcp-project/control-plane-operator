@@ -220,7 +220,7 @@ func (k *Kyverno) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, error) 
 				Spec: helmv2.HelmChartTemplateSpec{
 					Chart:   k.Config.Chart.Name,
 					Version: k.Config.Chart.Version,
-					SourceRef: helmv2.CrossNamespaceObjectReference{
+					SourceRef: &helmv2.CrossNamespaceObjectReference{
 						Kind: "HelmRepository",
 						Name: strings.ToLower(ComponentNameKyverno),
 					},

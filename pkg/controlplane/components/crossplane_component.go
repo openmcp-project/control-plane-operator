@@ -153,7 +153,7 @@ func (c *Crossplane) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, erro
 				Spec: helmv2.HelmChartTemplateSpec{
 					Chart:   c.Config.Chart.Name,
 					Version: c.Config.Chart.Version,
-					SourceRef: helmv2.CrossNamespaceObjectReference{
+					SourceRef: &helmv2.CrossNamespaceObjectReference{
 						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameCrossplane),
 					},
