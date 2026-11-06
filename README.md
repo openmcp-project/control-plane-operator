@@ -148,7 +148,7 @@ Set either of the following annotations on an existing managed object:
 - `core.orchestrate.cloud.sap/skip-reconciliation: "true"` 
 
 When either of these annotations is present, the operator skips reconciliation for that resource entirely. This means neither desired-state changes nor drift from the expected state will be applied granting manual control over the resource.
-The annotations works on the following components:
+The annotations work on the following components:
 
 - CrossplaneProvider
 - CrossplaneDeploymentRuntimeConfig
