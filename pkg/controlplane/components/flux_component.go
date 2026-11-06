@@ -155,7 +155,7 @@ func (f *Flux) BuildManifesto(ctx context.Context) (fluxcd.Manifesto, error) {
 				Spec: helmv2.HelmChartTemplateSpec{
 					Chart:   f.Config.Chart.Name,
 					Version: f.Config.Chart.Version,
-					SourceRef: helmv2.CrossNamespaceObjectReference{
+					SourceRef: &helmv2.CrossNamespaceObjectReference{
 						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameFlux),
 					},

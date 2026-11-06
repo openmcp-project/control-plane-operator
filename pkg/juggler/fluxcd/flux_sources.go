@@ -181,7 +181,7 @@ func (o *OCIRepositoryAdapter) ApplyDefaults() {
 	// a defaulting func in the future.
 	scheme.Default(o.Source)
 
-	o.Source.Spec.Interval = metav1.Duration{Duration: 1 * time.Hour}
+	o.Source.Spec.Interval = &metav1.Duration{Duration: 1 * time.Hour}
 }
 
 // Empty implements SourceAdapter.

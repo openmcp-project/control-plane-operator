@@ -119,7 +119,7 @@ func (btp *BTPServiceOperator) BuildManifesto(ctx context.Context) (fluxcd.Manif
 				Spec: helmv2.HelmChartTemplateSpec{
 					Chart:   btp.Config.Chart.Name,
 					Version: btp.Config.Chart.Version,
-					SourceRef: helmv2.CrossNamespaceObjectReference{
+					SourceRef: &helmv2.CrossNamespaceObjectReference{
 						Kind: helmRepositoryKind,
 						Name: strings.ToLower(ComponentNameBTPSO), // repo name
 					},
