@@ -221,5 +221,5 @@ func shouldSkipReconciliation(obj client.Object) bool {
 		return false
 	}
 
-	return obj.GetAnnotations()[constants.AnnotationSkipReconciliation] == "true" || obj.GetAnnotations()[constants.AnnotationSkipReconciliationLegacy] == "true"
+	return obj.GetAnnotations()[constants.AnnotationSkipReconciliation] == "ignore" || obj.GetAnnotations()[constants.AnnotationSkipReconciliationLegacy] == "true"
 }
