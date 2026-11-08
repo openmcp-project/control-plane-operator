@@ -3,7 +3,7 @@ module github.com/openmcp-project/control-plane-operator
 go 1.27.3
 
 require (
-	github.com/crossplane-contrib/xp-testing v1.10.1
+	github.com/crossplane-contrib/xp-testing v1.10.2
 	github.com/crossplane/crossplane/apis/v2 v2.4.3
 	github.com/fluxcd/helm-controller/api v1.7.1
 	github.com/fluxcd/kustomize-controller/api v1.10.1
