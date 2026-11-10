@@ -37,6 +37,7 @@ const (
 	testObjNamespace        = "default"
 	fakeObjectComponentName = "FakeObjectComponent"
 	annotationTrue          = "true"
+	annotationIgnore        = "ignore"
 	configuredCMName        = "configured-cm"
 )
 
@@ -106,7 +107,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 					obj := &corev1.Secret{
 						ObjectMeta: metav1.ObjectMeta{
 							Annotations: map[string]string{
-								constants.AnnotationSkipReconciliation: annotationTrue,
+								constants.AnnotationSkipReconciliation: annotationIgnore,
 							},
 						},
 					}
@@ -198,7 +199,7 @@ func TestObjectReconciler_Install(t *testing.T) {
 						Name:      testObjName,
 						Namespace: testObjNamespace,
 						Annotations: map[string]string{
-							constants.AnnotationSkipReconciliation: annotationTrue,
+							constants.AnnotationSkipReconciliation: annotationIgnore,
 						},
 					},
 					Type: corev1.SecretTypeOpaque,
@@ -664,7 +665,7 @@ func TestObjectReconciler_Observe(t *testing.T) {
 					obj := &corev1.Secret{
 						ObjectMeta: metav1.ObjectMeta{
 							Annotations: map[string]string{
-								constants.AnnotationSkipReconciliation: annotationTrue,
+								constants.AnnotationSkipReconciliation: annotationIgnore,
 							},
 						},
 					}
@@ -686,7 +687,7 @@ func TestObjectReconciler_Observe(t *testing.T) {
 						Name:      testObjName,
 						Namespace: testObjNamespace,
 						Annotations: map[string]string{
-							constants.AnnotationSkipReconciliation: annotationTrue,
+							constants.AnnotationSkipReconciliation: annotationIgnore,
 						},
 					},
 				},
@@ -816,5 +817,66 @@ func Test_ObjectReconciler_DetectOrphanedComponents(t *testing.T) {
 				assert.Equal(t, ac.IsEnabled(), ec.IsEnabled())
 			}
 		})
+	}
+}
+
+func Test_ObjectReconciler_ShouldSkipReconciliation(t *testing.T) {
+	testCases := []struct {
+		name string
+		obj  client.Object
+		skip bool
+	}{
+		{
+			name: "with skip annotation",
+			obj: &corev1.ConfigMap{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "cm",
+					Annotations: map[string]string{
+						constants.AnnotationSkipReconciliation: annotationIgnore,
+					},
+				},
+			},
+			skip: true,
+		},
+		{
+			name: "with skip annotation, wrong value",
+			obj: &corev1.ConfigMap{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "cm",
+					Annotations: map[string]string{
+						constants.AnnotationSkipReconciliation: "notignore",
+					},
+				},
+			},
+			skip: false,
+		},
+		{
+			name: "with legacy skip annotation",
+			obj: &corev1.ConfigMap{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "cm",
+					Annotations: map[string]string{
+						constants.AnnotationSkipReconciliationLegacy: annotationTrue,
+					},
+				},
+			},
+			skip: true,
+		},
+		{
+			name: "with legacy skip annotation, wrong value",
+			obj: &corev1.ConfigMap{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "cm",
+					Annotations: map[string]string{
+						constants.AnnotationSkipReconciliationLegacy: "nottrue",
+					},
+				},
+			},
+			skip: false,
+		},
+	}
+	for _, tC := range testCases {
+		skip := shouldSkipReconciliation(tC.obj)
+		assert.Equal(t, tC.skip, skip)
 	}
 }

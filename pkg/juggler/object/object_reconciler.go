@@ -207,7 +207,7 @@ func (r *ObjectReconciler) applyObject(ctx context.Context, component juggler.Co
 
 	_, err = controllerutil.CreateOrUpdate(ctx, r.remoteClient, obj, func() error {
 		if shouldSkipReconciliation(obj) {
-			r.logger.Info("Skipping update due to skip-reconciliation annotation on object", "name", key.Name, "namespace", key.Namespace)
+			r.logger.Info("Skipping update due to skip-reconciliation annotation on object", "objectName", key.Name, "objectNamespace", key.Namespace)
 			return nil
 		}
 		utils.SetLabels(obj, r.labelFunc(component))
@@ -221,5 +221,5 @@ func shouldSkipReconciliation(obj client.Object) bool {
 		return false
 	}
 
-	return obj.GetAnnotations()[constants.AnnotationSkipReconciliation] == "true"
+	return obj.GetAnnotations()[constants.AnnotationSkipReconciliation] == "ignore" || obj.GetAnnotations()[constants.AnnotationSkipReconciliationLegacy] == "true"
 }
