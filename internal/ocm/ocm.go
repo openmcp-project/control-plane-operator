@@ -49,7 +49,7 @@ func GetOCMRemoteRepo(ocmRegistry string, secret corev1.Secret, prefixFilter str
 	spec := ocireg.NewRepositorySpec(ocmRegistry, nil)
 	repo, err := octx.RepositoryForSpec(spec, creds)
 	if err != nil {
-		return nil, nil, errors.New("failed to get ocm registry with provided credentials")
+		return nil, nil, fmt.Errorf("failed to get ocm registry with provided credentials: %w", err)
 	}
 
 	// Currently workaround, as OCM does not support listing components for oci registries
@@ -61,7 +61,7 @@ func GetOCMRemoteRepo(ocmRegistry string, secret corev1.Secret, prefixFilter str
 	prefix := path + "/component-descriptors/"
 	repositories, err := GetRepositoriesInOCIRegistry(registryHost, secretData, prefix, "https")
 	if err != nil {
-		return nil, nil, errors.New("can't get repositories in OCI registry")
+		return nil, nil, fmt.Errorf("can't get repositories in OCI registry %q: %w", registryHost, err)
 	}
 
 	var components []string

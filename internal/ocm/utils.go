@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type RegistryCredentials struct {
@@ -37,10 +38,10 @@ func GetRepositoriesInOCIRegistry(ociRegistry string, creds RegistryCredentials,
 	}
 
 	req.SetBasicAuth(creds.Username, creds.Password)
-	client := &http.Client{}
+	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request to %s failed: %w", url, err)
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -48,6 +49,11 @@ func GetRepositoriesInOCIRegistry(ociRegistry string, creds RegistryCredentials,
 			fmt.Printf("Failed to close body: %v\n", err)
 		}
 	}(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 2048))
+		return nil, fmt.Errorf("catalog request to %s returned status %d: %s", url, resp.StatusCode, strings.TrimSpace(string(body)))
+	}
 
 	buf := new(strings.Builder)
 	_, err = io.Copy(buf, resp.Body)
@@ -58,7 +64,7 @@ func GetRepositoriesInOCIRegistry(ociRegistry string, creds RegistryCredentials,
 	var data CatalogResponse
 	err = json.Unmarshal([]byte(buf.String()), &data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse catalog response from %s: %w", url, err)
 	}
 
 	repositories := data.Repositories
